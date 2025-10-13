@@ -1,0 +1,65 @@
+# Rust Edge Compute Framework - 默认配置文件
+
+[server]
+host = "127.0.0.1"
+port = 3000
+workers = 4
+request_timeout_seconds = 300
+task_queue_size = 1000
+
+[container]
+youki_path = "youki"
+image_dir = "./images"
+runtime_dir = "./runtime"
+
+[container.default_config]
+rootless = true
+network_isolation = true
+
+[container.resource_limits]
+default_cpu_cores = 1.0
+default_memory_mb = 512
+max_cpu_cores = 4.0
+max_memory_mb = 2048
+container_timeout_seconds = 300
+
+[ffi]
+cpp_library_path = "./lib"
+bridge_header_path = "./src/ffi/cpp/bridge.h"
+bridge_impl_path = "./src/ffi/cpp/bridge.cc"
+memory_pool_size = 1048576  # 1MB
+
+[logging]
+level = "info"
+format = "text"
+console_output = true
+
+[security]
+allowed_origins = ["*"]
+
+[security.rate_limit]
+requests_per_minute = 60
+burst_size = 10
+
+[scheduler]
+intelligent_scheduling_enabled = false
+strategy = "Adaptive"
+max_concurrent_tasks = 10
+queue_size = 1000
+task_timeout_seconds = 300
+default_max_retries = 3
+
+[scheduler.load_balancer]
+strategy = "Adaptive"
+intelligent_scheduling_enabled = false
+health_check_interval = 30
+max_connections_per_worker = 10
+update_interval_ms = 1000
+adaptive_threshold = 0.8
+
+[scheduler.learning]
+learning_rate = 0.01
+history_window_size = 1000
+min_training_samples = 100
+prediction_window_seconds = 300
+model_update_interval_seconds = 3600

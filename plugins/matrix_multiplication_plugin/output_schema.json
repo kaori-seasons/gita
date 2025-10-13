@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Matrix Multiplication Output Schema",
+  "description": "输出结果模式定义",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "error"],
+      "description": "执行状态"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": ["naive", "tiled", "strassen", "eigen", "openblas"],
+      "description": "使用的算法"
+    },
+    "optimization_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "优化级别"
+    },
+    "result": {
+      "type": "array",
+      "description": "计算结果矩阵",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "array",
+        "description": "结果矩阵的一行",
+        "minItems": 1,
+        "maxItems": 10000,
+        "items": {
+          "type": "number",
+          "description": "结果矩阵元素",
+          "minimum": -1e308,
+          "maximum": 1e308
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "description": "性能指标",
+      "properties": {
+        "computation_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "计算耗时（毫秒）"
+        },
+        "input_matrix_size": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "description": "输入矩阵尺寸 [行数, 列数]"
+        },
+        "output_matrix_size": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "description": "输出矩阵尺寸 [行数, 列数]"
+        },
+        "estimated_memory_mb": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "预估内存使用量（MB）"
+        },
+        "max_memory_limit_mb": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "内存使用上限（MB）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "元数据信息",
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "插件版本"
+        },
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "总执行时间（毫秒）"
+        },
+        "timestamp": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "执行时间戳"
+        }
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "string",
+      "description": "错误信息（仅在status为error时存在）"
+    },
+    "error_code": {
+      "type": "string",
+      "description": "错误代码（仅在status为error时存在）"
+    }
+  },
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "status": { "enum": ["success"] }
+      },
+      "required": ["result", "performance", "metadata"]
+    },
+    {
+      "properties": {
+        "status": { "enum": ["error"] }
+      },
+      "required": ["error"]
+    }
+  ]
+}

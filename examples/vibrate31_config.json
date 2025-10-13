@@ -1,0 +1,127 @@
+{
+  "algorithm": {
+    "name": "vibrate31",
+    "version": "1.0.0",
+    "description": "生产级振动特征提取算法，支持频谱分析和工况识别",
+    "min_duration_seconds": 1.0,
+    "max_duration_seconds": 3600.0,
+    "dc_threshold": 500.0,
+    "min_sampling_rate": 100,
+    "max_sampling_rate": 50000,
+    "recommended_sampling_rate": 2000
+  },
+  "spectral_analysis": {
+    "window_type": "hann",
+    "overlap_ratio": 0.5,
+    "frequency_range_min": 0.0,
+    "frequency_range_max": 10000.0,
+    "frequency_resolution": 1.0,
+    "fft_size_min": 256,
+    "fft_size_max": 65536,
+    "fft_padding": true
+  },
+  "condition_analysis": {
+    "speed_thresholds": [10.0, 50.0, 100.0, 500.0],
+    "stability_window_size": 100,
+    "anomaly_threshold": 0.7,
+    "status_transition_threshold": 5.0,
+    "status_stability_period": 30
+  },
+  "performance": {
+    "enable_performance_tracking": true,
+    "memory_limit_mb": 1024,
+    "computation_timeout_seconds": 300,
+    "max_concurrent_executions": 10,
+    "cpu_cores": 2.0,
+    "memory_mb": 512
+  },
+  "monitoring": {
+    "health_check_interval_seconds": 60,
+    "metrics_collection_interval": 10,
+    "enable_detailed_logging": true,
+    "memory_usage_threshold": 0.8,
+    "cpu_usage_threshold": 0.9,
+    "error_rate_threshold": 0.05
+  },
+  "quality_assessment": {
+    "signal_quality_threshold": 0.7,
+    "data_integrity_threshold": 0.9,
+    "processing_confidence_threshold": 0.8,
+    "check_nan_values": true,
+    "check_infinite_values": true,
+    "validate_sampling_rate": true,
+    "validate_data_consistency": true
+  },
+  "storage": {
+    "enable_result_caching": true,
+    "cache_ttl_seconds": 3600,
+    "max_cache_size_mb": 100,
+    "persist_results": true,
+    "result_retention_days": 30,
+    "compression_enabled": true
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "enable_structured_logging": true,
+    "max_file_size_mb": 100,
+    "max_files": 10,
+    "compression": true
+  },
+  "security": {
+    "enable_input_validation": true,
+    "max_input_size_mb": 50,
+    "enable_rate_limiting": true,
+    "rate_limit_per_minute": 60,
+    "encrypt_sensitive_data": true,
+    "encryption_algorithm": "AES256"
+  },
+  "deployment": {
+    "container_image": "rust-edge-compute/vibrate31:latest",
+    "port": 8080,
+    "health_check_path": "/health",
+    "environment": [
+      "RUST_LOG=info",
+      "ALGORITHM_NAME=vibrate31"
+    ],
+    "resource_limits": {
+      "cpu": "2",
+      "memory": "1Gi"
+    },
+    "resource_requests": {
+      "cpu": "1",
+      "memory": "512Mi"
+    }
+  },
+  "scalability": {
+    "enable_horizontal_scaling": true,
+    "min_replicas": 1,
+    "max_replicas": 10,
+    "cpu_utilization_threshold": 70,
+    "memory_utilization_threshold": 80
+  },
+  "integration": {
+    "enable_rest_api": true,
+    "enable_grpc_api": false,
+    "enable_websocket": true,
+    "api_version": "v1",
+    "base_path": "/api/v1/vibrate31",
+    "require_authentication": true,
+    "supported_auth_methods": ["bearer", "api_key"]
+  },
+  "testing": {
+    "enable_integration_tests": true,
+    "enable_performance_tests": true,
+    "enable_load_tests": false,
+    "test_data_directory": "./test_data",
+    "benchmark_iterations": 100
+  },
+  "maintenance": {
+    "enable_auto_updates": true,
+    "maintenance_window_start": "02:00",
+    "maintenance_window_duration_hours": 2,
+    "enable_auto_backup": true,
+    "backup_interval_hours": 24,
+    "backup_retention_days": 7
+  }
+}

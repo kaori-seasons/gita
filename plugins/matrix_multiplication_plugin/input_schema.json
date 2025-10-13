@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Matrix Multiplication Input Schema",
+  "description": "输入参数模式定义",
+  "type": "object",
+  "required": ["operation", "matrix_a", "matrix_b"],
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["matrix_multiplication"],
+      "description": "操作类型，必须是'matrix_multiplication'"
+    },
+    "matrix_a": {
+      "type": "array",
+      "description": "第一个矩阵",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "array",
+        "description": "矩阵的一行",
+        "minItems": 1,
+        "maxItems": 10000,
+        "items": {
+          "type": "number",
+          "description": "矩阵元素",
+          "minimum": -1e308,
+          "maximum": 1e308
+        }
+      }
+    },
+    "matrix_b": {
+      "type": "array",
+      "description": "第二个矩阵",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "array",
+        "description": "矩阵的一行",
+        "minItems": 1,
+        "maxItems": 10000,
+        "items": {
+          "type": "number",
+          "description": "矩阵元素",
+          "minimum": -1e308,
+          "maximum": 1e308
+        }
+      }
+    },
+    "precision": {
+      "type": "string",
+      "enum": ["float", "double"],
+      "default": "double",
+      "description": "计算精度"
+    },
+    "optimization": {
+      "type": "string",
+      "enum": ["none", "basic", "avx", "avx2", "avx512"],
+      "default": "basic",
+      "description": "优化级别"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": ["naive", "tiled", "strassen", "eigen", "openblas"],
+      "default": "naive",
+      "description": "使用的算法"
+    }
+  },
+  "additionalProperties": false
+}

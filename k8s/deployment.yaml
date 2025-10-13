@@ -1,0 +1,191 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-edge-compute
+  labels:
+    app: rust-edge-compute
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rust-edge-compute
+  template:
+    metadata:
+      labels:
+        app: rust-edge-compute
+    spec:
+      containers:
+      - name: rust-edge-compute
+        image: rust-edge-compute:latest
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 443
+          name: https
+        env:
+        - name: RUST_LOG
+          value: "info"
+        - name: SERVER_HOST
+          value: "0.0.0.0"
+        - name: SERVER_PORT
+          value: "3000"
+        - name: DATABASE_URL
+          value: "/app/data/db"
+        - name: REDIS_URL
+          value: "redis://redis-service:6379"
+        - name: METRICS_ENABLED
+          value: "true"
+        - name: KUBERNETES_SERVICE_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        volumeMounts:
+        - name: data-storage
+          mountPath: /app/data
+        - name: log-storage
+          mountPath: /app/logs
+        - name: cert-storage
+          mountPath: /app/certs
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: data-storage
+        persistentVolumeClaim:
+          claimName: rust-edge-compute-data
+      - name: log-storage
+        persistentVolumeClaim:
+          claimName: rust-edge-compute-logs
+      - name: cert-storage
+        secret:
+          secretName: rust-edge-compute-certs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rust-edge-compute-service
+  labels:
+    app: rust-edge-compute
+spec:
+  selector:
+    app: rust-edge-compute
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rust-edge-compute-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rust-edge-compute-logs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rust-edge-compute-certs
+type: Opaque
+data:
+  # Base64 encoded certificate and key files
+  server.crt: LS0tLS1CRUdJTi... # Your certificate
+  server.key: LS0tLS1CRUdJTi... # Your private key
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rust-edge-compute-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - your-domain.com
+    secretName: rust-edge-compute-tls
+  rules:
+  - host: your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rust-edge-compute-service
+            port:
+              number: 80
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rust-edge-compute-config
+data:
+  config.toml: |
+    [server]
+    host = "0.0.0.0"
+    port = 3000
+    task_queue_size = 1000
+    request_timeout_seconds = 300
+
+    [security]
+    enable_authentication = true
+    jwt_secret = "your-jwt-secret-here"
+    enable_rate_limiting = true
+    requests_per_minute = 60
+
+    [performance]
+    enable_monitoring = true
+    sampling_interval_ms = 5000
+
+    [updates]
+    auto_check_updates = true
+    check_interval_seconds = 3600
+    update_server_url = "https://updates.your-domain.com"

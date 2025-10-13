@@ -1,0 +1,27 @@
+apiVersion: v2
+name: rust-edge-compute
+description: A high-performance Rust-based edge computing framework
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - rust
+  - edge-computing
+  - microservices
+  - high-performance
+  - container-runtime
+
+maintainers:
+  - name: Rust Edge Compute Team
+    email: team@rust-edge-compute.com
+
+dependencies:
+  - name: redis
+    version: "17.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled
+  - name: postgresql
+    version: "12.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled

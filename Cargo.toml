@@ -1,0 +1,106 @@
+[package]
+name = "rust-edge-compute"
+version = "0.1.0"
+edition = "2021"
+authors = ["Edge Compute Team"]
+description = "基于Rust的边缘计算框架"
+license = "MIT"
+
+[dependencies]
+# 异步运行时
+tokio = { version = "1.0", features = ["full"] }
+tokio-util = "0.7"
+
+# Web框架
+axum = "0.7"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "fs"] }
+
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 错误处理
+thiserror = "1.0"
+anyhow = "1.0"
+
+# 跨语言互操作
+cxx = "1.0"
+
+# 容器运行时 - 使用真实的Youki 0.4 Rust API
+youki = { version = "0.4", default-features = false, features = ["libcontainer"] }
+oci-spec = "0.6"
+
+# Youki运行时依赖
+anyhow = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 系统调用
+libc = "0.2"
+
+# 容器管理
+uuid = { version = "1.0", features = ["v4"] }
+
+# 容器运行时 (暂时使用命令行方式)
+tokio-process = "0.2"
+
+# 配置管理
+config = "0.14"
+dotenvy = "0.15"
+
+# 日志
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# 工具库
+uuid = { version = "1.0", features = ["v4", "serde"] }
+futures = "0.3"
+chrono = { version = "0.4", features = ["serde"] }
+tokio-util = { version = "0.7", features = ["signal"] }
+fastrand = "2.0"
+lazy_static = "1.4"
+
+# 数据库
+sled = "0.34"
+bincode = "1.3"
+
+# 异步特质
+async-trait = "0.1"
+
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+
+# 加密和安全
+ring = "0.17"
+base64 = "0.21"
+rustls = "0.21"
+rustls-pemfile = "1.0"
+tokio-rustls = "0.24"
+aes-gcm = "0.10"
+argon2 = "0.5"
+rand = "0.8"
+hex = "0.4"
+
+# 审计和监控
+audit = "0.1"
+opentelemetry = "0.20"
+opentelemetry-jaeger = "0.19"
+tracing-opentelemetry = "0.21"
+
+[dev-dependencies]
+# 测试依赖
+reqwest = { version = "0.11", features = ["json"] }
+tokio-test = "0.4"
+
+[build-dependencies]
+cxx-build = "1.0"
+
+[lib]
+name = "rust_edge_compute"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rust-edge-compute"
+path = "src/main.rs"

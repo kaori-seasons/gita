@@ -1,0 +1,121 @@
+{
+  "version": "1.0.0",
+  "description": "Algorithm Plugins Framework Configuration",
+  "global_settings": {
+    "log_level": "INFO",
+    "max_log_file_size": "10MB",
+    "log_rotation_count": 5,
+    "plugin_directory": "@CMAKE_INSTALL_PREFIX@/plugins",
+    "config_directory": "@CMAKE_INSTALL_PREFIX@/config",
+    "cache_directory": "@CMAKE_INSTALL_PREFIX@/cache"
+  },
+  "plugin_chains": {
+    "vibration_monitoring": {
+      "description": "振动监测插件链",
+      "plugins": [
+        {
+          "name": "vibrate31",
+          "type": "feature",
+          "config_file": "vibrate31_config.json"
+        },
+        {
+          "name": "motor97",
+          "type": "decision",
+          "config_file": "motor97_config.json"
+        },
+        {
+          "name": "comp_realtime_health34",
+          "type": "evaluation",
+          "config_file": "comp_realtime_health34_config.json"
+        },
+        {
+          "name": "score_alarm5",
+          "type": "event",
+          "config_file": "score_alarm5_config.json"
+        }
+      ],
+      "data_mappings": {
+        "vibrate31->motor97": "features",
+        "motor97->comp_realtime_health34": "status",
+        "comp_realtime_health34->score_alarm5": "health_scores"
+      }
+    },
+    "current_monitoring": {
+      "description": "电流监测插件链",
+      "plugins": [
+        {
+          "name": "current_feature_extractor",
+          "type": "feature",
+          "config_file": "current_feature_config.json"
+        },
+        {
+          "name": "universal_classify1",
+          "type": "decision",
+          "config_file": "universal_classify1_config.json"
+        },
+        {
+          "name": "error18",
+          "type": "evaluation",
+          "config_file": "error18_config.json"
+        },
+        {
+          "name": "status_alarm4",
+          "type": "event",
+          "config_file": "status_alarm4_config.json"
+        }
+      ],
+      "data_mappings": {
+        "current_feature_extractor->universal_classify1": "features",
+        "universal_classify1->error18": "status",
+        "error18->status_alarm4": "health_scores"
+      }
+    }
+  },
+  "device_configs": {
+    "device001": {
+      "description": "测试设备001",
+      "device_type": "motor",
+      "plugin_chain": "vibration_monitoring",
+      "parameters": {
+        "sampling_rate": 1000,
+        "device_id": "device001",
+        "location": "车间A-01"
+      }
+    },
+    "device002": {
+      "description": "测试设备002",
+      "device_type": "generator",
+      "plugin_chain": "current_monitoring",
+      "parameters": {
+        "sampling_rate": 100,
+        "device_id": "device002",
+        "location": "车间B-02"
+      }
+    }
+  },
+  "monitoring_settings": {
+    "enabled": true,
+    "metrics_collection_interval": 60,
+    "performance_thresholds": {
+      "max_execution_time_ms": 1000,
+      "min_success_rate": 0.95,
+      "max_error_count": 10
+    },
+    "alert_settings": {
+      "enabled": true,
+      "email_notifications": true,
+      "email_recipients": ["admin@company.com"],
+      "alert_cooldown_minutes": 30
+    }
+  },
+  "logging": {
+    "console_logging": true,
+    "file_logging": true,
+    "log_file_path": "@CMAKE_INSTALL_PREFIX@/logs/plugin_framework.log",
+    "log_format": "[%Y-%m-%d %H:%M:%S] [%l] [%n] %v",
+    "log_levels": {
+      "console": "INFO",
+      "file": "DEBUG"
+    }
+  }
+}

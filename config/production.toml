@@ -1,0 +1,141 @@
+# Rust Edge Compute - Production Configuration
+
+[server]
+host = "0.0.0.0"
+port = 3000
+task_queue_size = 10000
+request_timeout_seconds = 300
+max_concurrent_connections = 1000
+
+[security]
+enable_authentication = true
+enable_authorization = true
+enable_rate_limiting = true
+enable_input_validation = true
+enable_security_headers = true
+enable_cors = true
+
+# JWT配置（生产环境请使用强密钥）
+jwt_secret = "CHANGE_THIS_IN_PRODUCTION_ENVIRONMENT"
+jwt_expiration_seconds = 3600
+jwt_refresh_expiration_seconds = 604800
+
+# 密码策略
+password_min_length = 12
+password_require_uppercase = true
+password_require_lowercase = true
+password_require_digits = true
+password_require_special = true
+
+# 速率限制
+requests_per_minute = 100
+burst_size = 20
+
+# CORS配置
+allowed_origins = ["https://your-domain.com"]
+allowed_headers = ["Content-Type", "Authorization", "X-Requested-With"]
+allowed_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+
+[database]
+# Sled数据库配置
+path = "./data/db"
+cache_size_mb = 512
+compression_enabled = true
+
+# 可选：PostgreSQL配置
+# postgresql_url = "postgresql://user:password@localhost/rust_edge_compute"
+# connection_pool_size = 20
+
+[redis]
+enabled = true
+url = "redis://localhost:6379"
+connection_pool_size = 10
+key_prefix = "rust_edge_compute:"
+
+[logging]
+level = "info"
+console_output = true
+json_format = true
+include_location = true
+
+[file_output]
+enabled = true
+path = "./logs/app.log"
+rotation = "daily"
+max_size_mb = 100
+max_files = 30
+
+[audit]
+enabled = true
+log_file_path = "./logs/audit.log"
+log_success_events = true
+log_failure_events = true
+log_warning_events = true
+
+[performance]
+enable_monitoring = true
+sampling_interval_ms = 5000
+enable_memory_monitoring = true
+enable_cpu_monitoring = true
+
+[thresholds]
+request_response_time_ms = 1000
+cpu_usage_threshold = 80.0
+memory_usage_threshold = 85.0
+concurrent_connections_threshold = 1000
+queue_length_threshold = 500
+
+[updates]
+auto_check_updates = true
+check_interval_seconds = 3600
+update_server_url = "https://updates.your-domain.com"
+download_dir = "./updates"
+backup_old_version = true
+max_retry_attempts = 3
+update_timeout_seconds = 300
+
+[tls]
+enabled = true
+cert_path = "./certs/server.crt"
+key_path = "./certs/server.key"
+ca_cert_path = ""
+enable_hsts = true
+hsts_max_age = 31536000
+enable_client_auth = false
+min_tls_version = "TLS1.2"
+
+[metrics]
+enabled = true
+prometheus_endpoint = "/metrics"
+collect_system_metrics = true
+collect_application_metrics = true
+
+[alerting]
+enabled = true
+email_enabled = false
+slack_enabled = false
+webhook_enabled = false
+
+# 告警阈值
+alert_cpu_threshold = 90.0
+alert_memory_threshold = 90.0
+alert_error_rate_threshold = 10.0
+alert_response_time_threshold_ms = 5000
+
+[backup]
+enabled = true
+schedule = "0 2 * * *"  # 每天凌晨2点
+retention_days = 30
+s3_bucket = ""
+s3_region = "us-east-1"
+
+[maintenance]
+cleanup_expired_data_days = 90
+optimize_database_schedule = "0 3 * * 0"  # 每周日凌晨3点
+
+[external_services]
+# 外部服务集成
+prometheus_url = ""
+grafana_url = ""
+jaeger_url = ""
+elasticsearch_url = ""
