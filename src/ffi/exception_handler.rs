@@ -89,6 +89,16 @@ impl ExceptionHandler {
         Ok(translated)
     }
 
+    /// 获取错误翻译器
+    pub fn get_error_translator(&self) -> &ErrorTranslator {
+        &self.error_translator
+    }
+
+    /// 获取结果处理器
+    pub fn get_result_processor(&self) -> &ResultProcessor {
+        &self.result_processor
+    }
+
     /// 处理异常并生成结果
     pub async fn handle_exception(&self, exception_id: &str) -> Result<ExceptionResult, String> {
         let mut exceptions = self.exceptions.write().await;

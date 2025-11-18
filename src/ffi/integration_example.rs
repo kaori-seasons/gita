@@ -73,7 +73,7 @@ pub async fn run_complete_ffi_example() -> Result<(), Box<dyn std::error::Error 
              } else { 0.0 });
 
     // 6. 清理资源
-    memory_manager.force_gc().await?;
+    memory_manager.garbage_collect().await?;
     exception_handler.cleanup_handled_exceptions().await;
 
     println!("🧹 资源清理完成");
@@ -128,7 +128,8 @@ async fn execute_complex_computation(
 
     // 步骤4: 执行C++算法（模拟）
     println!("4️⃣ 执行C++算法");
-    let cpp_result = match crate::ffi::execute_cpp_algorithm("complex_math", input_data) {
+    let cpp_result_future = crate::ffi::execute_cpp_algorithm("complex_math", input_data);
+    let cpp_result = match cpp_result_future.await {
         Ok(result) => {
             println!("   ✅ C++算法执行成功");
             result
@@ -137,7 +138,7 @@ async fn execute_complex_computation(
             println!("   ❌ C++算法执行失败: {}", e);
 
             // 异常处理
-            let translated_error = exception_handler.catch_cpp_exception(&e).await?;
+            let translated_error = exception_handler.catch_cpp_exception(&e.to_string()).await?;
             let exception_id = format!("complex_computation_{}", chrono::Utc::now().timestamp_millis());
             let exception_result = exception_handler.handle_exception(&exception_id).await?;
 
@@ -152,7 +153,7 @@ async fn execute_complex_computation(
                     "exception_handled": true
                 })
             } else {
-                return Err(exception_result.error_message);
+                return Err(exception_result.error_message.into());
             }
         }
     };
@@ -249,8 +250,8 @@ pub async fn run_exception_handling_demo() -> Result<(), Box<dyn std::error::Err
     println!("🚨 异常处理专项演示");
 
     let exception_handler = crate::ffi::ExceptionHandler::new();
-    let error_translator = exception_handler.error_translator.clone();
-    let result_processor = exception_handler.result_processor.clone();
+    let error_translator = exception_handler.get_error_translator();
+    let result_processor = exception_handler.get_result_processor();
 
     println!("1️⃣ 异常捕获和翻译测试");
     let test_exceptions = vec![
@@ -325,7 +326,7 @@ pub async fn run_type_conversion_demo() -> Result<(), Box<dyn std::error::Error 
 
     println!("3️⃣ 结果转换测试");
     let rust_result = type_converter.convert_result_back(&conversion_result.data).await?;
-    println!("   转换回的数据: {}", rust_result);
+    println!("   转换回的数据: {:?}", rust_result);
 
     // 显示统计信息
     let stats = type_converter.get_conversion_stats().await;

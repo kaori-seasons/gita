@@ -1,0 +1,51 @@
+[package]
+name = "rust-edge-compute-ml"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rust Edge Compute Framework - Candle ML Executor"
+
+[lib]
+name = "rust_edge_compute_ml"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# 核心库
+rust-edge-compute-core = { path = "../rust-edge-compute-core" }
+
+# Candle核心库（使用本地路径，暂时注释，后续需要正确配置）
+# candle-core = { path = "../candle/candle/candle-core", version = "0.9.2-alpha.1" }
+# candle-nn = { path = "../candle/candle/candle-nn", version = "0.9.2-alpha.1" }
+# candle-transformers = { path = "../candle/candle/candle-transformers", version = "0.9.2-alpha.1" }
+
+# 异步运行时
+tokio = { workspace = true }
+
+# 序列化
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 错误处理
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# 日志
+tracing = { workspace = true }
+
+# 工具库
+uuid = { workspace = true }
+
+[features]
+default = []
+# CUDA支持（暂时注释，等待Candle依赖配置完成）
+# cuda = ["candle-core/cuda", "candle-nn/cuda"]
+# cuDNN支持
+# cudnn = ["cuda", "candle-core/cudnn"]
+# MKL优化
+# mkl = ["candle-core/mkl"]
+# Accelerate优化
+# accelerate = ["candle-core/accelerate"]
+# Metal支持
+# metal = ["candle-core/metal"]
+

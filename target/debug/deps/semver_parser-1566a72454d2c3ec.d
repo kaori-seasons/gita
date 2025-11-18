@@ -1,0 +1,11 @@
+F:\gitrepo\gita\target\debug\deps\semver_parser-1566a72454d2c3ec.d: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\version.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\range.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\common.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\recognize.rs
+
+F:\gitrepo\gita\target\debug\deps\libsemver_parser-1566a72454d2c3ec.rlib: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\version.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\range.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\common.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\recognize.rs
+
+F:\gitrepo\gita\target\debug\deps\libsemver_parser-1566a72454d2c3ec.rmeta: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\version.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\range.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\common.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\recognize.rs
+
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\lib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\version.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\range.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\common.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\semver-parser-0.7.0\src\recognize.rs:

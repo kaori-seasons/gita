@@ -1,0 +1,42 @@
+[package]
+name = "rust-edge-compute-cpp"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rust Edge Compute Framework - C++ Executor"
+
+[lib]
+name = "rust_edge_compute_cpp"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# 核心库
+rust-edge-compute-core = { path = "../rust-edge-compute-core" }
+
+# C++互操作
+cxx = { workspace = true }
+
+# 异步运行时
+tokio = { workspace = true }
+
+# 序列化
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 错误处理
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# 日志
+tracing = { workspace = true }
+
+[build-dependencies]
+cxx-build = "1.0"
+which = "4.4"
+
+[features]
+default = []
+# FFTW支持
+fftw = []
+

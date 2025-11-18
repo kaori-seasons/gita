@@ -56,8 +56,8 @@ mod ffi {
     }
 
     // C++函数声明
-    extern "C++" {
-        include!("rust-edge-compute/src/ffi/cpp/bridge.h");
+    unsafe extern "C++" {
+        include!("src/ffi/cpp/bridge.h");
 
         // 类型映射
         type AlgorithmInput;
@@ -96,39 +96,39 @@ mod ffi {
 // 生产级API命名空间
 #[cxx::bridge]
 mod production_api {
-    extern "C++" {
-        include!("rust-edge-compute/src/ffi/cpp/bridge.h");
+    // 插件状态结构
+    #[derive(Debug)]
+    struct PluginStatus {
+        plugin_name: String,
+        loaded: bool,
+        initialized: bool,
+        version: String,
+        last_error: String,
+        execution_count: u64,
+        avg_execution_time_ms: f64,
+    }
 
-        // 插件状态结构
-        #[derive(Debug)]
-        struct PluginStatus {
-            plugin_name: String,
-            loaded: bool,
-            initialized: bool,
-            version: String,
-            last_error: String,
-            execution_count: u64,
-            avg_execution_time_ms: f64,
-        }
+    // 系统状态结构
+    #[derive(Debug)]
+    struct SystemStatus {
+        total_memory_bytes: u64,
+        used_memory_bytes: u64,
+        active_plugins: u32,
+        total_plugins: u32,
+        system_health: String,
+    }
 
-        // 系统状态结构
-        #[derive(Debug)]
-        struct SystemStatus {
-            total_memory_bytes: u64,
-            used_memory_bytes: u64,
-            active_plugins: u32,
-            total_plugins: u32,
-            system_health: String,
-        }
+    // 性能指标结构
+    #[derive(Debug)]
+    struct PerformanceMetrics {
+        cpu_usage_percent: f64,
+        memory_usage_bytes: u64,
+        active_threads: u32,
+        uptime_seconds: u64,
+    }
 
-        // 性能指标结构
-        #[derive(Debug)]
-        struct PerformanceMetrics {
-            cpu_usage_percent: f64,
-            memory_usage_bytes: u64,
-            active_threads: u32,
-            uptime_seconds: u64,
-        }
+    unsafe extern "C++" {
+        include!("src/ffi/cpp/bridge.h");
 
         // 生产级API函数
         fn get_plugin_status() -> Vec<PluginStatus>;

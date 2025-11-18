@@ -1,0 +1,61 @@
+[package]
+name = "rust-edge-compute"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rust Edge Compute Framework - Main Application"
+
+[[bin]]
+name = "rust-edge-compute"
+path = "src/main.rs"
+
+[dependencies]
+# 核心库
+rust-edge-compute-core = { path = "../rust-edge-compute-core" }
+
+# Executor（可选）
+rust-edge-compute-cpp = { path = "../rust-edge-compute-cpp", optional = true }
+rust-edge-compute-ml = { path = "../rust-edge-compute-ml", optional = true }
+rust-edge-compute-python = { path = "../rust-edge-compute-python", optional = true }
+
+# Web框架
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+
+# 异步运行时
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+
+# 序列化
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 错误处理
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# 日志
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tracing-appender = { workspace = true }
+
+# 配置管理
+config = { workspace = true }
+dotenvy = { workspace = true }
+
+# 工具库
+uuid = { workspace = true }
+futures = { workspace = true }
+chrono = { workspace = true }
+
+[features]
+default = []
+# 启用不同executor
+cpp = ["dep:rust-edge-compute-cpp"]
+ml = ["dep:rust-edge-compute-ml"]
+python = ["dep:rust-edge-compute-python"]
+# 全部启用
+full = ["cpp", "ml", "python"]
+

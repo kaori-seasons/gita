@@ -1,0 +1,12 @@
+F:\gitrepo\gita\target\debug\deps\digest-a798b1c367c7bba5.d: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\ct_variable.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\rt_variable.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\wrapper.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\xof_reader.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\digest.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\mac.rs
+
+F:\gitrepo\gita\target\debug\deps\libdigest-a798b1c367c7bba5.rmeta: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\ct_variable.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\rt_variable.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\wrapper.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\xof_reader.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\digest.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\mac.rs
+
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\lib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\ct_variable.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\rt_variable.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\wrapper.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\core_api\xof_reader.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\digest.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\digest-0.10.7\src\mac.rs:

@@ -1,0 +1,13 @@
+F:\gitrepo\gita\target\debug\deps\tracing-ed59a9505a666153.d: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\macros.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\dispatcher.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\field.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\instrument.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\level_filters.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\span.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\stdlib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\subscriber.rs
+
+F:\gitrepo\gita\target\debug\deps\libtracing-ed59a9505a666153.rmeta: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\macros.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\dispatcher.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\field.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\instrument.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\level_filters.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\span.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\stdlib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\subscriber.rs
+
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\lib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\macros.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\dispatcher.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\field.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\instrument.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\level_filters.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\span.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\stdlib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\tracing-0.1.41\src\subscriber.rs:

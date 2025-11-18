@@ -10,7 +10,8 @@ use std::sync::Arc;
 use tokio::sync::oneshot;
 
 // 由于在main.rs中直接导入模块，这里使用相对路径
-use super::super::core::{ComputeRequest, ComputeResponse, EdgeComputeError, TaskScheduler, ScheduledTask, TaskPriority, QueueStatus, TaskStatus};
+use super::super::core::{ComputeRequest, ComputeResponse, EdgeComputeError, TaskScheduler, ScheduledTask, TaskPriority, QueueStatus};
+use super::super::core::task::TaskStatus;
 
 // 定义Result类型
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
@@ -239,35 +240,6 @@ pub async fn cancel_task(
                 .into_response()
         }
     }
-}
-
-/// 健康检查处理器（增强版）
-pub async fn health_check(state: axum::extract::State<AppState>) -> impl IntoResponse {
-    let queue_status = state.scheduler.get_queue_status().await;
-    let error_stats = state.error_handler.get_stats().await;
-
-    let health_status = if error_stats.error_rate > 0.1 {
-        "degraded"
-    } else {
-        "healthy"
-    };
-
-    Json(json!({
-        "status": health_status,
-        "service": "rust-edge-compute",
-        "version": env!("CARGO_PKG_VERSION"),
-        "scheduler": {
-            "active_tasks": queue_status.active_tasks,
-            "queued_tasks": queue_status.queued_tasks,
-            "max_concurrent": queue_status.max_concurrent
-        },
-        "errors": {
-            "total_count": error_stats.error_counts.values().sum::<u64>(),
-            "error_rate": error_stats.error_rate,
-            "recent_errors": error_stats.recent_errors.len()
-        },
-        "timestamp": chrono::Utc::now().to_rfc3339()
-    }))
 }
 
 /// 获取数据库统计信息

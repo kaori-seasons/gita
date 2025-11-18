@@ -6,10 +6,6 @@
 #include "feature_plugin_base.h"
 #include "vibrate31_plugin.h"
 #include "plugin_manager.h"
-#include "plugin_factories.cpp"
-
-// JSON处理库
-#include <nlohmann/json.hpp>
 
 #include <algorithm>
 #include <iostream>

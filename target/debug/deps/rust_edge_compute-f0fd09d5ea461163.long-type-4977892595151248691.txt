@@ -1,0 +1,1 @@
+impl futures::Future<Output = tokio::sync::MutexGuard<'_, std::option::Option<tokio::task::JoinHandle<()>>>>

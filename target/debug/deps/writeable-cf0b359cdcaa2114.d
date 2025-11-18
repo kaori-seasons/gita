@@ -1,0 +1,12 @@
+F:\gitrepo\gita\target\debug\deps\writeable-cf0b359cdcaa2114.d: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\cmp.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\impls.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\ops.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\parts_write_adapter.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\try_writeable.rs
+
+F:\gitrepo\gita\target\debug\deps\libwriteable-cf0b359cdcaa2114.rlib: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\cmp.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\impls.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\ops.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\parts_write_adapter.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\try_writeable.rs
+
+F:\gitrepo\gita\target\debug\deps\libwriteable-cf0b359cdcaa2114.rmeta: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\cmp.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\impls.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\ops.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\parts_write_adapter.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\try_writeable.rs
+
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\lib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\cmp.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\impls.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\ops.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\parts_write_adapter.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\writeable-0.6.2\src\try_writeable.rs:

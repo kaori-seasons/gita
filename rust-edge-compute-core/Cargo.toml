@@ -1,0 +1,65 @@
+[package]
+name = "rust-edge-compute-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Rust Edge Compute Framework - Core Library"
+
+[dependencies]
+# 异步运行时
+tokio = { workspace = true }
+tokio-util = { workspace = true }
+
+# 序列化
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# 错误处理
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# 工具库
+uuid = { workspace = true }
+futures = { workspace = true }
+chrono = { workspace = true }
+fastrand = { workspace = true }
+lazy_static = { workspace = true }
+
+# 数据库
+sled = { workspace = true }
+bincode = { workspace = true }
+
+# 异步特质
+async-trait = { workspace = true }
+
+# 日志
+tracing = { workspace = true }
+
+# 配置管理
+config = { workspace = true }
+dotenvy = { workspace = true }
+
+# 容器管理
+oci-spec = { workspace = true }
+tokio-process = { workspace = true }
+
+# 加密和安全
+ring = { workspace = true }
+base64 = { workspace = true }
+rustls = { workspace = true }
+rustls-pemfile = { workspace = true }
+tokio-rustls = { workspace = true }
+aes-gcm = { workspace = true }
+argon2 = { workspace = true }
+rand = { workspace = true }
+hex = { workspace = true }
+
+# 审计和监控
+opentelemetry = { workspace = true }
+opentelemetry-jaeger = { workspace = true }
+tracing-opentelemetry = { workspace = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+

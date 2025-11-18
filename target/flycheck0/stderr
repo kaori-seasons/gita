@@ -1,0 +1,14 @@
+warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.build-dependencies
+warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.dev-dependencies
+warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.profile
+    Updating crates.io index
+error: failed to select a version for `wasmtime`.
+    ... required by package `rust-edge-compute-python v0.1.0 (E:\software\gita\rust-edge-compute-python)`
+    ... which satisfies path dependency `rust-edge-compute-python` of package `rust-edge-compute v0.1.0 (E:\software\gita\rust-edge-compute)`
+versions that meet the requirements `^15.0` are: 15.0.1, 15.0.0
+
+package `rust-edge-compute-python` depends on `wasmtime` with feature `wasi` but `wasmtime` does not have that feature.
+ package `wasmtime` does have feature `wat`
+
+
+failed to select a version for `wasmtime` which could resolve this conflict

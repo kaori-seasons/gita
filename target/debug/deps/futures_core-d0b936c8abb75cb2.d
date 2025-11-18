@@ -1,0 +1,11 @@
+F:\gitrepo\gita\target\debug\deps\futures_core-d0b936c8abb75cb2.d: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\future.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\stream.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\mod.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\poll.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\mod.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\atomic_waker.rs
+
+F:\gitrepo\gita\target\debug\deps\libfutures_core-d0b936c8abb75cb2.rmeta: C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\lib.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\future.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\stream.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\mod.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\poll.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\mod.rs C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\atomic_waker.rs
+
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\lib.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\future.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\stream.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\mod.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\poll.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\mod.rs:
+C:\Users\yao\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\futures-core-0.3.31\src\task\__internal\atomic_waker.rs:

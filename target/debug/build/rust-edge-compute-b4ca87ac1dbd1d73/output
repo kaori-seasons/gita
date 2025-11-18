@@ -1,0 +1,4 @@
+cargo:warning=Skipping CXX bridge compilation for now
+cargo:rerun-if-changed=src/ffi/bridge.rs
+cargo:rustc-cfg=use_cxx
+cargo:rustc-cfg=cxx17
