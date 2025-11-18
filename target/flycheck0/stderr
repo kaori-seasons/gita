@@ -1,14 +1,4388 @@
-warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.build-dependencies
-warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.dev-dependencies
-warning: E:\software\gita\Cargo.toml: unused manifest key: workspace.profile
-    Updating crates.io index
-error: failed to select a version for `wasmtime`.
-    ... required by package `rust-edge-compute-python v0.1.0 (E:\software\gita\rust-edge-compute-python)`
-    ... which satisfies path dependency `rust-edge-compute-python` of package `rust-edge-compute v0.1.0 (E:\software\gita\rust-edge-compute)`
-versions that meet the requirements `^15.0` are: 15.0.1, 15.0.0
+   1.811217100s  INFO prepare_target{force=false package_id=rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute) target="rust-edge-compute"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute)/Check { test: false }/TargetInner { name: "rust-edge-compute", doc: true, ..: with_path("F:\\gitrepo\\gita\\rust-edge-compute\\src\\main.rs", Edition2021) }
+   1.811298400s  INFO prepare_target{force=false package_id=rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute) target="rust-edge-compute"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-e6e215a869f3755b\bin-rust-edge-compute`
 
-package `rust-edge-compute-python` depends on `wasmtime` with feature `wasi` but `wasmtime` does not have that feature.
- package `wasmtime` does have feature `wat`
+Caused by:
+    系统找不到指定的文件。 (os error 2)
 
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   1.870069500s  INFO prepare_target{force=false package_id=axum v0.7.9 target="axum"}: cargo::core::compiler::fingerprint: fingerprint error for axum v0.7.9/Check { test: false }/TargetInner { ..: lib_target("axum", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\axum-0.7.9\\src\\lib.rs", Edition2021) }
+   1.870118000s  INFO prepare_target{force=false package_id=axum v0.7.9 target="axum"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\axum-440e429264e51e79\lib-axum`
 
-failed to select a version for `wasmtime` which could resolve this conflict
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   1.886023300s  INFO prepare_target{force=false package_id=axum-core v0.4.5 target="axum_core"}: cargo::core::compiler::fingerprint: fingerprint error for axum-core v0.4.5/Check { test: false }/TargetInner { ..: lib_target("axum_core", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\axum-core-0.4.5\\src\\lib.rs", Edition2021) }
+   1.886070500s  INFO prepare_target{force=false package_id=axum-core v0.4.5 target="axum_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\axum-core-9287e379fadd183f\lib-axum_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.902647000s  INFO prepare_target{force=false package_id=tracing v0.1.41 target="tracing"}: cargo::core::compiler::fingerprint: fingerprint error for tracing v0.1.41/Check { test: false }/TargetInner { ..: lib_target("tracing", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-0.1.41\\src\\lib.rs", Edition2018) }
+   1.902695800s  INFO prepare_target{force=false package_id=tracing v0.1.41 target="tracing"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-ef246239222eea17\lib-tracing`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.904456500s  INFO prepare_target{force=false package_id=tracing-core v0.1.34 target="tracing_core"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-core v0.1.34/Check { test: false }/TargetInner { ..: lib_target("tracing_core", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-core-0.1.34\\src\\lib.rs", Edition2018) }
+   1.904501400s  INFO prepare_target{force=false package_id=tracing-core v0.1.34 target="tracing_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-core-5fe202c38fff4ec6\lib-tracing_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.908662400s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.3/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\once_cell-1.21.3\\src\\lib.rs", Edition2021) }
+   1.908708800s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\once_cell-4e43ebcce6251f40\lib-once_cell`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.910089300s  INFO prepare_target{force=false package_id=hyper v1.8.1 target="hyper"}: cargo::core::compiler::fingerprint: fingerprint error for hyper v1.8.1/Check { test: false }/TargetInner { ..: lib_target("hyper", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\hyper-1.8.1\\src\\lib.rs", Edition2021) }
+   1.910247100s  INFO prepare_target{force=false package_id=hyper v1.8.1 target="hyper"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\hyper-c95f94877b7b74d8\lib-hyper`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.916026700s  INFO prepare_target{force=false package_id=tokio v1.48.0 target="tokio"}: cargo::core::compiler::fingerprint: fingerprint error for tokio v1.48.0/Check { test: false }/TargetInner { ..: lib_target("tokio", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tokio-1.48.0\\src\\lib.rs", Edition2021) }
+   1.916070700s  INFO prepare_target{force=false package_id=tokio v1.48.0 target="tokio"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tokio-e1744e4c2ef9aaa5\lib-tokio`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.917262400s  INFO prepare_target{force=false package_id=mio v1.1.0 target="mio"}: cargo::core::compiler::fingerprint: fingerprint error for mio v1.1.0/Check { test: false }/TargetInner { ..: lib_target("mio", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\mio-1.1.0\\src\\lib.rs", Edition2021) }
+   1.917296400s  INFO prepare_target{force=false package_id=mio v1.1.0 target="mio"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\mio-69dcc90a1d203642\lib-mio`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.918477100s  INFO prepare_target{force=false package_id=windows-sys v0.61.2 target="windows_sys"}: cargo::core::compiler::fingerprint: fingerprint error for windows-sys v0.61.2/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("windows_sys", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\windows-sys-0.61.2\\src\\lib.rs", Edition2021) }
+   1.918539400s  INFO prepare_target{force=false package_id=windows-sys v0.61.2 target="windows_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\windows-sys-31ac06c03fd6de2d\lib-windows_sys`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.929170500s  INFO prepare_target{force=false package_id=hyper-util v0.1.18 target="hyper_util"}: cargo::core::compiler::fingerprint: fingerprint error for hyper-util v0.1.18/Check { test: false }/TargetInner { ..: lib_target("hyper_util", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\hyper-util-0.1.18\\src\\lib.rs", Edition2021) }
+   1.929214300s  INFO prepare_target{force=false package_id=hyper-util v0.1.18 target="hyper_util"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\hyper-util-6042b76daf09c1bf\lib-hyper_util`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.944733100s  INFO prepare_target{force=false package_id=tower v0.5.2 target="tower"}: cargo::core::compiler::fingerprint: fingerprint error for tower v0.5.2/Check { test: false }/TargetInner { ..: lib_target("tower", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tower-0.5.2\\src\\lib.rs", Edition2018) }
+   1.944776400s  INFO prepare_target{force=false package_id=tower v0.5.2 target="tower"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tower-e558862a555b2b93\lib-tower`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.947430000s  INFO prepare_target{force=false package_id=chrono v0.4.42 target="chrono"}: cargo::core::compiler::fingerprint: fingerprint error for chrono v0.4.42/Check { test: false }/TargetInner { ..: lib_target("chrono", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\chrono-0.4.42\\src\\lib.rs", Edition2021) }
+   1.947523800s  INFO prepare_target{force=false package_id=chrono v0.4.42 target="chrono"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\chrono-f1230a3552a40d25\lib-chrono`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   1.948748300s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint: fingerprint error for num-traits v0.2.19/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_traits", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-traits-0.2.19\\src\\lib.rs", Edition2021) }
+   1.948785500s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="num_traits"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-traits-2fdef32abbee5846\lib-num_traits`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.949836900s  INFO prepare_target{force=false package_id=libm v0.2.15 target="libm"}: cargo::core::compiler::fingerprint: fingerprint error for libm v0.2.15/Check { test: false }/TargetInner { ..: lib_target("libm", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\libm-0.2.15\\src\\lib.rs", Edition2021) }
+   1.949872400s  INFO prepare_target{force=false package_id=libm v0.2.15 target="libm"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\libm-aca6375b96c2eb9c\lib-libm`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.952073000s  INFO prepare_target{force=false package_id=libm v0.2.15 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for libm v0.2.15/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\libm-0.2.15\\build.rs", Edition2021) }
+   1.952104900s  INFO prepare_target{force=false package_id=libm v0.2.15 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\libm-07fa307acc489e33\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.952632100s  INFO prepare_target{force=false package_id=libm v0.2.15 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for libm v0.2.15/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\libm-0.2.15\\build.rs", Edition2021) }
+   1.952659400s  INFO prepare_target{force=false package_id=libm v0.2.15 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\libm-080619bef6e206ce\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.956489700s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for num-traits v0.2.19/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-traits-0.2.19\\build.rs", Edition2021) }
+   1.956591600s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-traits-ed451db06774b516\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.957418700s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for num-traits v0.2.19/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-traits-0.2.19\\build.rs", Edition2021) }
+   1.957454800s  INFO prepare_target{force=false package_id=num-traits v0.2.19 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-traits-7d0eb4ce24da5ca1\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.959080600s  INFO prepare_target{force=false package_id=config v0.14.1 target="config"}: cargo::core::compiler::fingerprint: fingerprint error for config v0.14.1/Check { test: false }/TargetInner { ..: lib_target("config", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\config-0.14.1\\src\\lib.rs", Edition2018) }
+   1.959122000s  INFO prepare_target{force=false package_id=config v0.14.1 target="config"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\config-10036d8fe615530d\lib-config`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   1.967369700s  INFO prepare_target{force=false package_id=rust-ini v0.20.0 target="ini"}: cargo::core::compiler::fingerprint: fingerprint error for rust-ini v0.20.0/Check { test: false }/TargetInner { ..: lib_target("ini", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rust-ini-0.20.0\\src\\lib.rs", Edition2018) }
+   1.967413600s  INFO prepare_target{force=false package_id=rust-ini v0.20.0 target="ini"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-ini-e4b2e04e16c76408\lib-ini`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.968499300s  INFO prepare_target{force=false package_id=ordered-multimap v0.7.3 target="ordered_multimap"}: cargo::core::compiler::fingerprint: fingerprint error for ordered-multimap v0.7.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("ordered_multimap", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ordered-multimap-0.7.3\\src\\lib.rs", Edition2021) }
+   1.968534100s  INFO prepare_target{force=false package_id=ordered-multimap v0.7.3 target="ordered_multimap"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ordered-multimap-4d2366ca8c6925b2\lib-ordered_multimap`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.969544200s  INFO prepare_target{force=false package_id=dlv-list v0.5.2 target="dlv_list"}: cargo::core::compiler::fingerprint: fingerprint error for dlv-list v0.5.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("dlv_list", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\dlv-list-0.5.2\\src\\lib.rs", Edition2021) }
+   1.969574600s  INFO prepare_target{force=false package_id=dlv-list v0.5.2 target="dlv_list"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\dlv-list-61468c12d65af4fe\lib-dlv_list`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.970511500s  INFO prepare_target{force=false package_id=const-random v0.1.18 target="const_random"}: cargo::core::compiler::fingerprint: fingerprint error for const-random v0.1.18/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("const_random", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\const-random-0.1.18\\src\\lib.rs", Edition2018) }
+   1.970542700s  INFO prepare_target{force=false package_id=const-random v0.1.18 target="const_random"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\const-random-8fa66ca8a39e1015\lib-const_random`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.972320100s  INFO prepare_target{force=false package_id=const-random-macro v0.1.16 target="const_random_macro"}: cargo::core::compiler::fingerprint: fingerprint error for const-random-macro v0.1.16/Build/TargetInner { name_inferred: true, for_host: true, proc_macro: true, ..: lib_target("const_random_macro", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\const-random-macro-0.1.16\\src\\lib.rs", Edition2018) }
+   1.972389200s  INFO prepare_target{force=false package_id=const-random-macro v0.1.16 target="const_random_macro"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\const-random-macro-74b3cc40be655796\lib-const_random_macro`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.974760000s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.3/Build/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\once_cell-1.21.3\\src\\lib.rs", Edition2021) }
+   1.974802600s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\once_cell-cb2bec540ac0b2ba\lib-once_cell`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   1.983446200s  INFO prepare_target{force=false package_id=hashbrown v0.14.5 target="hashbrown"}: cargo::core::compiler::fingerprint: fingerprint error for hashbrown v0.14.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hashbrown", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\hashbrown-0.14.5\\src\\lib.rs", Edition2021) }
+   1.983494300s  INFO prepare_target{force=false package_id=hashbrown v0.14.5 target="hashbrown"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\hashbrown-9b16362fde787bac\lib-hashbrown`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.984647100s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint: fingerprint error for ahash v0.8.12/Check { test: false }/TargetInner { ..: lib_target("ahash", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ahash-0.8.12\\src\\lib.rs", Edition2018) }
+   1.984688000s  INFO prepare_target{force=false package_id=ahash v0.8.12 target="ahash"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ahash-e5b65c56775ab7aa\lib-ahash`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.990168600s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="zerocopy"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy v0.8.27/Check { test: false }/TargetInner { ..: lib_target("zerocopy", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zerocopy-0.8.27\\src\\lib.rs", Edition2021) }
+   1.990269400s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="zerocopy"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zerocopy-0898734704f6572c\lib-zerocopy`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.993935400s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy v0.8.27/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zerocopy-0.8.27\\build.rs", Edition2021) }
+   1.994034800s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zerocopy-00d9c69b795d16c6\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.997317600s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy v0.8.27/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zerocopy-0.8.27\\build.rs", Edition2021) }
+   1.997754400s  INFO prepare_target{force=false package_id=zerocopy v0.8.27 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zerocopy-28582be742072335\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.999442500s  INFO prepare_target{force=false package_id=zerocopy-derive v0.8.27 target="zerocopy_derive"}: cargo::core::compiler::fingerprint: fingerprint error for zerocopy-derive v0.8.27/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("zerocopy_derive", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zerocopy-derive-0.8.27\\src\\lib.rs", Edition2021) }
+   1.999484200s  INFO prepare_target{force=false package_id=zerocopy-derive v0.8.27 target="zerocopy_derive"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zerocopy-derive-399a99c4801eac42\lib-zerocopy_derive`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.004073900s  INFO prepare_target{force=false package_id=yaml-rust2 v0.8.1 target="yaml_rust2"}: cargo::core::compiler::fingerprint: fingerprint error for yaml-rust2 v0.8.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("yaml_rust2", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\yaml-rust2-0.8.1\\src\\lib.rs", Edition2021) }
+   2.004115200s  INFO prepare_target{force=false package_id=yaml-rust2 v0.8.1 target="yaml_rust2"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\yaml-rust2-819273891f0c60a1\lib-yaml_rust2`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.007048400s  INFO prepare_target{force=false package_id=hashlink v0.8.4 target="hashlink"}: cargo::core::compiler::fingerprint: fingerprint error for hashlink v0.8.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hashlink", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\hashlink-0.8.4\\src\\lib.rs", Edition2018) }
+   2.007094500s  INFO prepare_target{force=false package_id=hashlink v0.8.4 target="hashlink"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\hashlink-ae6af0a9b095d72a\lib-hashlink`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.010099400s  INFO prepare_target{force=false package_id=rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core) target="rust_edge_compute_core"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rust_edge_compute_core", ["lib"], "F:\\gitrepo\\gita\\rust-edge-compute-core\\src\\lib.rs", Edition2021) }
+   2.010144600s  INFO prepare_target{force=false package_id=rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core) target="rust_edge_compute_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-core-fa910464c735f7ab\lib-rust_edge_compute_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.034932800s  INFO prepare_target{force=false package_id=oci-spec v0.6.7 target="oci_spec"}: cargo::core::compiler::fingerprint: fingerprint error for oci-spec v0.6.7/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("oci_spec", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\oci-spec-0.6.7\\src\\lib.rs", Edition2021) }
+   2.034976400s  INFO prepare_target{force=false package_id=oci-spec v0.6.7 target="oci_spec"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\oci-spec-3bd79e0cadb98f3c\lib-oci_spec`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.052279100s  INFO prepare_target{force=false package_id=opentelemetry v0.20.0 target="opentelemetry"}: cargo::core::compiler::fingerprint: fingerprint error for opentelemetry v0.20.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("opentelemetry", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\opentelemetry-0.20.0\\src\\lib.rs", Edition2021) }
+   2.052325500s  INFO prepare_target{force=false package_id=opentelemetry v0.20.0 target="opentelemetry"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\opentelemetry-af889204989afe10\lib-opentelemetry`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.053618700s  INFO prepare_target{force=false package_id=opentelemetry_api v0.20.0 target="opentelemetry_api"}: cargo::core::compiler::fingerprint: fingerprint error for opentelemetry_api v0.20.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("opentelemetry_api", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\opentelemetry_api-0.20.0\\src\\lib.rs", Edition2021) }
+   2.053656500s  INFO prepare_target{force=false package_id=opentelemetry_api v0.20.0 target="opentelemetry_api"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\opentelemetry_api-5a2457f4819f1a68\lib-opentelemetry_api`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.064671000s  INFO prepare_target{force=false package_id=opentelemetry_sdk v0.20.0 target="opentelemetry_sdk"}: cargo::core::compiler::fingerprint: fingerprint error for opentelemetry_sdk v0.20.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("opentelemetry_sdk", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\opentelemetry_sdk-0.20.0\\src\\lib.rs", Edition2021) }
+   2.064719000s  INFO prepare_target{force=false package_id=opentelemetry_sdk v0.20.0 target="opentelemetry_sdk"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\opentelemetry_sdk-cbeae432741a1d0d\lib-opentelemetry_sdk`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.068856000s  INFO prepare_target{force=false package_id=ordered-float v3.9.2 target="ordered_float"}: cargo::core::compiler::fingerprint: fingerprint error for ordered-float v3.9.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("ordered_float", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ordered-float-3.9.2\\src\\lib.rs", Edition2021) }
+   2.068936000s  INFO prepare_target{force=false package_id=ordered-float v3.9.2 target="ordered_float"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ordered-float-fd6a75fa536aac6f\lib-ordered_float`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.070126600s  INFO prepare_target{force=false package_id=rand v0.8.5 target="rand"}: cargo::core::compiler::fingerprint: fingerprint error for rand v0.8.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rand", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand-0.8.5\\src\\lib.rs", Edition2018) }
+   2.070169200s  INFO prepare_target{force=false package_id=rand v0.8.5 target="rand"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand-34bbc66d606d12dd\lib-rand`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.073981300s  INFO prepare_target{force=false package_id=rand_chacha v0.3.1 target="rand_chacha"}: cargo::core::compiler::fingerprint: fingerprint error for rand_chacha v0.3.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("rand_chacha", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand_chacha-0.3.1\\src\\lib.rs", Edition2018) }
+   2.074096900s  INFO prepare_target{force=false package_id=rand_chacha v0.3.1 target="rand_chacha"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand_chacha-b81dbe348af4d005\lib-rand_chacha`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.075411700s  INFO prepare_target{force=false package_id=ppv-lite86 v0.2.21 target="ppv_lite86"}: cargo::core::compiler::fingerprint: fingerprint error for ppv-lite86 v0.2.21/Check { test: false }/TargetInner { ..: lib_target("ppv_lite86", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ppv-lite86-0.2.21\\src\\lib.rs", Edition2021) }
+   2.075456000s  INFO prepare_target{force=false package_id=ppv-lite86 v0.2.21 target="ppv_lite86"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ppv-lite86-606499a9064a19b3\lib-ppv_lite86`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.076869400s  INFO prepare_target{force=false package_id=regex v1.10.6 target="regex"}: cargo::core::compiler::fingerprint: fingerprint error for regex v1.10.6/Check { test: false }/TargetInner { ..: lib_target("regex", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\regex-1.10.6\\src\\lib.rs", Edition2021) }
+   2.076949200s  INFO prepare_target{force=false package_id=regex v1.10.6 target="regex"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\regex-8be5bb79214a6788\lib-regex`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.083996300s  INFO prepare_target{force=false package_id=regex-automata v0.4.13 target="regex_automata"}: cargo::core::compiler::fingerprint: fingerprint error for regex-automata v0.4.13/Check { test: false }/TargetInner { benched: false, ..: lib_target("regex_automata", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\regex-automata-0.4.13\\src\\lib.rs", Edition2021) }
+   2.084041200s  INFO prepare_target{force=false package_id=regex-automata v0.4.13 target="regex_automata"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\regex-automata-ead75918fb04a3ea\lib-regex_automata`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.085674900s  INFO prepare_target{force=false package_id=opentelemetry-jaeger v0.19.0 target="opentelemetry_jaeger"}: cargo::core::compiler::fingerprint: fingerprint error for opentelemetry-jaeger v0.19.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("opentelemetry_jaeger", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\opentelemetry-jaeger-0.19.0\\src\\lib.rs", Edition2021) }
+   2.085713000s  INFO prepare_target{force=false package_id=opentelemetry-jaeger v0.19.0 target="opentelemetry_jaeger"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\opentelemetry-jaeger-0e19c2c11a43c259\lib-opentelemetry_jaeger`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.087785300s  INFO prepare_target{force=false package_id=opentelemetry-semantic-conventions v0.12.0 target="opentelemetry_semantic_conventions"}: cargo::core::compiler::fingerprint: fingerprint error for opentelemetry-semantic-conventions v0.12.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("opentelemetry_semantic_conventions", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\opentelemetry-semantic-conventions-0.12.0\\src\\lib.rs", Edition2021) }
+   2.088468100s  INFO prepare_target{force=false package_id=opentelemetry-semantic-conventions v0.12.0 target="opentelemetry_semantic_conventions"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\opentelemetry-semantic-conventions-c7823f9b02159d34\lib-opentelemetry_semantic_conventions`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.091332400s  INFO prepare_target{force=false package_id=thrift v0.17.0 target="thrift"}: cargo::core::compiler::fingerprint: fingerprint error for thrift v0.17.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("thrift", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\thrift-0.17.0\\src\\lib.rs", Edition2018) }
+   2.091510900s  INFO prepare_target{force=false package_id=thrift v0.17.0 target="thrift"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\thrift-25a499aa98fbe5e0\lib-thrift`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.093921900s  INFO prepare_target{force=false package_id=ordered-float v2.10.1 target="ordered_float"}: cargo::core::compiler::fingerprint: fingerprint error for ordered-float v2.10.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("ordered_float", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ordered-float-2.10.1\\src\\lib.rs", Edition2018) }
+   2.093967000s  INFO prepare_target{force=false package_id=ordered-float v2.10.1 target="ordered_float"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ordered-float-b2be52a3b68a3583\lib-ordered_float`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.168208100s  INFO prepare_target{force=false package_id=tokio-rustls v0.24.1 target="tokio_rustls"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-rustls v0.24.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tokio_rustls", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tokio-rustls-0.24.1\\src\\lib.rs", Edition2018) }
+   2.168293300s  INFO prepare_target{force=false package_id=tokio-rustls v0.24.1 target="tokio_rustls"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tokio-rustls-c207317cc2baa687\lib-tokio_rustls`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.169539900s  INFO prepare_target{force=false package_id=tokio-util v0.7.17 target="tokio_util"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-util v0.7.17/Check { test: false }/TargetInner { ..: lib_target("tokio_util", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tokio-util-0.7.17\\src\\lib.rs", Edition2021) }
+   2.169609900s  INFO prepare_target{force=false package_id=tokio-util v0.7.17 target="tokio_util"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tokio-util-1dcfb13370e9041e\lib-tokio_util`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.170866700s  INFO prepare_target{force=false package_id=tracing-opentelemetry v0.21.0 target="tracing_opentelemetry"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-opentelemetry v0.21.0/Check { test: false }/TargetInner { name_inferred: true, benched: false, ..: lib_target("tracing_opentelemetry", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-opentelemetry-0.21.0\\src\\lib.rs", Edition2018) }
+   2.170943700s  INFO prepare_target{force=false package_id=tracing-opentelemetry v0.21.0 target="tracing_opentelemetry"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-opentelemetry-db75a31288d194fe\lib-tracing_opentelemetry`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.176690200s  INFO prepare_target{force=false package_id=tracing-log v0.1.4 target="tracing_log"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-log v0.1.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tracing_log", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-log-0.1.4\\src\\lib.rs", Edition2018) }
+   2.176760000s  INFO prepare_target{force=false package_id=tracing-log v0.1.4 target="tracing_log"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-log-c4232164221f1c11\lib-tracing_log`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.178066500s  INFO prepare_target{force=false package_id=tracing-subscriber v0.3.20 target="tracing_subscriber"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-subscriber v0.3.20/Check { test: false }/TargetInner { ..: lib_target("tracing_subscriber", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-subscriber-0.3.20\\src\\lib.rs", Edition2018) }
+   2.178106800s  INFO prepare_target{force=false package_id=tracing-subscriber v0.3.20 target="tracing_subscriber"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-subscriber-05cb8d9afbe93e9d\lib-tracing_subscriber`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.179389900s  INFO prepare_target{force=false package_id=matchers v0.2.0 target="matchers"}: cargo::core::compiler::fingerprint: fingerprint error for matchers v0.2.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("matchers", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\matchers-0.2.0\\src\\lib.rs", Edition2018) }
+   2.179427600s  INFO prepare_target{force=false package_id=matchers v0.2.0 target="matchers"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\matchers-99e148f1b2e0a592\lib-matchers`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.180927800s  INFO prepare_target{force=false package_id=nu-ansi-term v0.50.3 target="nu_ansi_term"}: cargo::core::compiler::fingerprint: fingerprint error for nu-ansi-term v0.50.3/Check { test: false }/TargetInner { ..: lib_target("nu_ansi_term", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\nu-ansi-term-0.50.3\\src\\lib.rs", Edition2021) }
+   2.181076400s  INFO prepare_target{force=false package_id=nu-ansi-term v0.50.3 target="nu_ansi_term"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\nu-ansi-term-c32cdbb4a2d94f02\lib-nu_ansi_term`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.184059900s  INFO prepare_target{force=false package_id=tracing-log v0.2.0 target="tracing_log"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-log v0.2.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tracing_log", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-log-0.2.0\\src\\lib.rs", Edition2018) }
+   2.184150300s  INFO prepare_target{force=false package_id=tracing-log v0.2.0 target="tracing_log"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-log-1540252c955cd5c0\lib-tracing_log`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.185330300s  INFO prepare_target{force=false package_id=uuid v1.18.1 target="uuid"}: cargo::core::compiler::fingerprint: fingerprint error for uuid v1.18.1/Check { test: false }/TargetInner { ..: lib_target("uuid", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\uuid-1.18.1\\src\\lib.rs", Edition2018) }
+   2.185399000s  INFO prepare_target{force=false package_id=uuid v1.18.1 target="uuid"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\uuid-4077f2abe04bc525\lib-uuid`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.186594400s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="getrandom"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.3.4/Check { test: false }/TargetInner { ..: lib_target("getrandom", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.3.4\\src\\lib.rs", Edition2021) }
+   2.186673000s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="getrandom"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\getrandom-6b358047e3c9c75d\lib-getrandom`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.192152800s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.3.4/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.3.4\\build.rs", Edition2021) }
+   2.192243000s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\getrandom-1b6e0de25c32b6d3\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.193186400s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for getrandom v0.3.4/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\getrandom-0.3.4\\build.rs", Edition2021) }
+   2.193225800s  INFO prepare_target{force=false package_id=getrandom v0.3.4 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\getrandom-0a1eed9e0dde72eb\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.194283700s  INFO prepare_target{force=false package_id=tower v0.4.13 target="tower"}: cargo::core::compiler::fingerprint: fingerprint error for tower v0.4.13/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tower", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tower-0.4.13\\src\\lib.rs", Edition2018) }
+   2.194322300s  INFO prepare_target{force=false package_id=tower v0.4.13 target="tower"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tower-e6bebe332a874e65\lib-tower`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.195427300s  INFO prepare_target{force=false package_id=tower-http v0.5.2 target="tower_http"}: cargo::core::compiler::fingerprint: fingerprint error for tower-http v0.5.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tower_http", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tower-http-0.5.2\\src\\lib.rs", Edition2018) }
+   2.195466400s  INFO prepare_target{force=false package_id=tower-http v0.5.2 target="tower_http"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tower-http-b075e4d8cd76a007\lib-tower_http`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.200820900s  INFO prepare_target{force=false package_id=tracing-appender v0.2.3 target="tracing_appender"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-appender v0.2.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tracing_appender", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tracing-appender-0.2.3\\src\\lib.rs", Edition2018) }
+   2.200865600s  INFO prepare_target{force=false package_id=tracing-appender v0.2.3 target="tracing_appender"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tracing-appender-a79cf97b060c5440\lib-tracing_appender`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.204116000s  INFO prepare_target{force=false package_id=rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute) target="rust-edge-compute"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute)/Check { test: true }/TargetInner { name: "rust-edge-compute", doc: true, ..: with_path("F:\\gitrepo\\gita\\rust-edge-compute\\src\\main.rs", Edition2021) }
+   2.204199700s  INFO prepare_target{force=false package_id=rust-edge-compute v0.1.0 (F:\gitrepo\gita\rust-edge-compute) target="rust-edge-compute"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-92b8f3c8ee4a872c\test-bin-rust-edge-compute`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.215037400s  INFO prepare_target{force=false package_id=rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core) target="rust_edge_compute_core"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("rust_edge_compute_core", ["lib"], "F:\\gitrepo\\gita\\rust-edge-compute-core\\src\\lib.rs", Edition2021) }
+   2.215090200s  INFO prepare_target{force=false package_id=rust-edge-compute-core v0.1.0 (F:\gitrepo\gita\rust-edge-compute-core) target="rust_edge_compute_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-core-b405ac455194e33f\test-lib-rust_edge_compute_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.217342900s  INFO prepare_target{force=false package_id=tokio-test v0.4.4 target="tokio_test"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-test v0.4.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tokio_test", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tokio-test-0.4.4\\src\\lib.rs", Edition2021) }
+   2.217386200s  INFO prepare_target{force=false package_id=tokio-test v0.4.4 target="tokio_test"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tokio-test-e0d4ac969ef89348\lib-tokio_test`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.219190000s  INFO prepare_target{force=false package_id=tokio-stream v0.1.17 target="tokio_stream"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-stream v0.1.17/Check { test: false }/TargetInner { ..: lib_target("tokio_stream", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\tokio-stream-0.1.17\\src\\lib.rs", Edition2021) }
+   2.219229900s  INFO prepare_target{force=false package_id=tokio-stream v0.1.17 target="tokio_stream"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\tokio-stream-3f875a859516cfcd\lib-tokio_stream`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.235053500s  INFO prepare_target{force=false package_id=rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp) target="rust_edge_compute_cpp"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp)/Check { test: false }/TargetInner { ..: lib_target("rust_edge_compute_cpp", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-cpp\\src\\lib.rs", Edition2021) }
+   2.235148800s  INFO prepare_target{force=false package_id=rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp) target="rust_edge_compute_cpp"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-cpp-bdc20d77199c7e41\lib-rust_edge_compute_cpp`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.254343400s  INFO prepare_target{force=false package_id=rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp) target="rust_edge_compute_cpp"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp)/Check { test: true }/TargetInner { ..: lib_target("rust_edge_compute_cpp", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-cpp\\src\\lib.rs", Edition2021) }
+   2.254388800s  INFO prepare_target{force=false package_id=rust-edge-compute-cpp v0.1.0 (F:\gitrepo\gita\rust-edge-compute-cpp) target="rust_edge_compute_cpp"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-cpp-93450d55de4a11b8\test-lib-rust_edge_compute_cpp`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.279689500s  INFO prepare_target{force=false package_id=rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml) target="rust_edge_compute_ml"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml)/Check { test: false }/TargetInner { ..: lib_target("rust_edge_compute_ml", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-ml\\src\\lib.rs", Edition2021) }
+   2.279742300s  INFO prepare_target{force=false package_id=rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml) target="rust_edge_compute_ml"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-ml-f9079fbab3b4c1f8\lib-rust_edge_compute_ml`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.282053800s  INFO prepare_target{force=false package_id=candle-core v0.9.2-alpha.1 target="candle_core"}: cargo::core::compiler::fingerprint: fingerprint error for candle-core v0.9.2-alpha.1/Check { test: false }/TargetInner { ..: lib_target("candle_core", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\candle-core-0.9.2-alpha.1\\src\\lib.rs", Edition2021) }
+   2.282098900s  INFO prepare_target{force=false package_id=candle-core v0.9.2-alpha.1 target="candle_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\candle-core-81bad3c5e81bc516\lib-candle_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.283521100s  INFO prepare_target{force=false package_id=float8 v0.4.2 target="float8"}: cargo::core::compiler::fingerprint: fingerprint error for float8 v0.4.2/Check { test: false }/TargetInner { ..: lib_target("float8", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\float8-0.4.2\\src\\lib.rs", Edition2021) }
+   2.283668300s  INFO prepare_target{force=false package_id=float8 v0.4.2 target="float8"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\float8-61049f08d01607d4\lib-float8`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.285232200s  INFO prepare_target{force=false package_id=half v2.7.1 target="half"}: cargo::core::compiler::fingerprint: fingerprint error for half v2.7.1/Check { test: false }/TargetInner { ..: lib_target("half", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\half-2.7.1\\src\\lib.rs", Edition2021) }
+   2.285273700s  INFO prepare_target{force=false package_id=half v2.7.1 target="half"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\half-3dcc9c1509f93258\lib-half`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.286544400s  INFO prepare_target{force=false package_id=bytemuck v1.24.0 target="bytemuck"}: cargo::core::compiler::fingerprint: fingerprint error for bytemuck v1.24.0/Check { test: false }/TargetInner { ..: lib_target("bytemuck", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\bytemuck-1.24.0\\src\\lib.rs", Edition2018) }
+   2.286582300s  INFO prepare_target{force=false package_id=bytemuck v1.24.0 target="bytemuck"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\bytemuck-e0d1041caad619c2\lib-bytemuck`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.287627100s  INFO prepare_target{force=false package_id=bytemuck_derive v1.10.2 target="bytemuck_derive"}: cargo::core::compiler::fingerprint: fingerprint error for bytemuck_derive v1.10.2/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("bytemuck_derive", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\bytemuck_derive-1.10.2\\src\\lib.rs", Edition2018) }
+   2.287662400s  INFO prepare_target{force=false package_id=bytemuck_derive v1.10.2 target="bytemuck_derive"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\bytemuck_derive-c1c4ff951e279fae\lib-bytemuck_derive`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.291324900s  INFO prepare_target{force=false package_id=rand v0.9.2 target="rand"}: cargo::core::compiler::fingerprint: fingerprint error for rand v0.9.2/Check { test: false }/TargetInner { ..: lib_target("rand", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand-0.9.2\\src\\lib.rs", Edition2021) }
+   2.291387600s  INFO prepare_target{force=false package_id=rand v0.9.2 target="rand"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand-5d4deaf23aa43aee\lib-rand`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.292921600s  INFO prepare_target{force=false package_id=rand_chacha v0.9.0 target="rand_chacha"}: cargo::core::compiler::fingerprint: fingerprint error for rand_chacha v0.9.0/Check { test: false }/TargetInner { ..: lib_target("rand_chacha", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand_chacha-0.9.0\\src\\lib.rs", Edition2021) }
+   2.292969500s  INFO prepare_target{force=false package_id=rand_chacha v0.9.0 target="rand_chacha"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand_chacha-8730283a3fa7d123\lib-rand_chacha`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.294150700s  INFO prepare_target{force=false package_id=rand_core v0.9.3 target="rand_core"}: cargo::core::compiler::fingerprint: fingerprint error for rand_core v0.9.3/Check { test: false }/TargetInner { ..: lib_target("rand_core", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand_core-0.9.3\\src\\lib.rs", Edition2021) }
+   2.294195400s  INFO prepare_target{force=false package_id=rand_core v0.9.3 target="rand_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand_core-c0b24b2a07141e2b\lib-rand_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.295282100s  INFO prepare_target{force=false package_id=rand_distr v0.5.1 target="rand_distr"}: cargo::core::compiler::fingerprint: fingerprint error for rand_distr v0.5.1/Check { test: false }/TargetInner { ..: lib_target("rand_distr", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rand_distr-0.5.1\\src\\lib.rs", Edition2021) }
+   2.295322500s  INFO prepare_target{force=false package_id=rand_distr v0.5.1 target="rand_distr"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rand_distr-bc7148f7f831ee92\lib-rand_distr`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.296404000s  INFO prepare_target{force=false package_id=gemm v0.18.2 target="gemm"}: cargo::core::compiler::fingerprint: fingerprint error for gemm v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-0.18.2\\src\\lib.rs", Edition2021) }
+   2.296440700s  INFO prepare_target{force=false package_id=gemm v0.18.2 target="gemm"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-bd49c033647f52d5\lib-gemm`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.297635200s  INFO prepare_target{force=false package_id=dyn-stack v0.13.2 target="dyn_stack"}: cargo::core::compiler::fingerprint: fingerprint error for dyn-stack v0.13.2/Check { test: false }/TargetInner { ..: lib_target("dyn_stack", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\dyn-stack-0.13.2\\src\\lib.rs", Edition2021) }
+   2.297671000s  INFO prepare_target{force=false package_id=dyn-stack v0.13.2 target="dyn_stack"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\dyn-stack-5fd17c48f297d880\lib-dyn_stack`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.298691700s  INFO prepare_target{force=false package_id=dyn-stack-macros v0.1.3 target="dyn_stack_macros"}: cargo::core::compiler::fingerprint: fingerprint error for dyn-stack-macros v0.1.3/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("dyn_stack_macros", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\dyn-stack-macros-0.1.3\\src\\lib.rs", Edition2021) }
+   2.298727000s  INFO prepare_target{force=false package_id=dyn-stack-macros v0.1.3 target="dyn_stack_macros"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\dyn-stack-macros-b8563d61d072a3ef\lib-dyn_stack_macros`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.299708900s  INFO prepare_target{force=false package_id=gemm-c32 v0.18.2 target="gemm_c32"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-c32 v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_c32", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-c32-0.18.2\\src\\lib.rs", Edition2021) }
+   2.299813200s  INFO prepare_target{force=false package_id=gemm-c32 v0.18.2 target="gemm_c32"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-c32-61f9b3189faf5749\lib-gemm_c32`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.301267600s  INFO prepare_target{force=false package_id=gemm-common v0.18.2 target="gemm_common"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-common v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_common", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-common-0.18.2\\src\\lib.rs", Edition2021) }
+   2.301338000s  INFO prepare_target{force=false package_id=gemm-common v0.18.2 target="gemm_common"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-common-da64a8d89ba40e25\lib-gemm_common`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.302654100s  INFO prepare_target{force=false package_id=num-complex v0.4.6 target="num_complex"}: cargo::core::compiler::fingerprint: fingerprint error for num-complex v0.4.6/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_complex", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-complex-0.4.6\\src\\lib.rs", Edition2021) }
+   2.302692400s  INFO prepare_target{force=false package_id=num-complex v0.4.6 target="num_complex"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-complex-6bab61827be30839\lib-num_complex`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.303795800s  INFO prepare_target{force=false package_id=paste v1.0.15 target="paste"}: cargo::core::compiler::fingerprint: fingerprint error for paste v1.0.15/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("paste", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\paste-1.0.15\\src\\lib.rs", Edition2018) }
+   2.303833000s  INFO prepare_target{force=false package_id=paste v1.0.15 target="paste"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\paste-e20bee204e1c3035\lib-paste`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.321001700s  INFO prepare_target{force=false package_id=paste v1.0.15 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for paste v1.0.15/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\paste-1.0.15\\build.rs", Edition2018) }
+   2.324986800s  INFO prepare_target{force=false package_id=paste v1.0.15 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\paste-056f3c1406e40270\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.325896900s  INFO prepare_target{force=false package_id=paste v1.0.15 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for paste v1.0.15/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\paste-1.0.15\\build.rs", Edition2018) }
+   2.325976700s  INFO prepare_target{force=false package_id=paste v1.0.15 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\paste-aaf181d69b011bc5\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.328242500s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="pulp"}: cargo::core::compiler::fingerprint: fingerprint error for pulp v0.21.5/Check { test: false }/TargetInner { ..: lib_target("pulp", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\pulp-0.21.5\\src\\lib.rs", Edition2021) }
+   2.328331200s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="pulp"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\pulp-bd05544d043d78bd\lib-pulp`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.341334300s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for pulp v0.21.5/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\pulp-0.21.5\\build.rs", Edition2021) }
+   2.341427300s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\pulp-1344d49c9f2c9330\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.342392600s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for pulp v0.21.5/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\pulp-0.21.5\\build.rs", Edition2021) }
+   2.342433400s  INFO prepare_target{force=false package_id=pulp v0.21.5 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\pulp-85af16df34b0d269\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.344153300s  INFO prepare_target{force=false package_id=reborrow v0.5.5 target="reborrow"}: cargo::core::compiler::fingerprint: fingerprint error for reborrow v0.5.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("reborrow", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\reborrow-0.5.5\\src\\lib.rs", Edition2021) }
+   2.344236000s  INFO prepare_target{force=false package_id=reborrow v0.5.5 target="reborrow"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\reborrow-01876b43666d80a3\lib-reborrow`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.345512000s  INFO prepare_target{force=false package_id=raw-cpuid v11.6.0 target="raw_cpuid"}: cargo::core::compiler::fingerprint: fingerprint error for raw-cpuid v11.6.0/Check { test: false }/TargetInner { ..: lib_target("raw_cpuid", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\raw-cpuid-11.6.0\\src\\lib.rs", Edition2018) }
+   2.345608600s  INFO prepare_target{force=false package_id=raw-cpuid v11.6.0 target="raw_cpuid"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\raw-cpuid-a9ebc688c7213186\lib-raw_cpuid`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.347520500s  INFO prepare_target{force=false package_id=rayon v1.11.0 target="rayon"}: cargo::core::compiler::fingerprint: fingerprint error for rayon v1.11.0/Check { test: false }/TargetInner { ..: lib_target("rayon", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rayon-1.11.0\\src\\lib.rs", Edition2021) }
+   2.347568500s  INFO prepare_target{force=false package_id=rayon v1.11.0 target="rayon"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rayon-e9252ef565b3ea54\lib-rayon`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.348716800s  INFO prepare_target{force=false package_id=either v1.15.0 target="either"}: cargo::core::compiler::fingerprint: fingerprint error for either v1.15.0/Check { test: false }/TargetInner { ..: lib_target("either", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\either-1.15.0\\src\\lib.rs", Edition2021) }
+   2.348756800s  INFO prepare_target{force=false package_id=either v1.15.0 target="either"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\either-e57837416719dbaa\lib-either`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.349862100s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="rayon_core"}: cargo::core::compiler::fingerprint: fingerprint error for rayon-core v1.13.0/Check { test: false }/TargetInner { ..: lib_target("rayon_core", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rayon-core-1.13.0\\src\\lib.rs", Edition2021) }
+   2.349903600s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="rayon_core"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rayon-core-0dc89f5f3ac3ec2c\lib-rayon_core`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.352520600s  INFO prepare_target{force=false package_id=crossbeam-deque v0.8.6 target="crossbeam_deque"}: cargo::core::compiler::fingerprint: fingerprint error for crossbeam-deque v0.8.6/Check { test: false }/TargetInner { ..: lib_target("crossbeam_deque", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\crossbeam-deque-0.8.6\\src\\lib.rs", Edition2021) }
+   2.352572700s  INFO prepare_target{force=false package_id=crossbeam-deque v0.8.6 target="crossbeam_deque"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\crossbeam-deque-0e61b8645b40f6d6\lib-crossbeam_deque`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.358865500s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for rayon-core v1.13.0/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rayon-core-1.13.0\\build.rs", Edition2021) }
+   2.358953600s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rayon-core-05dd191fa076fdca\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   2.360097200s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for rayon-core v1.13.0/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\rayon-core-1.13.0\\build.rs", Edition2021) }
+   2.360208900s  INFO prepare_target{force=false package_id=rayon-core v1.13.0 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rayon-core-f2670388c047b2ca\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   2.362477500s  INFO prepare_target{force=false package_id=seq-macro v0.3.6 target="seq_macro"}: cargo::core::compiler::fingerprint: fingerprint error for seq-macro v0.3.6/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("seq_macro", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\seq-macro-0.3.6\\src\\lib.rs", Edition2018) }
+   2.362520800s  INFO prepare_target{force=false package_id=seq-macro v0.3.6 target="seq_macro"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\seq-macro-8086c05aaa38089d\lib-seq_macro`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.363604500s  INFO prepare_target{force=false package_id=gemm-c64 v0.18.2 target="gemm_c64"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-c64 v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_c64", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-c64-0.18.2\\src\\lib.rs", Edition2021) }
+   2.363640900s  INFO prepare_target{force=false package_id=gemm-c64 v0.18.2 target="gemm_c64"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-c64-880d56a4c1285e5c\lib-gemm_c64`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.364942800s  INFO prepare_target{force=false package_id=gemm-f16 v0.18.2 target="gemm_f16"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-f16 v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_f16", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-f16-0.18.2\\src\\lib.rs", Edition2021) }
+   2.364982600s  INFO prepare_target{force=false package_id=gemm-f16 v0.18.2 target="gemm_f16"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-f16-d25ac6f5b58a7737\lib-gemm_f16`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.367552800s  INFO prepare_target{force=false package_id=gemm-f32 v0.18.2 target="gemm_f32"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-f32 v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_f32", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-f32-0.18.2\\src\\lib.rs", Edition2021) }
+   2.367613600s  INFO prepare_target{force=false package_id=gemm-f32 v0.18.2 target="gemm_f32"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-f32-30ae01f649f65c58\lib-gemm_f32`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.368931900s  INFO prepare_target{force=false package_id=gemm-f64 v0.18.2 target="gemm_f64"}: cargo::core::compiler::fingerprint: fingerprint error for gemm-f64 v0.18.2/Check { test: false }/TargetInner { ..: lib_target("gemm_f64", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\gemm-f64-0.18.2\\src\\lib.rs", Edition2021) }
+   2.368977700s  INFO prepare_target{force=false package_id=gemm-f64 v0.18.2 target="gemm_f64"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\gemm-f64-dbc02afa45819665\lib-gemm_f64`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.370295400s  INFO prepare_target{force=false package_id=memmap2 v0.9.9 target="memmap2"}: cargo::core::compiler::fingerprint: fingerprint error for memmap2 v0.9.9/Check { test: false }/TargetInner { ..: lib_target("memmap2", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\memmap2-0.9.9\\src\\lib.rs", Edition2021) }
+   2.370339600s  INFO prepare_target{force=false package_id=memmap2 v0.9.9 target="memmap2"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\memmap2-29b56e96df7d927b\lib-memmap2`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.372628900s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint: fingerprint error for stable_deref_trait v1.2.1/Check { test: false }/TargetInner { ..: lib_target("stable_deref_trait", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\stable_deref_trait-1.2.1\\src\\lib.rs", Edition2015) }
+   2.372687600s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\stable_deref_trait-113a069dd38e866d\lib-stable_deref_trait`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.374233500s  INFO prepare_target{force=false package_id=safetensors v0.4.5 target="safetensors"}: cargo::core::compiler::fingerprint: fingerprint error for safetensors v0.4.5/Check { test: false }/TargetInner { ..: lib_target("safetensors", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\safetensors-0.4.5\\src\\lib.rs", Edition2021) }
+   2.374280200s  INFO prepare_target{force=false package_id=safetensors v0.4.5 target="safetensors"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\safetensors-caa001212215982f\lib-safetensors`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.410590300s  INFO prepare_target{force=false package_id=ug v0.5.0 target="ug"}: cargo::core::compiler::fingerprint: fingerprint error for ug v0.5.0/Check { test: false }/TargetInner { ..: lib_target("ug", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\ug-0.5.0\\src\\lib.rs", Edition2021) }
+   2.410641700s  INFO prepare_target{force=false package_id=ug v0.5.0 target="ug"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\ug-c5852e4df5d66cc8\lib-ug`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.412309700s  INFO prepare_target{force=false package_id=libloading v0.8.9 target="libloading"}: cargo::core::compiler::fingerprint: fingerprint error for libloading v0.8.9/Check { test: false }/TargetInner { ..: lib_target("libloading", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\libloading-0.8.9\\src\\lib.rs", Edition2015) }
+   2.412382300s  INFO prepare_target{force=false package_id=libloading v0.8.9 target="libloading"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\libloading-0bb1dcc6e9152358\lib-libloading`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.414955100s  INFO prepare_target{force=false package_id=num v0.4.3 target="num"}: cargo::core::compiler::fingerprint: fingerprint error for num v0.4.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-0.4.3\\src\\lib.rs", Edition2021) }
+   2.414999100s  INFO prepare_target{force=false package_id=num v0.4.3 target="num"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-2bff142692d60fd1\lib-num`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.416111200s  INFO prepare_target{force=false package_id=num-bigint v0.4.6 target="num_bigint"}: cargo::core::compiler::fingerprint: fingerprint error for num-bigint v0.4.6/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_bigint", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-bigint-0.4.6\\src\\lib.rs", Edition2021) }
+   2.416144000s  INFO prepare_target{force=false package_id=num-bigint v0.4.6 target="num_bigint"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-bigint-5dd5b79d78fa3cf0\lib-num_bigint`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.417161200s  INFO prepare_target{force=false package_id=num-integer v0.1.46 target="num_integer"}: cargo::core::compiler::fingerprint: fingerprint error for num-integer v0.1.46/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_integer", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-integer-0.1.46\\src\\lib.rs", Edition2018) }
+   2.417197600s  INFO prepare_target{force=false package_id=num-integer v0.1.46 target="num_integer"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-integer-dd3b548c4bc8bf2c\lib-num_integer`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.418906400s  INFO prepare_target{force=false package_id=num-iter v0.1.45 target="num_iter"}: cargo::core::compiler::fingerprint: fingerprint error for num-iter v0.1.45/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_iter", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-iter-0.1.45\\src\\lib.rs", Edition2018) }
+   2.418996500s  INFO prepare_target{force=false package_id=num-iter v0.1.45 target="num_iter"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-iter-7e5cb14e64c70317\lib-num_iter`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.420287500s  INFO prepare_target{force=false package_id=num-rational v0.4.2 target="num_rational"}: cargo::core::compiler::fingerprint: fingerprint error for num-rational v0.4.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("num_rational", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num-rational-0.4.2\\src\\lib.rs", Edition2021) }
+   2.420329400s  INFO prepare_target{force=false package_id=num-rational v0.4.2 target="num_rational"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num-rational-d2d514f8967f84c0\lib-num_rational`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.428099700s  INFO prepare_target{force=false package_id=yoke v0.7.5 target="yoke"}: cargo::core::compiler::fingerprint: fingerprint error for yoke v0.7.5/Check { test: false }/TargetInner { ..: lib_target("yoke", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\yoke-0.7.5\\src\\lib.rs", Edition2021) }
+   2.428274800s  INFO prepare_target{force=false package_id=yoke v0.7.5 target="yoke"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\yoke-586506998e33a846\lib-yoke`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.430807900s  INFO prepare_target{force=false package_id=yoke-derive v0.7.5 target="yoke_derive"}: cargo::core::compiler::fingerprint: fingerprint error for yoke-derive v0.7.5/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("yoke_derive", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\yoke-derive-0.7.5\\src\\lib.rs", Edition2021) }
+   2.430848700s  INFO prepare_target{force=false package_id=yoke-derive v0.7.5 target="yoke_derive"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\yoke-derive-b0f690dee514a219\lib-yoke_derive`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.432330900s  INFO prepare_target{force=false package_id=zerofrom v0.1.6 target="zerofrom"}: cargo::core::compiler::fingerprint: fingerprint error for zerofrom v0.1.6/Check { test: false }/TargetInner { ..: lib_target("zerofrom", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zerofrom-0.1.6\\src\\lib.rs", Edition2021) }
+   2.432364000s  INFO prepare_target{force=false package_id=zerofrom v0.1.6 target="zerofrom"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zerofrom-17d89bf2ae39fa67\lib-zerofrom`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.433847000s  INFO prepare_target{force=false package_id=zip v1.1.4 target="zip"}: cargo::core::compiler::fingerprint: fingerprint error for zip v1.1.4/Check { test: false }/TargetInner { ..: lib_target("zip", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zip-1.1.4\\src\\lib.rs", Edition2021) }
+   2.433883400s  INFO prepare_target{force=false package_id=zip v1.1.4 target="zip"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zip-285ebc34c68e11e7\lib-zip`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.435342000s  INFO prepare_target{force=false package_id=num_enum v0.7.5 target="num_enum"}: cargo::core::compiler::fingerprint: fingerprint error for num_enum v0.7.5/Check { test: false }/TargetInner { ..: lib_target("num_enum", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num_enum-0.7.5\\src\\lib.rs", Edition2021) }
+   2.435376600s  INFO prepare_target{force=false package_id=num_enum v0.7.5 target="num_enum"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num_enum-78e1e9afdc92f1da\lib-num_enum`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.436369200s  INFO prepare_target{force=false package_id=num_enum_derive v0.7.5 target="num_enum_derive"}: cargo::core::compiler::fingerprint: fingerprint error for num_enum_derive v0.7.5/Build/TargetInner { for_host: true, proc_macro: true, ..: lib_target("num_enum_derive", ["proc-macro"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\num_enum_derive-0.7.5\\src\\lib.rs", Edition2021) }
+   2.436401800s  INFO prepare_target{force=false package_id=num_enum_derive v0.7.5 target="num_enum_derive"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\num_enum_derive-e337ae72000f7a1d\lib-num_enum_derive`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.437389900s  INFO prepare_target{force=false package_id=proc-macro-crate v3.4.0 target="proc_macro_crate"}: cargo::core::compiler::fingerprint: fingerprint error for proc-macro-crate v3.4.0/Build/TargetInner { ..: lib_target("proc_macro_crate", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\proc-macro-crate-3.4.0\\src\\lib.rs", Edition2021) }
+   2.437421100s  INFO prepare_target{force=false package_id=proc-macro-crate v3.4.0 target="proc_macro_crate"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\proc-macro-crate-d9e9e089e575c758\lib-proc_macro_crate`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   2.443593800s  INFO prepare_target{force=false package_id=toml_edit v0.23.7 target="toml_edit"}: cargo::core::compiler::fingerprint: fingerprint error for toml_edit v0.23.7/Build/TargetInner { ..: lib_target("toml_edit", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\toml_edit-0.23.7\\src\\lib.rs", Edition2021) }
+   2.443639900s  INFO prepare_target{force=false package_id=toml_edit v0.23.7 target="toml_edit"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\toml_edit-a99edeb98dafd03f\lib-toml_edit`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   2.446242400s  INFO prepare_target{force=false package_id=toml_datetime v0.7.3 target="toml_datetime"}: cargo::core::compiler::fingerprint: fingerprint error for toml_datetime v0.7.3/Build/TargetInner { ..: lib_target("toml_datetime", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\toml_datetime-0.7.3\\src\\lib.rs", Edition2021) }
+   2.446286300s  INFO prepare_target{force=false package_id=toml_datetime v0.7.3 target="toml_datetime"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\toml_datetime-6ce65ec888492e9f\lib-toml_datetime`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.447402100s  INFO prepare_target{force=false package_id=toml_parser v1.0.4 target="toml_parser"}: cargo::core::compiler::fingerprint: fingerprint error for toml_parser v1.0.4/Build/TargetInner { ..: lib_target("toml_parser", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\toml_parser-1.0.4\\src\\lib.rs", Edition2021) }
+   2.447441900s  INFO prepare_target{force=false package_id=toml_parser v1.0.4 target="toml_parser"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\toml_parser-482b0468add89a2f\lib-toml_parser`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   2.448520100s  INFO prepare_target{force=false package_id=winnow v0.7.13 target="winnow"}: cargo::core::compiler::fingerprint: fingerprint error for winnow v0.7.13/Build/TargetInner { ..: lib_target("winnow", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\winnow-0.7.13\\src\\lib.rs", Edition2021) }
+   2.448608400s  INFO prepare_target{force=false package_id=winnow v0.7.13 target="winnow"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\winnow-0eb4a1234f7722d5\lib-winnow`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   2.451025700s  INFO prepare_target{force=false package_id=zip v1.1.4 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for zip v1.1.4/RunCustomBuild/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zip-1.1.4\\src\\build.rs", Edition2021) }
+   2.451058900s  INFO prepare_target{force=false package_id=zip v1.1.4 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zip-eafb1075c0e7fe91\run-build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.451567500s  INFO prepare_target{force=false package_id=zip v1.1.4 target="build-script-build"}: cargo::core::compiler::fingerprint: fingerprint error for zip v1.1.4/Build/TargetInner { ..: custom_build_target("build-script-build", "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\zip-1.1.4\\src\\build.rs", Edition2021) }
+   2.451595100s  INFO prepare_target{force=false package_id=zip v1.1.4 target="build-script-build"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\zip-cf08c80eb5ca5c89\build-script-build-script-build`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.452615600s  INFO prepare_target{force=false package_id=candle-nn v0.9.2-alpha.1 target="candle_nn"}: cargo::core::compiler::fingerprint: fingerprint error for candle-nn v0.9.2-alpha.1/Check { test: false }/TargetInner { ..: lib_target("candle_nn", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\candle-nn-0.9.2-alpha.1\\src\\lib.rs", Edition2021) }
+   2.452688200s  INFO prepare_target{force=false package_id=candle-nn v0.9.2-alpha.1 target="candle_nn"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\candle-nn-bc94f022db36be46\lib-candle_nn`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.454265900s  INFO prepare_target{force=false package_id=candle-transformers v0.9.2-alpha.1 target="candle_transformers"}: cargo::core::compiler::fingerprint: fingerprint error for candle-transformers v0.9.2-alpha.1/Check { test: false }/TargetInner { ..: lib_target("candle_transformers", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\candle-transformers-0.9.2-alpha.1\\src\\lib.rs", Edition2021) }
+   2.454331300s  INFO prepare_target{force=false package_id=candle-transformers v0.9.2-alpha.1 target="candle_transformers"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\candle-transformers-4582cd4433831cd0\lib-candle_transformers`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   2.462361100s  INFO prepare_target{force=false package_id=fancy-regex v0.13.0 target="fancy_regex"}: cargo::core::compiler::fingerprint: fingerprint error for fancy-regex v0.13.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fancy_regex", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\fancy-regex-0.13.0\\src\\lib.rs", Edition2018) }
+   2.462448000s  INFO prepare_target{force=false package_id=fancy-regex v0.13.0 target="fancy_regex"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\fancy-regex-f6e4aff2839f6981\lib-fancy_regex`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.464683100s  INFO prepare_target{force=false package_id=bit-set v0.5.3 target="bit_set"}: cargo::core::compiler::fingerprint: fingerprint error for bit-set v0.5.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("bit_set", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\bit-set-0.5.3\\src\\lib.rs", Edition2015) }
+   2.464764400s  INFO prepare_target{force=false package_id=bit-set v0.5.3 target="bit_set"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\bit-set-163448b71859553c\lib-bit_set`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   2.466330200s  INFO prepare_target{force=false package_id=bit-vec v0.6.3 target="bit_vec"}: cargo::core::compiler::fingerprint: fingerprint error for bit-vec v0.6.3/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("bit_vec", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\bit-vec-0.6.3\\src\\lib.rs", Edition2015) }
+   2.466391700s  INFO prepare_target{force=false package_id=bit-vec v0.6.3 target="bit_vec"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\bit-vec-044ade46090aefa3\lib-bit_vec`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   2.467441900s  INFO prepare_target{force=false package_id=serde_plain v1.0.2 target="serde_plain"}: cargo::core::compiler::fingerprint: fingerprint error for serde_plain v1.0.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("serde_plain", ["lib"], "C:\\Users\\yao\\.cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\serde_plain-1.0.2\\src\\lib.rs", Edition2018) }
+   2.467499800s  INFO prepare_target{force=false package_id=serde_plain v1.0.2 target="serde_plain"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\serde_plain-61adf823680dbd58\lib-serde_plain`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   2.468761100s  INFO prepare_target{force=false package_id=rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml) target="rust_edge_compute_ml"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml)/Check { test: true }/TargetInner { ..: lib_target("rust_edge_compute_ml", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-ml\\src\\lib.rs", Edition2021) }
+   2.468821200s  INFO prepare_target{force=false package_id=rust-edge-compute-ml v0.1.0 (F:\gitrepo\gita\rust-edge-compute-ml) target="rust_edge_compute_ml"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-ml-e02b777123c7fe4a\test-lib-rust_edge_compute_ml`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.474495800s  INFO prepare_target{force=false package_id=rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python) target="rust_edge_compute_python"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python)/Check { test: false }/TargetInner { ..: lib_target("rust_edge_compute_python", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-python\\src\\lib.rs", Edition2021) }
+   2.474544900s  INFO prepare_target{force=false package_id=rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python) target="rust_edge_compute_python"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-python-da2aa4438cbb2cd0\lib-rust_edge_compute_python`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   2.478280900s  INFO prepare_target{force=false package_id=rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python) target="rust_edge_compute_python"}: cargo::core::compiler::fingerprint: fingerprint error for rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python)/Check { test: true }/TargetInner { ..: lib_target("rust_edge_compute_python", ["cdylib", "rlib"], "F:\\gitrepo\\gita\\rust-edge-compute-python\\src\\lib.rs", Edition2021) }
+   2.478332600s  INFO prepare_target{force=false package_id=rust-edge-compute-python v0.1.0 (F:\gitrepo\gita\rust-edge-compute-python) target="rust_edge_compute_python"}: cargo::core::compiler::fingerprint:     err: failed to read `F:\gitrepo\gita\target\debug\.fingerprint\rust-edge-compute-python-c55e28c9fc9b74d0\test-lib-rust_edge_compute_python`
+
+Caused by:
+    系统找不到指定的文件。 (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+    Checking once_cell v1.21.3
+   Compiling libm v0.2.15
+   Compiling zerocopy v0.8.27
+   Compiling zerocopy-derive v0.8.27
+error: could not compile `libm` (build script) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+   Compiling num-traits v0.2.19
+error: could not compile `zerocopy-derive` (lib) due to 1 previous error
+   Compiling getrandom v0.3.4
+error: could not compile `zerocopy` (build script) due to 1 previous error
+    Checking windows-sys v0.61.2
+error: could not compile `once_cell` (lib) due to 1 previous error
+    Checking regex-automata v0.4.13
+error: could not compile `num-traits` (build script) due to 1 previous error
+   Compiling bytemuck_derive v1.10.2
+error: could not compile `getrandom` (build script) due to 1 previous error
+error: could not compile `windows-sys` (lib) due to 1 previous error
+   Compiling rayon-core v1.13.0
+error: could not compile `bytemuck_derive` (lib) due to 1 previous error
+error: could not compile `once_cell` (lib) due to 1 previous error
+    Checking crossbeam-deque v0.8.6
+   Compiling pulp v0.21.5
+error: could not compile `rayon-core` (build script) due to 1 previous error
+   Compiling paste v1.0.15
+error: could not compile `regex-automata` (lib) due to 1 previous error
+    Checking reborrow v0.5.5
+error: could not compile `pulp` (build script) due to 1 previous error
+    Checking either v1.15.0
+error: could not compile `crossbeam-deque` (lib) due to 1 previous error
+   Compiling dyn-stack-macros v0.1.3
+error: could not compile `paste` (build script) due to 1 previous error
+    Checking raw-cpuid v11.6.0
+error: could not compile `reborrow` (lib) due to 1 previous error
+   Compiling seq-macro v0.3.6
+error: could not compile `either` (lib) due to 1 previous error
+   Compiling winnow v0.7.13
+error: could not compile `dyn-stack-macros` (lib) due to 1 previous error
+    Checking oci-spec v0.6.7
+error: could not compile `raw-cpuid` (lib) due to 1 previous error
+   Compiling toml_datetime v0.7.3
+error: could not compile `seq-macro` (lib) due to 1 previous error
+    Checking stable_deref_trait v1.2.1
+error: could not compile `oci-spec` (lib) due to 1 previous error
+    Checking zerofrom v0.1.6
+error: could not compile `toml_datetime` (lib) due to 1 previous error
+   Compiling yoke-derive v0.7.5
+error: could not compile `winnow` (lib) due to 1 previous error
+   Compiling zip v1.1.4
+error: could not compile `stable_deref_trait` (lib) due to 1 previous error
+    Checking safetensors v0.4.5
+error: could not compile `zerofrom` (lib) due to 1 previous error
+    Checking libloading v0.8.9
+error: could not compile `zip` (build script) due to 1 previous error
+    Checking bit-vec v0.6.3
+error: could not compile `yoke-derive` (lib) due to 1 previous error
+    Checking serde_plain v1.0.2
+error: could not compile `safetensors` (lib) due to 1 previous error
+error: could not compile `libloading` (lib) due to 1 previous error
+error: could not compile `serde_plain` (lib) due to 1 previous error
+error: could not compile `bit-vec` (lib) due to 1 previous error

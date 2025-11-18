@@ -14,10 +14,10 @@ crate-type = ["cdylib", "rlib"]
 # 核心库
 rust-edge-compute-core = { path = "../rust-edge-compute-core" }
 
-# Candle核心库（使用本地路径，暂时注释，后续需要正确配置）
-# candle-core = { path = "../candle/candle/candle-core", version = "0.9.2-alpha.1" }
-# candle-nn = { path = "../candle/candle/candle-nn", version = "0.9.2-alpha.1" }
-# candle-transformers = { path = "../candle/candle/candle-transformers", version = "0.9.2-alpha.1" }
+# Candle核心库（使用外部依赖）
+candle-core = "0.9.2-alpha.1"
+candle-nn = "0.9.2-alpha.1"
+candle-transformers = "0.9.2-alpha.1"
 
 # 异步运行时
 tokio = { workspace = true }
@@ -38,14 +38,14 @@ uuid = { workspace = true }
 
 [features]
 default = []
-# CUDA支持（暂时注释，等待Candle依赖配置完成）
-# cuda = ["candle-core/cuda", "candle-nn/cuda"]
+# CUDA支持
+cuda = ["candle-core/cuda", "candle-nn/cuda"]
 # cuDNN支持
-# cudnn = ["cuda", "candle-core/cudnn"]
+cudnn = ["cuda", "candle-core/cudnn"]
 # MKL优化
-# mkl = ["candle-core/mkl"]
+mkl = ["candle-core/mkl"]
 # Accelerate优化
-# accelerate = ["candle-core/accelerate"]
+accelerate = ["candle-core/accelerate"]
 # Metal支持
-# metal = ["candle-core/metal"]
+metal = ["candle-core/metal"]
 

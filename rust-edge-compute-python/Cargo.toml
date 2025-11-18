@@ -17,11 +17,12 @@ rust-edge-compute-core = { path = "../rust-edge-compute-core" }
 # Python绑定
 pyo3 = { version = "0.22", features = ["auto-initialize", "abi3-py311"], optional = true }
 
-# Candle PyO3（暂时注释，等待Candle依赖配置完成）
-# candle-pyo3 = { path = "../candle/candle/candle-pyo3", version = "0.9.2-alpha.1", optional = true }
+# Candle PyO3（使用外部依赖）
+candle-pyo3 = { version = "0.9.2-alpha.1", optional = true }
 
 # WASM运行时
-wasmtime = { version = "15.0", features = ["async", "wasi"], optional = true }
+wasmtime = { version = "15.0", features = ["async"], optional = true }
+wasmtime-wasi = { version = "15.0", optional = true }
 
 # 异步运行时
 tokio = { workspace = true }
@@ -43,8 +44,8 @@ which = "4.4"
 
 [features]
 default = []
-# Python支持（暂时注释candle-pyo3，等待Candle依赖配置完成）
-python = ["dep:pyo3", "dep:pyo3-build-config"]
+# Python支持
+python = ["dep:pyo3", "dep:pyo3-build-config", "dep:candle-pyo3"]
 # WASM支持
-wasm = ["dep:wasmtime"]
+wasm = ["dep:wasmtime", "dep:wasmtime-wasi"]
 
