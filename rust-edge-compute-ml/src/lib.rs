@@ -5,6 +5,12 @@
 pub mod executor;
 pub mod model_manager;
 pub mod device_manager;
+pub mod inference;
+pub mod preprocessing;
+pub mod postprocessing;
 
 pub use executor::*;
+pub use inference::*;
+pub use preprocessing::*;
+pub use postprocessing::*;
 

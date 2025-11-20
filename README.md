@@ -1,4 +1,4 @@
-# Rust边缘计算框架项目(别名: 吉他)
+# Gita(边缘计算框架)
 
 ## 项目概述
 
@@ -17,6 +17,31 @@
 2. **异步优先**: 使用Tokio处理高并发场景
 3. **零开销抽象**: 在保证安全的前提下最大化性能
 4. **容器化隔离**: 使用Youki提供安全的执行环境
+
+## CI/CD 流水线
+
+本项目使用基于 [rust-ci](https://gitlab.com/rust-ci/rust-ci) 的高效 CI/CD 流水线，支持：
+
+- ✅ **自动化测试**：单元测试、集成测试、文档测试
+- ✅ **代码质量检查**：Rustfmt、Clippy
+- ✅ **并行构建**：多 crate workspace 并行编译
+- ✅ **智能缓存**：加速构建过程
+- ✅ **按 Executor 分包**：为每个 executor 创建独立的依赖包
+- ✅ **多特性支持**：支持不同的特性组合（CUDA、Metal、Python、WASM 等）
+- ✅ **自动打包**：创建发布包
+- ✅ **部署管理**：支持测试和生产环境部署
+
+### 分包特性
+
+- **核心库包**：所有 executor 共享的基础库
+- **C++ Executor 包**：包含 C++ 头文件和库文件
+- **ML Executor 包**：支持 CPU、CUDA、Metal 等变体
+- **Python Executor 包**：支持 Base、Python、WASM、Full 等变体
+
+详细使用说明请参考：
+- [CI/CD 使用指南](docs/ci-cd-guide.md)
+- [Executor 分包使用指南](docs/ci-cd-executor-packages.md)
+- [CI/CD 重构方案](docs/ci-cd-refactor-plan.md)
 
 ## 项目结构
 

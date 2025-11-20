@@ -35,6 +35,7 @@ tracing = { workspace = true }
 
 # 工具库
 uuid = { workspace = true }
+base64 = "0.21"
 
 [features]
 default = []

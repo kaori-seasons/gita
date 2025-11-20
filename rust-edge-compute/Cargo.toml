@@ -36,10 +36,10 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 
-# 日志
-tracing = { workspace = true }
-tracing-subscriber = { workspace = true }
-tracing-appender = { workspace = true }
+# 日志（优化：只启用必要的 features）
+tracing = { workspace = true, default-features = false }
+tracing-subscriber = { workspace = true, default-features = false, features = ["env-filter", "fmt", "std"] }
+tracing-appender = { workspace = true, default-features = false }
 
 # 配置管理
 config = { workspace = true }

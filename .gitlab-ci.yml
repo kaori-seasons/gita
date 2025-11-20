@@ -1,0 +1,844 @@
+# GitLab CI/CD 配置文件
+# 基于 rust-ci 项目的最佳实践，为多 crate workspace 项目优化
+# 支持按 executor 独立打包
+# 完全本地化配置，不依赖远端资源
+
+# 定义流水线阶段
+stages:
+  - validate      # 验证阶段：格式检查、依赖检查
+  - lint          # 代码检查阶段：clippy、fmt
+  - test          # 测试阶段：单元测试、集成测试
+  - build         # 构建阶段：编译各个 crate
+  - analyze       # 分析阶段：依赖分析、体积分析
+  - package       # 打包阶段：创建发布包
+  - deploy        # 部署阶段（可选）
+
+# 全局变量配置
+variables:
+  # Rust 工具链版本
+  # 使用具体版本号以确保构建的一致性和可重现性
+  # 当前使用最新稳定版 1.85.0
+  RUST_VERSION: "1.85.0"
+  # 启用 cargo 缓存
+  CARGO_HOME: "${CI_PROJECT_DIR}/.cargo"
+  # 启用 cargo 注册表缓存
+  CARGO_REGISTRY_CACHE: "${CI_PROJECT_DIR}/.cargo/registry"
+  # 启用 cargo git 缓存
+  CARGO_GIT_CACHE: "${CI_PROJECT_DIR}/.cargo/git"
+  # 启用 cargo target 缓存
+  CARGO_TARGET_CACHE: "${CI_PROJECT_DIR}/target"
+  # 并行编译线程数
+  CARGO_BUILD_JOBS: "4"
+  # 禁用增量编译（CI 环境中通常不需要）
+  CARGO_INCREMENTAL: "0"
+  # 优化编译时间
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  # 工作空间成员
+  WORKSPACE_MEMBERS: "rust-edge-compute-core rust-edge-compute rust-edge-compute-cpp rust-edge-compute-ml rust-edge-compute-python"
+  # 版本号（从标签或提交SHA生成）
+  PACKAGE_VERSION: "${CI_COMMIT_TAG:-${CI_COMMIT_SHORT_SHA}}"
+
+# 全局缓存配置
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .cargo/bin/
+    - .cargo/registry/
+    - .cargo/git/
+    - target/
+
+# ==================== 验证阶段 ====================
+
+# 验证 Cargo.toml 格式
+validate:cargo-toml:
+  stage: validate
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo check --workspace --message-format=short
+  only:
+    changes:
+      - "**/Cargo.toml"
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+# 验证依赖完整性
+validate:dependencies:
+  stage: validate
+  image: rust:${RUST_VERSION}
+  script:
+    # 检查 Cargo.lock 是否存在，如果不存在则生成
+    - |
+      if [ ! -f Cargo.lock ]; then
+        echo "⚠️  Cargo.lock not found. Generating lock file..."
+        cargo generate-lockfile
+      fi
+    # 尝试更新 Cargo.lock（如果需要）
+    # 如果 Cargo.toml 中的依赖发生了变化，Cargo.lock 需要更新
+    - |
+      echo "Checking if Cargo.lock needs to be updated..."
+      # 保存原始 Cargo.lock 的哈希值（如果文件存在）
+      if [ -f Cargo.lock ]; then
+        ORIGINAL_HASH=$(sha256sum Cargo.lock | cut -d' ' -f1)
+        # 尝试生成/更新 lock 文件
+        cargo generate-lockfile
+        # 检查是否有更改
+        NEW_HASH=$(sha256sum Cargo.lock | cut -d' ' -f1)
+        if [ "$ORIGINAL_HASH" != "$NEW_HASH" ]; then
+          echo "❌ Error: Cargo.lock needs to be updated."
+          echo "The lock file was modified during validation, which means Cargo.toml dependencies have changed."
+          echo "Please run 'cargo generate-lockfile' locally and commit the updated Cargo.lock file."
+          # 尝试显示差异（如果 git 可用）
+          git diff Cargo.lock 2>/dev/null || echo "Git diff not available, but Cargo.lock was modified."
+          exit 1
+        else
+          echo "✅ Cargo.lock is up to date."
+        fi
+      else
+        # 如果文件不存在，生成它
+        cargo generate-lockfile
+        echo "⚠️  Cargo.lock was generated. Please commit it to the repository."
+        exit 1
+      fi
+    # 验证依赖是否完整（不使用 --locked，因为我们已经确保 lock 文件是最新的）
+    - echo "Fetching dependencies..."
+    - cargo fetch
+    - echo "Validating dependency tree..."
+    - cargo tree
+    - echo "✅ Dependency validation complete."
+  only:
+    changes:
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+# ==================== 代码检查阶段 ====================
+
+# Rust 代码格式化检查
+lint:fmt:
+  stage: lint
+  image: rust:${RUST_VERSION}
+  script:
+    - rustup component add rustfmt
+    - cargo fmt --all -- --check
+  allow_failure: false
+  only:
+    changes:
+      - "**/*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+# Clippy 代码检查
+lint:clippy:
+  stage: lint
+  image: rust:${RUST_VERSION}
+  script:
+    - rustup component add clippy
+    - cargo clippy --workspace --all-targets --all-features -- -D warnings
+  allow_failure: false
+  only:
+    changes:
+      - "**/*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+# 针对各个 crate 的 clippy 检查（并行执行）
+lint:clippy:core:
+  extends: .lint:clippy
+  script:
+    - rustup component add clippy
+    - cargo clippy -p rust-edge-compute-core --all-targets --all-features -- -D warnings
+
+lint:clippy:cpp:
+  extends: .lint:clippy
+  script:
+    - rustup component add clippy
+    - cargo clippy -p rust-edge-compute-cpp --all-targets --all-features -- -D warnings
+
+lint:clippy:ml:
+  extends: .lint:clippy
+  script:
+    - rustup component add clippy
+    - cargo clippy -p rust-edge-compute-ml --all-targets --all-features -- -D warnings
+
+lint:clippy:python:
+  extends: .lint:clippy
+  script:
+    - rustup component add clippy
+    - cargo clippy -p rust-edge-compute-python --all-targets --all-features -- -D warnings
+
+# ==================== 测试阶段 ====================
+
+# 运行所有测试
+test:all:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test --workspace --all-features -- --test-threads=4
+  # 从测试输出中提取覆盖率百分比
+  coverage: '/^test result:.*\s+(\d+\.\d+)%.*$/'
+  artifacts:
+    # 保存覆盖率报告文件（如果生成了的话）
+    paths:
+      - target/cobertura.xml
+      - coverage.xml
+      - target/coverage/
+    expire_in: 1 week
+  only:
+    changes:
+      - "**/*.rs"
+      - "Cargo.toml"
+      - "Cargo.lock"
+
+# 针对各个 crate 的单元测试（并行执行）
+test:unit:core:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test -p rust-edge-compute-core --lib -- --test-threads=2
+
+test:unit:cpp:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test -p rust-edge-compute-cpp --lib -- --test-threads=2
+
+test:unit:ml:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test -p rust-edge-compute-ml --lib -- --test-threads=2
+
+test:unit:python:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test -p rust-edge-compute-python --lib -- --test-threads=2
+
+# 集成测试
+test:integration:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test --workspace --test '*' -- --test-threads=2
+  only:
+    changes:
+      - "tests/**/*"
+      - "**/tests/**/*"
+      - "**/*.rs"
+
+# 文档测试
+test:doc:
+  stage: test
+  image: rust:${RUST_VERSION}
+  script:
+    - cargo test --workspace --doc
+  allow_failure: true
+
+# ==================== 构建阶段 ====================
+
+# 构建核心库（所有 executor 依赖）
+build:release:core:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项（只影响 release 构建，不影响 clippy/test）
+    # link-dead-code=false: 移除未使用的代码，进一步减小体积
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - cargo build -p rust-edge-compute-core --release
+    - |
+      echo "Core library artifacts:"
+      find target/release -name "*rust_edge_compute_core*" -type f | head -10
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_core*
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# ==================== C++ Executor 构建 ====================
+
+# C++ Executor 基础构建
+build:release:cpp:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building C++ Executor..."
+      cargo build -p rust-edge-compute-cpp --release
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_cpp*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_cpp*
+      - rust-edge-compute-cpp/src/ffi/*.h
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# C++ Executor 带 FFTW 支持
+build:release:cpp:fftw:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building C++ Executor with FFTW support..."
+      cargo build -p rust-edge-compute-cpp --release --features fftw
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_cpp*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_cpp*
+    expire_in: 1 week
+  only:
+    - tags
+  when: manual
+
+# ==================== ML Executor 构建 ====================
+
+# ML Executor CPU 版本
+build:release:ml:cpu:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building ML Executor (CPU only)..."
+      cargo build -p rust-edge-compute-ml --release
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_ml*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_ml*
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# ML Executor CUDA 版本
+build:release:ml:cuda:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building ML Executor with CUDA support..."
+      cargo build -p rust-edge-compute-ml --release --features cuda
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_ml*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_ml*
+    expire_in: 1 week
+  only:
+    - tags
+  when: manual
+
+# ML Executor Metal 版本（macOS）
+build:release:ml:metal:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building ML Executor with Metal support..."
+      cargo build -p rust-edge-compute-ml --release --features metal
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_ml*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_ml*
+    expire_in: 1 week
+  only:
+    - tags
+  when: manual
+
+# ==================== Python Executor 构建 ====================
+
+# Python Executor 基础版本（无特性）
+build:release:python:base:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building Python Executor (base)..."
+      cargo build -p rust-edge-compute-python --release
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_python*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_python*
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# Python Executor 带 Python 支持
+build:release:python:python:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-dev
+  script:
+    - |
+      echo "Building Python Executor with Python support..."
+      cargo build -p rust-edge-compute-python --release --features python
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_python*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_python*
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# Python Executor 带 WASM 支持
+build:release:python:wasm:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  script:
+    - |
+      echo "Building Python Executor with WASM support..."
+      cargo build -p rust-edge-compute-python --release --features wasm
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_python*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_python*
+    expire_in: 1 week
+  only:
+    - main
+    - master
+    - tags
+    - merge_requests
+
+# Python Executor 完整版本（Python + WASM）
+build:release:python:full:
+  stage: build
+  image: rust:${RUST_VERSION}
+  variables:
+    # Release 构建的额外优化选项
+    RUSTFLAGS: "-C link-dead-code=false"
+  before_script:
+    - apt-get update && apt-get install -y python3 python3-dev
+  script:
+    - |
+      echo "Building Python Executor (full: Python + WASM)..."
+      cargo build -p rust-edge-compute-python --release --features python,wasm
+      echo "Build artifacts:"
+      find target/release -name "*rust_edge_compute_python*" -type f
+  artifacts:
+    paths:
+      - target/release/lib*.rlib
+      - target/release/lib*.so
+      - target/release/lib*.dylib
+      - target/release/deps/rust_edge_compute_python*
+    expire_in: 1 week
+  only:
+    - tags
+  when: manual
+
+# ==================== 分析阶段 ====================
+
+# 分析 C++ Executor 依赖
+analyze:dependencies:cpp:
+  stage: analyze
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:cpp
+  script:
+    - |
+      echo "Analyzing C++ Executor dependencies..."
+      cargo tree -p rust-edge-compute-cpp --depth 2 > dist/cpp-dependencies.txt
+      echo "Dependency analysis complete"
+      head -20 dist/cpp-dependencies.txt
+  artifacts:
+    paths:
+      - dist/cpp-dependencies.txt
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 分析 ML Executor 依赖
+analyze:dependencies:ml:
+  stage: analyze
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:ml:cpu
+  script:
+    - |
+      echo "Analyzing ML Executor dependencies..."
+      cargo tree -p rust-edge-compute-ml --depth 2 > dist/ml-dependencies.txt
+      echo "Dependency analysis complete"
+      head -20 dist/ml-dependencies.txt
+  artifacts:
+    paths:
+      - dist/ml-dependencies.txt
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 分析 Python Executor 依赖
+analyze:dependencies:python:
+  stage: analyze
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:python:base
+  script:
+    - |
+      echo "Analyzing Python Executor dependencies..."
+      cargo tree -p rust-edge-compute-python --depth 2 > dist/python-dependencies.txt
+      echo "Dependency analysis complete"
+      head -20 dist/python-dependencies.txt
+  artifacts:
+    paths:
+      - dist/python-dependencies.txt
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 分析包体积
+analyze:size:
+  stage: analyze
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:cpp
+    - build:release:ml:cpu
+    - build:release:python:base
+  script:
+    - |
+      echo "Analyzing package sizes..."
+      mkdir -p dist
+      echo "=== Package Size Analysis ===" > dist/size-analysis.txt
+      echo "" >> dist/size-analysis.txt
+      
+      echo "C++ Executor:" >> dist/size-analysis.txt
+      find target/release -name "*rust_edge_compute_cpp*" -type f -exec ls -lh {} \; >> dist/size-analysis.txt || true
+      echo "" >> dist/size-analysis.txt
+      
+      echo "ML Executor:" >> dist/size-analysis.txt
+      find target/release -name "*rust_edge_compute_ml*" -type f -exec ls -lh {} \; >> dist/size-analysis.txt || true
+      echo "" >> dist/size-analysis.txt
+      
+      echo "Python Executor:" >> dist/size-analysis.txt
+      find target/release -name "*rust_edge_compute_python*" -type f -exec ls -lh {} \; >> dist/size-analysis.txt || true
+      
+      cat dist/size-analysis.txt
+  artifacts:
+    paths:
+      - dist/size-analysis.txt
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# ==================== 打包阶段 ====================
+
+# 打包核心库
+package:core:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:core
+    - analyze:dependencies:cpp
+  script:
+    - |
+      mkdir -p dist
+      VERSION="${PACKAGE_VERSION}"
+      PACKAGE_NAME="rust-edge-compute-core-${VERSION}"
+      PACKAGE_DIR="dist/${PACKAGE_NAME}"
+      
+      mkdir -p "${PACKAGE_DIR}/lib"
+      mkdir -p "${PACKAGE_DIR}/docs"
+      
+      # 复制库文件
+      find target/release -name "*rust_edge_compute_core*.rlib" -exec cp {} "${PACKAGE_DIR}/lib/" \;
+      find target/release -name "*rust_edge_compute_core*.so" -o -name "*rust_edge_compute_core*.dylib" | head -1 | xargs -I {} cp {} "${PACKAGE_DIR}/lib/" || true
+      
+      # 生成依赖列表
+      cargo tree -p rust-edge-compute-core --depth 1 > "${PACKAGE_DIR}/dependencies.txt" 2>/dev/null || true
+      
+      # 创建 README
+      cat > "${PACKAGE_DIR}/README.md" << 'EOF'
+      # Rust Edge Compute Core Library
+      
+      Core library for the Rust Edge Compute Framework.
+      
+      All executors depend on this library.
+      EOF
+      
+      # 创建压缩包
+      cd dist
+      tar -czf "${PACKAGE_NAME}.tar.gz" "${PACKAGE_NAME}"
+      cd ..
+      
+      echo "Core package created: dist/${PACKAGE_NAME}.tar.gz"
+      ls -lh "dist/${PACKAGE_NAME}.tar.gz"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-core-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 C++ Executor
+package:cpp:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:cpp
+    - analyze:dependencies:cpp
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh cpp "${PACKAGE_VERSION}" ""
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-cpp-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 ML Executor (CPU)
+package:ml:cpu:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:ml:cpu
+    - analyze:dependencies:ml
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh ml "${PACKAGE_VERSION}" "cpu"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-ml-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 ML Executor (CUDA)
+package:ml:cuda:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:ml:cuda
+    - analyze:dependencies:ml
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh ml "${PACKAGE_VERSION}" "cuda"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-ml-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+  when: manual
+
+# 打包 Python Executor (Base)
+package:python:base:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:python:base
+    - analyze:dependencies:python
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh python "${PACKAGE_VERSION}" "base"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-python-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 Python Executor (Python)
+package:python:python:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:python:python
+    - analyze:dependencies:python
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh python "${PACKAGE_VERSION}" "python"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-python-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 Python Executor (WASM)
+package:python:wasm:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:python:wasm
+    - analyze:dependencies:python
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh python "${PACKAGE_VERSION}" "wasm"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-python-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+    - main
+    - master
+
+# 打包 Python Executor (Full)
+package:python:full:
+  stage: package
+  image: rust:${RUST_VERSION}
+  dependencies:
+    - build:release:python:full
+    - analyze:dependencies:python
+  script:
+    - chmod +x scripts/package-executor.sh
+    - ./scripts/package-executor.sh python "${PACKAGE_VERSION}" "python,wasm"
+  artifacts:
+    paths:
+      - dist/rust-edge-compute-python-*.tar.gz
+    expire_in: 1 month
+  only:
+    - tags
+  when: manual
+
+# ==================== 部署阶段（可选）====================
+
+# 部署到测试环境
+deploy:staging:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Deploy to staging environment"
+    - |
+      # 这里可以添加实际的部署脚本
+      # 例如：构建 Docker 镜像、推送到镜像仓库、部署到 Kubernetes 等
+      echo "Deployment script would go here"
+  environment:
+    name: staging
+    url: https://staging.example.com
+  only:
+    - main
+    - master
+  when: manual
+
+# 部署到生产环境
+deploy:production:
+  stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "Deploy to production environment"
+    - |
+      # 这里可以添加实际的部署脚本
+      echo "Production deployment script would go here"
+  environment:
+    name: production
+    url: https://production.example.com
+  only:
+    - tags
+  when: manual
+
+# ==================== 模板定义 ====================
+
+# Clippy 检查模板
+.lint:clippy:
+  stage: lint
+  image: rust:${RUST_VERSION}
+  script:
+    - rustup component add clippy
+    - cargo clippy --workspace --all-targets --all-features -- -D warnings
+  allow_failure: false
+
+# ==================== 特殊配置 ====================
+
+# 跳过 CI（如果提交信息包含 [skip ci]）
+workflow:
+  rules:
+    - if: $CI_COMMIT_MESSAGE =~ /\[skip ci\]/
+      when: never
+    - if: $CI_COMMIT_MESSAGE =~ /\[ci skip\]/
+      when: never
+    - when: always

@@ -1,0 +1,180 @@
+stages:
+- "Rust CI warning"
+- "lint"
+- "test"
+# Run cache tests in a separate stage to minimise the cache they inherit the
+# cache from other tests
+- "cache tests"
+- "release"
+
+"DEPRECATION WARNING":
+  image: alpine
+  stage: "Rust CI warning"
+  script:
+  - |
+    echo 'Using `.gitlab-ci.yml` as input has been deprecated. Please use `base-pipeline.yml`.'
+    echo 'For example -
+    include:
+      - project: "rust-ci/rust-ci"
+        ref: "master"
+        file: "base-pipeline.yml"
+    '
+  - exit 1
+  allow_failure: true
+  rules:
+  - if: $CI_PROJECT_NAME != "rust-ci"
+
+commit:
+  image:
+    name: registry.hub.docker.com/commitlint/commitlint:18.6.2
+    entrypoint: [""]
+  stage: lint
+  script:
+  - commitlint -V --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to $CI_COMMIT_SHA
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_PROJECT_NAME == "rust-ci"
+  interruptible: true
+
+source:
+  image: rust:alpine
+  stage: test
+  variables:
+    YAMLFMT_VERSION: 0.17.0
+  before_script:
+  - apk add musl-dev git
+  - |
+    if ! [ -f yamlfmt ]; then
+      apk add curl
+      echo install yamlfmt v${YAMLFMT_VERSION}
+      curl -LO https://github.com/google/yamlfmt/releases/download/v${YAMLFMT_VERSION}/yamlfmt_${YAMLFMT_VERSION}_Linux_x86_64.tar.gz
+      tar -xf yamlfmt_${YAMLFMT_VERSION}_Linux_x86_64.tar.gz yamlfmt
+    fi
+  script:
+  - cargo run
+  - ./yamlfmt templates
+  # Confirm that running the template generator hasn't modified them
+  - git diff
+  - git diff | xargs -I {} test -z "{}"
+  cache:
+    paths:
+    - ./yamlfmt
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_PROJECT_NAME == "rust-ci"
+  needs: []
+  interruptible: true
+
+🚀:
+  stage: "test"
+  parallel:
+    matrix:
+    - TEST: production
+      PIPELINE: base-pipeline
+    - TEST: add_dependency
+      PIPELINE: base-pipeline
+    - TEST: nightly
+      PIPELINE: base-pipeline
+    - TEST: include_ignored
+      PIPELINE: base-pipeline
+    - TEST: nextest
+      PIPELINE: base-pipeline
+    - TEST: alpine
+      PIPELINE: base-pipeline
+
+    - TEST: production
+      PIPELINE: extended
+    - TEST: add_dependency
+      PIPELINE: extended
+    - TEST: nightly
+      PIPELINE: extended
+    - TEST: include_ignored
+      PIPELINE: extended
+    - TEST: nextest
+      PIPELINE: extended
+    - TEST: alpine
+      PIPELINE: extended
+
+    - TEST: production
+      PIPELINE: full
+    - TEST: add_dependency
+      PIPELINE: full
+    - TEST: nightly
+      PIPELINE: full
+    - TEST: include_ignored
+      PIPELINE: full
+    - TEST: nextest
+      PIPELINE: full
+    - TEST: alpine
+      PIPELINE: full
+  trigger:
+    include:
+    - local: /tests/$PIPELINE/$TEST.yml
+    strategy: depend
+  rules:
+  - if: $CI_PROJECT_NAME == "rust-ci"
+
+📮:
+  stage: "cache tests"
+  parallel:
+    matrix:
+    - TEST: add_cache
+      PIPELINE: base-pipeline
+    - TEST: disable_all_install
+      PIPELINE: base-pipeline
+    - TEST: disable_each_install
+      PIPELINE: base-pipeline
+    - TEST: disable_group_installs
+      PIPELINE: base-pipeline
+
+    - TEST: add_cache
+      PIPELINE: extended
+    - TEST: disable_all_install
+      PIPELINE: extended
+    - TEST: disable_each_install
+      PIPELINE: extended
+    - TEST: disable_group_installs
+      PIPELINE: extended
+
+    - TEST: add_cache
+      PIPELINE: full
+    - TEST: disable_all_install
+      PIPELINE: full
+    - TEST: disable_each_install
+      PIPELINE: full
+    - TEST: disable_group_installs
+      PIPELINE: full
+
+  trigger:
+    include:
+    - local: /tests/$PIPELINE/$TEST.yml
+    strategy: depend
+  rules:
+  - if: $CI_PROJECT_NAME == "rust-ci"
+
+# If we are tagging a release with a semantic version and all previous checks succeeded,
+# we proceed with creating a release automatically.
+release:create:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+  - if: $CI_COMMIT_TAG =~ /\d+/
+  script: echo "Creating release $CI_COMMIT_TAG"
+  release:
+    tag_name: $CI_COMMIT_TAG
+    description: "Release $CI_COMMIT_TAG of components repository $CI_PROJECT_PATH"
+
+release:test:
+  stage: release
+  needs:
+  - release:create
+  parallel:
+    matrix:
+    - BRANCH: master
+    - BRANCH: ci/include-base
+    - BRANCH: ci/extended
+    - BRANCH: ci/base
+  trigger:
+    project: rust-ci/dummy-project
+    branch: $BRANCH
+    strategy: depend
+  rules:
+  - if: $CI_COMMIT_TAG =~ /\d+/

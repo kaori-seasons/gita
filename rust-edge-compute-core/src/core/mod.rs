@@ -17,6 +17,13 @@ pub mod updates;
 pub mod performance;
 pub mod load_balancer;
 pub mod intelligent_scheduler;
+pub mod zeromq_source;
+pub mod offset_tracker;
+pub mod window_aggregator;
+pub mod ordered_window_processor;
+
+#[cfg(test)]
+mod integration_tests;
 
 pub use types::*;
 pub use error::*;
@@ -33,3 +40,7 @@ pub use updates::*;
 pub use performance::*;
 pub use load_balancer::*;
 pub use intelligent_scheduler::*;
+pub use zeromq_source::*;
+pub use offset_tracker::*;
+pub use window_aggregator::*;
+pub use ordered_window_processor::*;

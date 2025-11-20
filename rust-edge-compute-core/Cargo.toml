@@ -26,9 +26,9 @@ chrono = { workspace = true }
 fastrand = { workspace = true }
 lazy_static = { workspace = true }
 
-# 数据库
-sled = { workspace = true }
-bincode = { workspace = true }
+# 数据库（优化：只启用必要的 features）
+sled = { workspace = true, default-features = false }
+bincode = { version = "1.3", default-features = false }
 
 # 异步特质
 async-trait = { workspace = true }
@@ -36,9 +36,9 @@ async-trait = { workspace = true }
 # 日志
 tracing = { workspace = true }
 
-# 配置管理
-config = { workspace = true }
-dotenvy = { workspace = true }
+# 配置管理（优化：只启用必要的 features）
+config = { workspace = true, default-features = false }
+dotenvy = { workspace = true, default-features = false }
 
 # 容器管理
 oci-spec = { workspace = true }
@@ -55,10 +55,14 @@ argon2 = { workspace = true }
 rand = { workspace = true }
 hex = { workspace = true }
 
-# 审计和监控
-opentelemetry = { workspace = true }
-opentelemetry-jaeger = { workspace = true }
-tracing-opentelemetry = { workspace = true }
+# 审计和监控（优化：只启用必要的 features）
+# 注意：如果不需要监控功能，可以考虑移除这些依赖
+opentelemetry = { workspace = true, default-features = false }
+opentelemetry-jaeger = { workspace = true, default-features = false }
+tracing-opentelemetry = { workspace = true, default-features = false }
+
+# ZeroMQ 支持（使用异步 API）
+zeromq = "0.5.0-pre"
 
 [dev-dependencies]
 tokio-test = "0.4"

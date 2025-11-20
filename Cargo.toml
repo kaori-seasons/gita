@@ -15,18 +15,44 @@ edition = "2021"
 authors = ["Edge Compute Team"]
 license = "MIT"
 
+# Release 模式优化配置（针对边缘端部署）
+[profile.release]
+# 优化等级：'z' 表示最小二进制体积
+opt-level = 'z'
+# 链接时优化，消除冗余代码
+# 使用 "thin" 而不是 true，平衡编译时间和优化效果
+# thin LTO: 编译更快，优化效果略差但体积仍然显著减小
+# fat LTO (true): 编译更慢，优化效果最好
+lto = "thin"
+# 限制并行代码生成单元数量，便于优化
+codegen-units = 1
+# Panic 时立刻终止，减少体积（会禁用栈回溯）
+panic = 'abort'
+# 减少调试信息
+debug = false
+# 减少符号信息
+strip = true
+
 [workspace.dependencies]
-# 异步运行时
-tokio = { version = "1.0", features = ["full"] }
-tokio-util = "0.7"
+# 异步运行时（优化：只启用必要的 features）
+# 注意：根据实际使用情况调整 features
+tokio = { version = "1.0", default-features = false, features = [
+    "rt-multi-thread",  # 多线程运行时
+    "net",              # 网络支持
+    "io-util",          # IO 工具
+    "time",             # 时间支持
+    "sync",             # 同步原语
+    "macros",           # 宏支持
+] }
+tokio-util = { version = "0.7", default-features = false, features = ["codec", "io"] }
 
-# Web框架
-axum = "0.7"
-tower = "0.4"
-tower-http = { version = "0.5", features = ["cors", "fs"] }
+# Web框架（优化：只启用必要的 features）
+axum = { version = "0.7", default-features = false, features = ["http1", "http2", "json"] }
+tower = { version = "0.4", default-features = false }
+tower-http = { version = "0.5", default-features = false, features = ["cors", "fs"] }
 
-# HTTP客户端
-reqwest = { version = "0.11", features = ["json"] }
+# HTTP客户端（优化：只启用必要的 features）
+reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
 
 # 序列化
 serde = { version = "1.0", features = ["derive"] }
@@ -52,15 +78,15 @@ tokio-process = "0.2"
 config = "0.14"
 dotenvy = "0.15"
 
-# 日志
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tracing-appender = "0.2"
+# 日志（优化：只启用必要的 features）
+tracing = { version = "0.1", default-features = false }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "fmt", "std"] }
+tracing-appender = { version = "0.2", default-features = false }
 
-# 工具库
-uuid = { version = "1.0", features = ["v4", "serde"] }
-futures = "0.3"
-chrono = { version = "0.4", features = ["serde"] }
+# 工具库（优化：只启用必要的 features）
+uuid = { version = "1.0", default-features = false, features = ["v4", "serde"] }
+futures = { version = "0.3", default-features = false }
+chrono = { version = "0.4", default-features = false, features = ["serde", "clock"] }
 fastrand = "2.0"
 lazy_static = "1.4"
 
@@ -82,7 +108,8 @@ argon2 = "0.5"
 rand = "0.8"
 hex = "0.4"
 
-# 审计和监控
-opentelemetry = "0.20"
-opentelemetry-jaeger = "0.19"
-tracing-opentelemetry = "0.21"
+# 审计和监控（优化：只启用必要的 features）
+# 注意：如果不需要监控功能，可以考虑移除这些依赖
+opentelemetry = { version = "0.20", default-features = false }
+opentelemetry-jaeger = { version = "0.19", default-features = false }
+tracing-opentelemetry = { version = "0.21", default-features = false }
