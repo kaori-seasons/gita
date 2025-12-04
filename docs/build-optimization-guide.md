@@ -61,34 +61,17 @@ axum = { version = "0.7", default-features = false, features = ["http1", "http2"
 
 ### 3. 构建脚本优化
 
-**配置位置**：
-- 主要优化配置在 `Cargo.toml` 的 `[profile.release]` 中
-- 额外的优化选项通过 CI 中的 `RUSTFLAGS` 环境变量设置（只影响 release 构建）
+创建了 `.cargo/config.toml` 配置文件，添加了额外的编译选项：
 
-**优化配置详情**：
-
-#### Cargo.toml 中的配置
 ```toml
-[profile.release]
-opt-level = 'z'        # 最小二进制体积优化
-lto = "thin"           # 使用 thin LTO（平衡编译时间和优化效果）
-codegen-units = 1      # 限制并行代码生成单元
-panic = 'abort'        # Panic 时立刻终止
-debug = false          # 减少调试信息
-strip = true           # 减少符号信息
+[target.'cfg(all(target_os = "linux", target_arch = "x86_64"))']
+rustflags = [
+    "-C", "opt-level=z",
+    "-C", "lto=thin",
+    "-C", "codegen-units=1",
+    "-C", "link-dead-code=false",
+]
 ```
-
-#### CI 中的额外优化
-在 GitLab CI 的 release 构建作业中，通过 `RUSTFLAGS` 环境变量添加：
-```yaml
-variables:
-  RUSTFLAGS: "-C link-dead-code=false"  # 移除未使用的代码
-```
-
-**为什么不在 `.cargo/config.toml` 中设置全局配置**：
-- 全局配置会影响所有构建模式（dev、test、clippy 等）
-- 可能导致 LTO 与某些 proc-macro 依赖的 `embed-bitcode=no` 冲突
-- 通过 CI 中的 `RUSTFLAGS` 可以精确控制，只影响 release 构建
 
 ## 📊 预期优化效果
 

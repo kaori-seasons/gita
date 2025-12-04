@@ -64,15 +64,16 @@ pub fn create_routes(state: AppState) -> Router {
         ))
         .layer(axum::middleware::from_fn(security_headers_middleware))
         .layer(axum::middleware::from_fn(cors_middleware))
-        .layer(
-            tower_http::trace::TraceLayer::new_for_http()
-                .make_span_with(
-                    tower_http::trace::DefaultMakeSpan::new()
-                        .level(tracing::Level::INFO),
-                )
-                .on_response(
-                    tower_http::trace::DefaultOnResponse::new()
-                        .level(tracing::Level::INFO),
-                ),
-        )
+        // Note: tower_http::trace requires 'trace' feature
+        // .layer(
+        //     tower_http::trace::TraceLayer::new_for_http()
+        //         .make_span_with(
+        //             tower_http::trace::DefaultMakeSpan::new()
+        //                 .level(tracing::Level::INFO),
+        //         )
+        //         .on_response(
+        //             tower_http::trace::DefaultOnResponse::new()
+        //                 .level(tracing::Level::INFO),
+        //         ),
+        // )
 }

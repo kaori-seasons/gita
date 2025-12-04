@@ -15,14 +15,16 @@ use tokio::sync::{RwLock, Mutex};
 use tokio::process::Command;
 use serde::{Deserialize, Serialize};
 
-use crate::core::{ComputeRequest, ComputeResponse, ContainerConfig};
-use crate::core::error::Result;
-use crate::ffi::MemoryManager;
+use crate::core::{ComputeRequest, ComputeResponse, ContainerConfig, EdgeComputeError, ResourceLimits};
+use crate::core::security::SecurityConfig;
+use crate::core::ffi::MemoryManager;
+use crate::container::{YoukiContainerManager, ResourceRequirements};
+use crate::core::{TaskSpawner, SpawnConfig};
 
 /// 容器化算法执行器
 pub struct ContainerizedAlgorithmExecutor {
     /// Youki容器管理器
-    container_manager: Arc<super::YoukiContainerManager>,
+    container_manager: Arc<YoukiContainerManager>,
     /// 算法插件注册表
     algorithm_registry: Arc<RwLock<AlgorithmRegistry>>,
     /// 内存管理器
@@ -207,7 +209,7 @@ pub struct ResourceUsage {
 impl ContainerizedAlgorithmExecutor {
     /// 创建新的容器化算法执行器
     pub fn new(
-        container_manager: Arc<super::YoukiContainerManager>,
+        container_manager: Arc<YoukiContainerManager>,
         memory_manager: Arc<MemoryManager>,
     ) -> Self {
         let runtime_config = RuntimeConfig {
@@ -302,7 +304,7 @@ impl ContainerizedAlgorithmExecutor {
             &plugin_image,
             &execution_dir,
             &input_file,
-        )?;
+        ).await?;
 
         // 6. 创建并启动容器
         let container_id: String = self.container_manager.create_container(
@@ -390,10 +392,14 @@ impl ContainerizedAlgorithmExecutor {
 
         // 10. 清理执行目录（延迟清理，避免影响调试）
         if !self.runtime_config.debug_mode {
-            let _ = tokio::spawn(async move {
-                tokio::time::sleep(Duration::from_secs(60)).await; // 延迟1分钟清理
-                let _ = tokio::fs::remove_dir_all(&execution_dir).await;
-            });
+            let _ = TaskSpawner::spawn_with_config(
+                async move {
+                    tokio::time::sleep(Duration::from_secs(60)).await; // 延迟1分鐘清理
+                    let _ = tokio::fs::remove_dir_all(&execution_dir).await;
+                },
+                SpawnConfig::new(format!("cleanup_{}", execution_id))
+                    .with_log_success(false)
+            );
         }
 
         tracing::info!("Containerized algorithm execution completed: {}", execution_id);
@@ -472,7 +478,7 @@ impl ContainerizedAlgorithmExecutor {
     }
 
     /// 创建容器配置
-    fn create_container_config(
+    async fn create_container_config(
         &self,
         algorithm: &AlgorithmInfo,
         image: &PluginImage,
@@ -493,8 +499,18 @@ impl ContainerizedAlgorithmExecutor {
         let mut mounts = image.mounts.clone();
 
         // 添加输入文件挂载
+        let input_parent = input_file.parent().ok_or_else(|| {
+            EdgeComputeError::Config {
+                message: format!(
+                    "Input file {} does not have a parent directory",
+                    input_file.display()
+                ),
+                source: Some("container-executor".to_string()),
+            }
+        })?;
+
         mounts.push(MountPoint {
-            host_path: input_file.parent().unwrap().to_path_buf(),
+            host_path: input_parent.to_path_buf(),
             container_path: PathBuf::from("/input"),
             options: vec!["ro".to_string()],
             readonly: true,
@@ -586,8 +602,8 @@ impl AlgorithmRegistry {
 
 impl Default for ContainerizedAlgorithmExecutor {
     fn default() -> Self {
-        let container_manager = Arc::new(super::YoukiContainerManager::new(PathBuf::from("./runtime")));
-        let memory_manager = Arc::new(crate::ffi::MemoryManager::new());
+        let container_manager = Arc::new(YoukiContainerManager::new(PathBuf::from("./runtime")));
+        let memory_manager = Arc::new(MemoryManager::new());
 
         Self::new(container_manager, memory_manager)
     }

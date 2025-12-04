@@ -366,9 +366,10 @@ impl LoadTester {
         for user_id in 0..self.config.concurrent_users {
             let client = self.http_client.clone();
             let url = target_url.to_string();
+            let load_test_config = self.config.clone();
 
             let handle = tokio::spawn(async move {
-                Self::run_user_simulation(client, url, user_id, config).await
+                Self::run_user_simulation(client, url, user_id, load_test_config).await
             });
 
             handles.push(handle);
@@ -454,7 +455,7 @@ impl LoadTester {
     async fn run_user_simulation(
         client: reqwest::Client,
         url: String,
-        user_id: usize,
+        _user_id: usize,
         config: LoadTestConfig,
     ) -> Result<(u64, u64, Vec<u128>), Box<dyn std::error::Error + Send + Sync>> {
         let mut requests = 0u64;
@@ -516,7 +517,7 @@ pub struct PerformanceOptimizer;
 impl PerformanceOptimizer {
     /// 分析性能瓶颈并生成优化建议
     pub async fn analyze_and_optimize(
-        analyzer: &PerformanceAnalyzer,
+        _analyzer: &PerformanceAnalyzer,
         metrics: &PerformanceMetrics,
     ) -> Vec<OptimizationRecommendation> {
         let mut recommendations = Vec::new();

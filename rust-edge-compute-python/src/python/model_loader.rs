@@ -116,20 +116,28 @@ impl ModelLoader {
         let load_stats = Arc::clone(&self.load_stats);
         let interval = Duration::from_secs(self.config.scan_interval_seconds);
         
-        let handle = tokio::spawn(async move {
-            let mut interval_timer = tokio::time::interval(interval);
-            
-            loop {
-                interval_timer.tick().await;
+        let handle = crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                let mut interval_timer = tokio::time::interval(interval);
                 
-                // 扫描模型目录
-                if let Err(e) = Self::scan_model_directory(&model_dir, &loaded_models, &load_stats).await {
-                    tracing::error!("Error scanning model directory: {}", e);
+                loop {
+                    interval_timer.tick().await;
+                    
+                    // 扫描模型目录
+                    if let Err(e) = Self::scan_model_directory(&model_dir, &loaded_models, &load_stats).await {
+                        tracing::error!("Error scanning model directory: {}", e);
+                    }
                 }
-            }
-        });
+            },
+            crate::core::SpawnConfig::new("model_scan_task")
+                .with_timeout(self.config.scan_interval_seconds + 10)
+                .with_detailed_errors(true)
+        );
         
-        let mut scan_handle = self.scan_handle.write().unwrap();
+        let mut scan_handle = self
+            .scan_handle
+            .write()
+            .expect("model loader scan handle poisoned");
         *scan_handle = Some(handle);
     }
     

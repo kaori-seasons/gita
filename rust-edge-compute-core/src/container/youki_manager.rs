@@ -7,16 +7,20 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use youki::container::{Container, ContainerCreateOpts};
-use youki::spec::Spec;
+// Note: Youki container crate is not available in this environment
+// use youki::container::{Container, ContainerCreateOpts};
+// use youki::spec::Spec;
 use oci_spec::runtime::{Spec as OciSpec, ProcessBuilder, RootBuilder, LinuxBuilder, LinuxResourcesBuilder, LinuxMemoryBuilder, LinuxCpuBuilder};
 use anyhow::{Context, Result as AnyhowResult};
 use uuid::Uuid;
 
-use crate::core::{ContainerConfig, Result};
+use crate::core::{ContainerConfig};
+use crate::Result;
 
-// 添加libc导入用于信号处理
-extern crate libc;
+// Container placeholder type when youki is not available
+type Container = String;
+
+use libc;
 
 /// 基于Youki API的容器管理器 - 生产级实现
 pub struct YoukiContainerManager {

@@ -3,6 +3,10 @@
 #include <numeric>
 #include <cmath>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 namespace AlgorithmPlugins {
 
 // FeaturePluginBase实现
@@ -51,6 +55,12 @@ bool FeaturePluginBase::extractFeatures(std::shared_ptr<PluginData> input,
         setError("特征提取异常: " + std::string(e.what()));
         return false;
     }
+}
+
+// FeaturePluginBase的process()实现
+bool FeaturePluginBase::process(std::shared_ptr<PluginData> input, 
+                               std::shared_ptr<PluginResult> output) {
+    return extractFeatures(input, output);
 }
 
 // VibrationFeaturePluginBase实现
@@ -180,7 +190,6 @@ int VibrationFeaturePluginBase::determineStatus(const std::vector<double>& speed
                                                size_t start, size_t end) {
     if (speed_data.empty()) return 1;
     
-    // 计算该段的平均转速
     double avg_speed = 0.0;
     int count = 0;
     
@@ -192,10 +201,9 @@ int VibrationFeaturePluginBase::determineStatus(const std::vector<double>& speed
     if (count == 0) return 1;
     avg_speed /= count;
     
-    // 简化的状态判断逻辑
-    if (avg_speed < 10.0) return 0;      // 停机
-    else if (avg_speed < 50.0) return 2; // 过渡
-    else return 1;                        // 运行
+    if (avg_speed < 10.0) return 0;
+    else if (avg_speed < 50.0) return 2;
+    else return 1;
 }
 
 // RealTimeFeaturePluginBase实现

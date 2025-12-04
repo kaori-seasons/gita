@@ -5,6 +5,7 @@ use axum::{
     http::{header, StatusCode},
     middleware::Next,
     response::{IntoResponse, Response},
+    Json,
 };
 use std::sync::Arc;
 use serde_json::json;
@@ -13,7 +14,7 @@ use super::handlers::AppState;
 
 /// 认证中间件
 pub async fn auth_middleware(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
     mut request: Request,
     next: Next,
 ) -> Response {
@@ -35,21 +36,19 @@ pub async fn auth_middleware(
             } else {
                 return (
                     StatusCode::UNAUTHORIZED,
-                    [(header::WWW_AUTHENTICATE, "Bearer")],
-                    json!({
+                    Json(json!({
                         "error": "Invalid token",
                         "message": "The provided authentication token is invalid"
-                    }),
+                    })),
                 ).into_response();
             }
         } else {
             return (
                 StatusCode::UNAUTHORIZED,
-                [(header::WWW_AUTHENTICATE, "Bearer")],
-                json!({
+                Json(json!({
                     "error": "Invalid authorization header",
                     "message": "Authorization header must start with 'Bearer '"
-                }),
+                })),
             ).into_response();
         }
     } else {
@@ -64,12 +63,12 @@ pub async fn auth_middleware(
 
 /// 速率限制中间件
 pub async fn rate_limit_middleware(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
     request: Request,
     next: Next,
 ) -> Response {
     // 获取客户端IP
-    let client_ip = extract_client_ip(&request);
+    let _client_ip = extract_client_ip(&request);
 
     // 这里应该检查速率限制
     // 暂时跳过速率限制检查
@@ -216,16 +215,19 @@ pub async fn login(
         // 生成JWT token（模拟）
         let token = format!("jwt_token_for_{}", username);
 
-        Json(json!({
-            "token": token,
-            "user": {
-                "id": "user123",
-                "username": username,
-                "roles": ["user"],
-                "permissions": ["execute:add", "execute:multiply"]
-            },
-            "expires_in": 3600
-        }))
+        (
+            StatusCode::OK,
+            Json(json!({
+                "token": token,
+                "user": {
+                    "id": "user123",
+                    "username": username,
+                    "roles": ["user"],
+                    "permissions": ["execute:add", "execute:multiply"]
+                },
+                "expires_in": 3600
+            }))
+        ).into_response()
     } else {
         (
             StatusCode::BAD_REQUEST,

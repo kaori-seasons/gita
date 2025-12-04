@@ -35,6 +35,11 @@ async-trait = { workspace = true }
 
 # 日志
 tracing = { workspace = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-appender = "0.2"
+
+# 系统库
+libc = "0.2"
 
 # 配置管理（优化：只启用必要的 features）
 config = { workspace = true, default-features = false }
@@ -64,6 +69,15 @@ tracing-opentelemetry = { workspace = true, default-features = false }
 # ZeroMQ 支持（使用异步 API）
 zeromq = "0.5.0-pre"
 
+# Web框架（优化：只启用必要的 features）
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+
+# HTTP客户端（必需）
+reqwest = { workspace = true }
+
 [dev-dependencies]
 tokio-test = "0.4"
+pathbuf = "1.0"
 

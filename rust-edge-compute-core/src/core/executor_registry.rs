@@ -2,12 +2,19 @@
 //!
 //! 管理所有注册的executor，提供executor查找和选择功能
 
-use crate::core::executor_trait::{Executor, ResourceRequirements};
-use crate::core::{ComputeRequest, ComputeResponse};
-use crate::core::error::Result;
+use crate::container::ResourceRequirements;
+use crate::Result;
 use std::sync::Arc;
 use std::collections::HashMap;
 use tokio::sync::RwLock;
+
+/// Executor trait (placeholder - actual implementation in executor_trait module)
+pub trait Executor: Send + Sync {
+    fn name(&self) -> &str;
+    fn version(&self) -> &str;
+    fn supported_algorithms(&self) -> Vec<String>;
+    fn resource_requirements(&self) -> ResourceRequirements;
+}
 
 /// Executor注册表
 ///

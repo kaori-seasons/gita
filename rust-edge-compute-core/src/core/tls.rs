@@ -227,7 +227,8 @@ pub mod middleware {
         let headers = response.headers_mut();
         headers.insert(
             "Strict-Transport-Security",
-            "max-age=31536000; includeSubDomains; preload".parse().unwrap(),
+            "max-age=31536000; includeSubDomains; preload".parse()
+                .expect("Failed to parse HSTS header value"),
         );
 
         response

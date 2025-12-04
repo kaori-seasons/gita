@@ -39,6 +39,10 @@ public:
     bool isInitialized() const override { return initialized_; }
     std::string getLastError() const override { return last_error_; }
     
+    // process()默认实现：委托给processEvent()
+    bool process(std::shared_ptr<PluginData> input, 
+                std::shared_ptr<PluginResult> output) override;
+    
     // 事件处理核心接口
     virtual bool processEvent(std::shared_ptr<PluginData> input, 
                              std::shared_ptr<PluginResult> output) = 0;
@@ -153,7 +157,7 @@ private:
     
     // 报警级别名称
     std::vector<std::string> alarm_level_names_ = {
-        "正常", "轻微", "一般", "严重", "危险", "紧急"
+        "Normal", "Minor", "Moderate", "Severe", "Dangerous", "Emergency"
     };
 };
 
@@ -234,6 +238,9 @@ protected:
 private:
     std::map<int, std::string> status_mapping_;
     std::map<int, std::map<std::string, std::string>> alarm_rules_;
+    
+    // 解析状态映射
+    void parseStatusMapping();
     
     // 解析报警规则
     void parseAlarmRules();

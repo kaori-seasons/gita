@@ -218,7 +218,7 @@ impl MemoryManager {
     pub async fn retain(&self, address: usize) -> Result<(), String> {
         let mut blocks = self.memory_blocks.write().await;
 
-        if let Some(mut block) = blocks.get_mut(&address) {
+        if let Some(block) = blocks.get_mut(&address) {
             if block.is_freed {
                 return Err(format!("Cannot retain freed memory block: {}", address));
             }
@@ -294,15 +294,19 @@ impl MemoryManager {
         }
 
         let gc_interval = self.gc_interval;
-        tokio::spawn(async move {
-            loop {
-                tokio::time::sleep(gc_interval).await;
+        crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                loop {
+                    tokio::time::sleep(gc_interval).await;
 
-                if let Err(e) = self.garbage_collect().await {
-                    tracing::error!("Auto GC failed: {}", e);
+                    if let Err(e) = self.garbage_collect().await {
+                        tracing::error!("Auto GC failed: {}", e);
+                    }
                 }
-            }
-        });
+            },
+            crate::core::SpawnConfig::new("auto_gc")
+                .with_detailed_errors(true)
+        );
     }
 }
 

@@ -151,7 +151,7 @@ impl ComputeResponse {
 }
 
 /// 负载均衡策略
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum LoadBalancingStrategy {
     /// 轮询调度
     RoundRobin,
@@ -185,7 +185,7 @@ pub struct DynamicStrategyAdjuster {
 }
 
 /// 性能阈值
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct PerformanceThresholds {
     /// 高负载阈值
     pub high_load_threshold: f64,

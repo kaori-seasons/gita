@@ -1,1 +1,0 @@
-impl futures::Future<Output = tokio::sync::MutexGuard<'_, DynamicStrategyAdjuster>>

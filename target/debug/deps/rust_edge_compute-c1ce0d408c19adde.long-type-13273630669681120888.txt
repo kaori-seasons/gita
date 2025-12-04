@@ -1,3 +1,0 @@
-argon2::password_hash::Salt<'_>
-argon2::password_hash::Salt<'_>: From<&str>
-Into<argon2::password_hash::Salt<'_>>

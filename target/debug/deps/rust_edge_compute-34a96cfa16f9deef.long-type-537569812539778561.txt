@@ -1,2 +1,0 @@
-persistence::_::<impl Deserialize<'de> for CleanupStats>::deserialize::__Field
-persistence::_::<impl Deserialize<'de> for DatabaseStats>::deserialize::__Field

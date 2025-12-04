@@ -15,8 +15,8 @@ use tokio::sync::{RwLock, Mutex};
 use tokio::process::Command;
 use serde::{Deserialize, Serialize};
 
-use crate::core::{ComputeRequest, ComputeResponse, ContainerConfig};
-use crate::core::error::Result;
+use crate::core::{ComputeRequest, ComputeResponse, ContainerConfig, Result, ResourceLimits};
+use crate::core::types::SecurityConfig;
 use crate::ffi::MemoryManager;
 
 /// 容器化算法执行器
@@ -243,10 +243,11 @@ impl ContainerizedAlgorithmExecutor {
             return Err(format!("Plugin image not found: {}", image.image_name).into());
         }
 
-        registry.algorithms.insert(info.name.clone(), info);
-        registry.plugin_images.insert(info.name.clone(), image);
+        let algorithm_name = info.name.clone();
+        registry.algorithms.insert(algorithm_name.clone(), info);
+        registry.plugin_images.insert(algorithm_name.clone(), image);
 
-        tracing::info!("Registered algorithm plugin: {}", info.name);
+        tracing::info!("Registered algorithm plugin: {}", algorithm_name);
         Ok(())
     }
 
@@ -302,7 +303,7 @@ impl ContainerizedAlgorithmExecutor {
             &plugin_image,
             &execution_dir,
             &input_file,
-        )?;
+        ).await?;
 
         // 6. 创建并启动容器
         let container_id: String = self.container_manager.create_container(
@@ -331,7 +332,7 @@ impl ContainerizedAlgorithmExecutor {
 
                 ExecutionResult {
                     execution_id: execution_id.clone(),
-                    container_id,
+                    container_id: container_id.clone(),
                     status: ExecutionStatus::Success,
                     result: Some(output_data),
                     error_message: None,
@@ -349,7 +350,7 @@ impl ContainerizedAlgorithmExecutor {
 
                 ExecutionResult {
                     execution_id: execution_id.clone(),
-                    container_id,
+                    container_id: container_id.clone(),
                     status: ExecutionStatus::Failed,
                     result: None,
                     error_message: Some(e.to_string()),
@@ -367,7 +368,7 @@ impl ContainerizedAlgorithmExecutor {
 
                 ExecutionResult {
                     execution_id: execution_id.clone(),
-                    container_id,
+                    container_id: container_id.clone(),
                     status: ExecutionStatus::Timeout,
                     result: None,
                     error_message: Some(format!("Execution timeout after {} seconds", algorithm_info.timeout_seconds)),
@@ -472,7 +473,7 @@ impl ContainerizedAlgorithmExecutor {
     }
 
     /// 创建容器配置
-    fn create_container_config(
+    async fn create_container_config(
         &self,
         algorithm: &AlgorithmInfo,
         image: &PluginImage,
@@ -534,7 +535,7 @@ impl ContainerizedAlgorithmExecutor {
     /// 等待执行完成
     async fn wait_for_execution_completion(
         &self,
-        container_id: &str,
+        _container_id: &str,
         execution_dir: &Path,
     ) -> Result<serde_json::Value> {
         // 这里应该通过容器日志或文件监控来检测执行完成
@@ -561,7 +562,7 @@ impl ContainerizedAlgorithmExecutor {
     }
 
     /// 收集资源使用情况
-    async fn collect_resource_usage(&self, container_id: &str) -> ResourceUsage {
+    async fn collect_resource_usage(&self, _container_id: &str) -> ResourceUsage {
         // 这里应该从容器运行时收集实际的资源使用情况
         // 暂时返回模拟数据
 

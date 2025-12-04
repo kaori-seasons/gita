@@ -23,6 +23,10 @@ public:
     bool isInitialized() const override { return initialized_; }
     std::string getLastError() const override { return last_error_; }
     
+    // process()默认实现：委托给evaluateHealth()
+    bool process(std::shared_ptr<PluginData> input, 
+                std::shared_ptr<PluginResult> output) override;
+    
     // 健康评估核心接口
     virtual bool evaluateHealth(std::shared_ptr<PluginData> input, 
                                std::shared_ptr<PluginResult> output) = 0;
@@ -186,6 +190,12 @@ private:
     
     // 分数转换
     double convertToScore(double value, const std::vector<double>& thresholds, double upper_limit);
+    
+    // 健康配置解析
+    void parseHealthConfigs(const std::string& configs_str);
+    
+    // 特征统计解析
+    void parseFeatureStats(const std::string& stats_str);
 };
 
 /**
@@ -279,6 +289,9 @@ private:
     
     // 特征名称（从参数中获取）
     std::vector<std::string> feature_names_;
+    
+    // 平滑参数解析
+    void parseSmoothParams(const std::string& params_str, std::map<std::string, std::string>& smooth_param);
 };
 
 } // namespace AlgorithmPlugins

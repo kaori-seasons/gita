@@ -1,12 +1,14 @@
 #include "plugin_base.h"
+#include "vibrate31_plugin.h"
 #include "feature_plugin_base.h"
 #include "decision_plugin_base.h"
 #include "evaluation_plugin_base.h"
 #include "event_plugin_base.h"
+#include "plugin_manager.h"
 
 namespace AlgorithmPlugins {
 
-// 振动特征提取插件工厂
+// 鎸姩鐗瑰緛鎻愬彇鎻掍欢宸ュ巶
 class Vibrate31PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -22,7 +24,7 @@ public:
     }
 };
 
-// 电流特征提取插件工厂
+// 鐢垫祦鐗瑰緛鎻愬彇鎻掍欢宸ュ巶
 class CurrentFeaturePluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -38,7 +40,7 @@ public:
     }
 };
 
-// 温度特征提取插件工厂
+// 娓╁害鐗瑰緛鎻愬彇鎻掍欢宸ュ巶
 class TemperatureFeaturePluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -54,7 +56,7 @@ public:
     }
 };
 
-// 声音特征提取插件工厂
+// 澹伴煶鐗瑰緛鎻愬彇鎻掍欢宸ュ巶
 class AudioFeaturePluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -70,7 +72,7 @@ public:
     }
 };
 
-// 电机状态识别插件工厂
+// 鐢垫満鐘舵€佽瘑鍒彃浠跺伐鍘?
 class Motor97PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -86,7 +88,7 @@ public:
     }
 };
 
-// 通用分类器插件工厂
+// 閫氱敤鍒嗙被鍣ㄦ彃浠跺伐鍘?
 class UniversalClassify1PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -102,7 +104,7 @@ public:
     }
 };
 
-// 实时健康度评估插件工厂
+// 瀹炴椂鍋ュ悍搴﹁瘎浼版彃浠跺伐鍘?
 class CompRealtimeHealth34PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -118,7 +120,7 @@ public:
     }
 };
 
-// 错误检测插件工厂
+// 閿欒妫€娴嬫彃浠跺伐鍘?
 class Error18PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -134,7 +136,7 @@ public:
     }
 };
 
-// 分数报警插件工厂
+// 鍒嗘暟鎶ヨ鎻掍欢宸ュ巶
 class ScoreAlarm5PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -150,7 +152,7 @@ public:
     }
 };
 
-// 状态报警插件工厂
+// 鐘舵€佹姤璀︽彃浠跺伐鍘?
 class StatusAlarm4PluginFactory : public IPluginFactory {
 public:
     std::shared_ptr<IPlugin> createPlugin() override {
@@ -166,32 +168,32 @@ public:
     }
 };
 
-// 插件注册函数
+// 鎻掍欢娉ㄥ唽鍑芥暟
 void registerAllPlugins() {
     auto& manager = PluginManager::getInstance();
     
-    // 注册特征提取插件
+    // 娉ㄥ唽鐗瑰緛鎻愬彇鎻掍欢
     manager.registerPluginFactory(std::make_shared<Vibrate31PluginFactory>());
     manager.registerPluginFactory(std::make_shared<CurrentFeaturePluginFactory>());
     manager.registerPluginFactory(std::make_shared<TemperatureFeaturePluginFactory>());
     manager.registerPluginFactory(std::make_shared<AudioFeaturePluginFactory>());
     
-    // 注册状态识别插件
+    // 娉ㄥ唽鐘舵€佽瘑鍒彃浠?
     manager.registerPluginFactory(std::make_shared<Motor97PluginFactory>());
     manager.registerPluginFactory(std::make_shared<UniversalClassify1PluginFactory>());
     
-    // 注册健康评估插件
+    // 娉ㄥ唽鍋ュ悍璇勪及鎻掍欢
     manager.registerPluginFactory(std::make_shared<CompRealtimeHealth34PluginFactory>());
     manager.registerPluginFactory(std::make_shared<Error18PluginFactory>());
     
-    // 注册事件处理插件
+    // 娉ㄥ唽浜嬩欢澶勭悊鎻掍欢
     manager.registerPluginFactory(std::make_shared<ScoreAlarm5PluginFactory>());
     manager.registerPluginFactory(std::make_shared<StatusAlarm4PluginFactory>());
 }
 
 } // namespace AlgorithmPlugins
 
-// C接口导出函数
+// C鎺ュ彛瀵煎嚭鍑芥暟
 extern "C" {
     void register_algorithm_plugins() {
         AlgorithmPlugins::registerAllPlugins();

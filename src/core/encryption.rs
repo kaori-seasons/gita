@@ -2,7 +2,7 @@
 
 use aes_gcm::{Aes256Gcm, Key, KeyInit, Nonce};
 use aes_gcm::aead::{Aead};
-use argon2::{Argon2, PasswordHasher, password_hash::{PasswordHash, PasswordVerifier, Salt, SaltString}};
+use argon2::{Argon2, PasswordHasher, password_hash::{PasswordHash, PasswordVerifier, SaltString}};
 use rand::RngCore;
 use ring::rand::SecureRandom;
 use std::collections::HashMap;

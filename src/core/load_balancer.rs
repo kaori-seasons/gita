@@ -56,7 +56,7 @@ pub struct LoadBalancer {
     intelligent_scheduler: Arc<IntelligentScheduler>,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize)]
 pub struct LoadBalancerStats {
     /// 总请求数
     pub total_requests: u64,
@@ -229,7 +229,7 @@ impl LoadBalancer {
     async fn try_intelligent_selection(&self, workers: &[&WorkerInfo]) -> Option<usize> {
         // 计算当前系统状态
         let system_load = self.calculate_system_load().await;
-        let avg_response_time = self.calculate_average_response_time().await;
+        let _avg_response_time = self.calculate_average_response_time().await;
         let queue_length = 0; // 这里需要从调度器获取实际队列长度
 
         // 使用智能调度器进行预测
@@ -438,7 +438,7 @@ impl LoadBalancer {
         let avg_response_time = self.calculate_average_response_time().await;
 
         // 根据负载和响应时间决定新的策略
-        let new_strategy = self.determine_optimal_strategy(system_load, avg_response_time);
+        let new_strategy = self.determine_optimal_strategy(system_load, avg_response_time).await;
 
         // 如果策略发生变化，记录历史
         if new_strategy != self.config.strategy {
@@ -457,8 +457,8 @@ impl LoadBalancer {
     }
 
     /// 根据系统状态确定最优策略
-    fn determine_optimal_strategy(&self, system_load: f64, avg_response_time: f64) -> LoadBalancingStrategy {
-        let adjuster = self.dynamic_strategy_adjuster.lock().unwrap();
+    async fn determine_optimal_strategy(&self, system_load: f64, avg_response_time: f64) -> LoadBalancingStrategy {
+        let adjuster = self.dynamic_strategy_adjuster.lock().await;
 
         // 高负载情况
         if system_load > adjuster.performance_thresholds.high_load_threshold {
@@ -566,13 +566,14 @@ impl LoadBalancer {
 }
 
 /// 动态调整统计信息
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct DynamicAdjustmentStats {
     /// 当前系统负载水平
     pub current_system_load: f64,
     /// 策略变更次数
     pub strategy_changes: usize,
     /// 最后调整时间
+    #[allow(dead_code)]
     pub last_adjustment: Instant,
     /// 性能阈值
     pub performance_thresholds: PerformanceThresholds,

@@ -52,8 +52,8 @@ impl ExceptionHandler {
     pub fn new() -> Self {
         Self {
             exceptions: Arc::new(RwLock::new(HashMap::new())),
-            error_translator: ErrorTranslator::new(),
-            result_processor: ResultProcessor::new(),
+            error_translator: Arc::new(ErrorTranslator::new()),
+            result_processor: Arc::new(ResultProcessor::new()),
             stats: Arc::new(RwLock::new(ExceptionStats::default())),
         }
     }
@@ -301,7 +301,7 @@ impl ResultProcessor {
     }
 
     /// 处理成功结果
-    pub async fn process_success_result(&self, data: serde_json::Value) -> Result<ExceptionResult, String> {
+    pub async fn process_success_result(&self, _data: serde_json::Value) -> Result<ExceptionResult, String> {
         let start_time = std::time::Instant::now();
 
         let result = ExceptionResult {

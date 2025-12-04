@@ -224,22 +224,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     for i in 0..3 {
         let executor_clone = Arc::clone(&algorithm_executor);
-        let task = tokio::spawn(async move {
-            let request = ComputeRequest {
-                id: format!("concurrent_task_{}", i),
-                algorithm: "matrix_multiplication".to_string(),
-                parameters: serde_json::json!({
-                    "operation": "multiply",
-                    "matrix_a": [[i as f64 + 1.0, 0.0], [0.0, i as f64 + 1.0]],
-                    "matrix_b": [[1.0, 0.0], [0.0, 1.0]],
-                }),
-                priority: TaskPriority::Normal,
-                timeout: Some(60),
-            };
+        let task = rust_edge_compute::core::TaskSpawner::spawn_with_config(
+            async move {
+                let request = ComputeRequest {
+                    id: format!("concurrent_task_{}", i),
+                    algorithm: "matrix_multiplication".to_string(),
+                    parameters: serde_json::json!({
+                        "operation": "multiply",
+                        "matrix_a": [[i as f64 + 1.0, 0.0], [0.0, i as f64 + 1.0]],
+                        "matrix_b": [[1.0, 0.0], [0.0, 1.0]],
+                    }),
+                    priority: TaskPriority::Normal,
+                    timeout: Some(60),
+                };
 
-            let result = executor_clone.execute_algorithm(request).await;
-            (i, result)
-        });
+                let result = executor_clone.execute_algorithm(request).await;
+                (i, result)
+            },
+            rust_edge_compute::core::SpawnConfig::new(format!("concurrent_task_{}", i))
+                .with_timeout(60)
+                .with_log_success(true)
+        );
         concurrent_tasks.push(task);
     }
 

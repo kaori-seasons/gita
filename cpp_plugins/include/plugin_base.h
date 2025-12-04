@@ -96,6 +96,7 @@ public:
     virtual bool getBool(const std::string& key, bool defaultValue = false) const = 0;
     virtual std::vector<double> getDoubleArray(const std::string& key) const = 0;
     virtual std::vector<int> getIntArray(const std::string& key) const = 0;
+    virtual std::vector<std::string> getStringArray(const std::string& key) const = 0;
     
     // 设置参数
     virtual void setString(const std::string& key, const std::string& value) = 0;
@@ -104,6 +105,7 @@ public:
     virtual void setBool(const std::string& key, bool value) = 0;
     virtual void setDoubleArray(const std::string& key, const std::vector<double>& value) = 0;
     virtual void setIntArray(const std::string& key, const std::vector<int>& value) = 0;
+    virtual void setStringArray(const std::string& key, const std::vector<std::string>& value) = 0;
     
     // 序列化/反序列化
     virtual std::string serialize() const = 0;

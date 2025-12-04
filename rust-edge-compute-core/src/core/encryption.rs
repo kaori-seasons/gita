@@ -74,7 +74,9 @@ impl EncryptionManager {
             &salt,
         ).map_err(|e| format!("Failed to hash password: {}", e))?;
 
-        let hash = password_hash.hash.unwrap();
+        let hash = password_hash
+            .hash
+            .ok_or_else(|| "Argon2 hash output missing".to_string())?;
         let key = hash.as_bytes().to_vec();
 
         if key.len() != self.config.key_length {
@@ -322,7 +324,9 @@ pub mod utils {
     /// 生成安全的随机数
     pub fn secure_random_bytes(length: usize) -> Vec<u8> {
         let mut bytes = vec![0u8; length];
-        ring::rand::SystemRandom::new().fill(&mut bytes).unwrap();
+        ring::rand::SystemRandom::new()
+            .fill(&mut bytes)
+            .expect("system RNG failed to provide random bytes");
         bytes
     }
 

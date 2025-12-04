@@ -7,6 +7,8 @@ use rust_edge_compute::{
 // 直接导入API模块
 mod api;
 mod core;
+mod container;
+mod ffi;
 
 // 定义Result类型
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
@@ -48,6 +50,8 @@ async fn main() -> Result<()> {
         queue_size: settings.server.task_queue_size,
         task_timeout_seconds: settings.server.request_timeout_seconds,
         default_max_retries: 3,
+        intelligent_scheduling_enabled: false,
+        load_balancer_config: core::LoadBalancerConfig::default(),
     }).with_error_handler(Arc::clone(&error_handler)));
 
     tracing::info!("Task scheduler created with max_concurrent_tasks: {}", 10);
@@ -55,16 +59,22 @@ async fn main() -> Result<()> {
     // 启动调度器
     let scheduler_clone = Arc::clone(&scheduler);
     let error_handler_clone = Arc::clone(&error_handler);
-    tokio::spawn(async move {
-        if let Err(e) = scheduler_clone.start().await {
-            let error = core::EdgeComputeError::TaskScheduling {
-                message: format!("Failed to start scheduler: {}", e),
-                task_id: None,
-                queue_size: None,
-            };
-            let _ = error_handler_clone.handle_error(error).await;
-        }
-    });
+    crate::core::TaskSpawner::spawn_with_config(
+        async move {
+            if let Err(e) = scheduler_clone.start().await {
+                let error = core::EdgeComputeError::TaskScheduling {
+                    message: format!("Failed to start scheduler: {}", e),
+                    task_id: None,
+                    queue_size: None,
+                };
+                let _ = error_handler_clone.handle_error(error).await;
+            }
+            Ok(())
+        },
+        crate::core::SpawnConfig::new("scheduler_start")
+            .with_timeout(300)
+            .with_detailed_errors(true)
+    );
 
     // 创建服务器配置
     let server_config = api::server::ServerConfig {
@@ -104,7 +114,7 @@ async fn main() -> Result<()> {
 
     #[async_trait::async_trait]
     impl core::ShutdownHook for StateSaveHook {
-        async fn on_shutdown(&self, _signal: core::ShutdownSignal) -> Result<(), core::ShutdownError> {
+        async fn on_shutdown(&self, _signal: core::ShutdownSignal) -> std::result::Result<(), core::ShutdownError> {
             tracing::info!("Saving application state before shutdown...");
 
             // 保存错误统计

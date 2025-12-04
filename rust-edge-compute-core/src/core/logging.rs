@@ -513,6 +513,20 @@ impl LogRotationManager {
             let log_path = Path::new(&file_config.path);
 
             if let Some(parent_dir) = log_path.parent() {
+                let log_stem = match log_path
+                    .file_stem()
+                    .map(|stem| stem.to_string_lossy().to_string())
+                {
+                    Some(stem) => stem,
+                    None => {
+                        tracing::warn!(
+                            "Failed to determine file stem for log path: {}",
+                            log_path.display()
+                        );
+                        return Ok(());
+                    }
+                };
+
                 let mut entries = tokio::fs::read_dir(parent_dir).await?;
                 let mut log_files = Vec::new();
 
@@ -520,7 +534,7 @@ impl LogRotationManager {
                 while let Some(entry) = entries.next_entry().await? {
                     let path = entry.path();
                     if let Some(extension) = path.extension() {
-                        if extension == "log" && path.to_string_lossy().contains(&log_path.file_stem().unwrap().to_string_lossy()) {
+                        if extension == "log" && path.to_string_lossy().contains(&log_stem) {
                             if let Ok(metadata) = entry.metadata().await {
                                 log_files.push((path, metadata.modified().unwrap_or(std::time::SystemTime::UNIX_EPOCH)));
                             }

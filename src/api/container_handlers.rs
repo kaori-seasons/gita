@@ -13,7 +13,7 @@ use crate::core::ContainerConfig;
 
 /// 创建容器处理器
 pub async fn create_container(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(_state): axum::extract::State<AppState>,
     Json(request): Json<CreateContainerRequest>,
 ) -> Response {
     // TODO: 实现容器创建逻辑

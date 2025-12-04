@@ -1,2 +1,0 @@
-std::sync::Arc<tokio_rustls::rustls::ConfigBuilder<tokio_rustls::rustls::ServerConfig, WantsServerCert>>
-TlsAcceptor: From<std::sync::Arc<tokio_rustls::rustls::ConfigBuilder<tokio_rustls::rustls::ServerConfig, WantsServerCert>>>

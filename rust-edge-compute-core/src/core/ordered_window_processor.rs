@@ -5,12 +5,13 @@
 
 use std::sync::Arc;
 use tokio::sync::{mpsc, RwLock};
-use crate::core::error::Result;
+use crate::Result;
 use crate::core::offset_tracker::{OffsetTracker, OffsetTrackerConfig, WindowData};
 use crate::core::window_aggregator::{SlidingWindowAggregator, WindowConfig, WindowBatch};
 use crate::core::zeromq_source::{ZeroMQSource, ZeroMQMessage, ZeroMQConfig};
 use crate::core::scheduler::{TaskScheduler, ScheduledTask, TaskPriority};
 use crate::core::types::ComputeRequest;
+use crate::core::{TaskSpawner, SpawnConfig};
 
 /// 有序窗口处理器
 pub struct OrderedWindowProcessor {
@@ -124,15 +125,20 @@ impl OrderedWindowProcessor {
         let stats = Arc::clone(&self.stats);
         let is_running_clone = self.is_running.clone();
         
-        tokio::spawn(async move {
-            Self::process_loop(
-                receiver,
-                offset_tracker,
-                window_aggregator,
-                stats,
-                is_running_clone,
-            ).await;
-        });
+        TaskSpawner::spawn_with_config(
+            async move {
+                Self::process_loop(
+                    receiver,
+                    offset_tracker,
+                    window_aggregator,
+                    stats,
+                    is_running_clone,
+                ).await;
+            },
+            SpawnConfig::new("ordered_window_process_loop")
+                .with_timeout(3600)  // 1 hour timeout
+                .with_detailed_errors(true)
+        );
         
         tracing::info!("Ordered window processor started successfully");
         Ok(())
@@ -267,11 +273,15 @@ impl OrderedWindowProcessor {
         
         // 提交任务（异步）
         let scheduler_clone = Arc::clone(&scheduler);
-        tokio::spawn(async move {
-            if let Err(e) = scheduler_clone.submit_task(task).await {
-                tracing::error!("Failed to submit window batch task: {}", e);
-            }
-        });
+        TaskSpawner::spawn_with_config(
+            async move {
+                if let Err(e) = scheduler_clone.submit_task(task).await {
+                    tracing::error!("Failed to submit window batch task: {}", e);
+                }
+            },
+            SpawnConfig::new("window_batch_submit")
+                .with_log_success(false)
+        );
         
         Ok(())
     }

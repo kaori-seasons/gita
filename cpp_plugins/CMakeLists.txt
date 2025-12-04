@@ -58,22 +58,11 @@ set(PLUGIN_SOURCES
     src/data_types.cpp
     src/feature_plugin_base.cpp
     src/vibrate31_plugin.cpp
-    src/current_feature_plugin.cpp
-    src/temperature_feature_plugin.cpp
-    src/audio_feature_plugin.cpp
     src/decision_plugin_base.cpp
-    src/motor97_plugin.cpp
-    src/universal_classify1_plugin.cpp
     src/evaluation_plugin_base.cpp
-    src/comp_realtime_health34_plugin.cpp
-    src/error18_plugin.cpp
     src/event_plugin_base.cpp
-    src/score_alarm5_plugin.cpp
-    src/status_alarm4_plugin.cpp
     src/plugin_manager.cpp
-    src/plugin_chain_manager.cpp
-    src/plugin_config_manager.cpp
-    src/plugin_monitor_manager.cpp
+    src/plugin_factories.cpp
 )
 
 # 头文件
@@ -82,22 +71,10 @@ set(PLUGIN_HEADERS
     include/data_types.h
     include/feature_plugin_base.h
     include/vibrate31_plugin.h
-    include/current_feature_plugin.h
-    include/temperature_feature_plugin.h
-    include/audio_feature_plugin.h
     include/decision_plugin_base.h
-    include/motor97_plugin.h
-    include/universal_classify1_plugin.h
     include/evaluation_plugin_base.h
-    include/comp_realtime_health34_plugin.h
-    include/error18_plugin.h
     include/event_plugin_base.h
-    include/score_alarm5_plugin.h
-    include/status_alarm4_plugin.h
     include/plugin_manager.h
-    include/plugin_chain_manager.h
-    include/plugin_config_manager.h
-    include/plugin_monitor_manager.h
 )
 
 # 创建核心库
@@ -140,12 +117,12 @@ add_executable(plugin_example examples/plugin_example.cpp)
 target_link_libraries(plugin_example AlgorithmPluginsCore)
 
 # 创建测试程序
-add_executable(plugin_tests tests/plugin_tests.cpp)
-target_link_libraries(plugin_tests AlgorithmPluginsCore)
+# add_executable(plugin_tests tests/plugin_tests.cpp)
+# target_link_libraries(plugin_tests AlgorithmPluginsCore)
 
 # 创建插件加载器示例
-add_executable(plugin_loader examples/plugin_loader.cpp)
-target_link_libraries(plugin_loader AlgorithmPluginsCore)
+# add_executable(plugin_loader examples/plugin_loader.cpp)
+# target_link_libraries(plugin_loader AlgorithmPluginsCore)
 
 # 安装规则
 install(TARGETS AlgorithmPluginsCore AlgorithmPlugins

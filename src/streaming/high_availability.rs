@@ -212,9 +212,13 @@ impl HighAvailabilityManager {
             .ok_or("HA manager already started")?;
 
         let manager = Arc::new(self.clone());
-        tokio::spawn(async move {
-            manager.message_loop(receiver).await;
-        });
+        crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                manager.message_loop(receiver).await;
+            },
+            crate::core::SpawnConfig::new("ha_message_loop")
+                .with_detailed_errors(true)
+        );
 
         // 启动故障检测
         if self.config.enable_failure_detection {
@@ -225,9 +229,13 @@ impl HighAvailabilityManager {
             ));
 
             let manager_clone = Arc::new(self.clone());
-            tokio::spawn(async move {
-                detector.start_detection_loop(manager_clone).await;
-            });
+            crate::core::TaskSpawner::spawn_with_config(
+                async move {
+                    detector.start_detection_loop(manager_clone).await;
+                },
+                crate::core::SpawnConfig::new("ha_failure_detector")
+                    .with_detailed_errors(true)
+            );
         }
 
         // 启动健康检查
@@ -237,9 +245,13 @@ impl HighAvailabilityManager {
         ));
 
         let manager_clone = Arc::new(self.clone());
-        tokio::spawn(async move {
-            health_checker.start_check_loop(manager_clone).await;
-        });
+        crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                health_checker.start_check_loop(manager_clone).await;
+            },
+            crate::core::SpawnConfig::new("ha_health_checker")
+                .with_detailed_errors(true)
+        );
 
         tracing::info!("High Availability Manager started successfully");
         Ok(())

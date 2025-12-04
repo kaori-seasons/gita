@@ -458,7 +458,7 @@ pub mod utils {
     /// 哈希密码
     pub fn hash_password(password: &str, salt: &[u8]) -> Vec<u8> {
         let mut hash = vec![0u8; 32]; // SHA256输出长度
-        let iterations = NonZeroU32::new(100_000).unwrap();
+        let iterations = NonZeroU32::new(100_000).expect("iteration count must be non-zero");
 
         pbkdf2::derive(
             pbkdf2::PBKDF2_HMAC_SHA256,
@@ -473,7 +473,7 @@ pub mod utils {
 
     /// 验证密码哈希
     pub fn verify_password(password: &str, salt: &[u8], expected_hash: &[u8]) -> bool {
-        let iterations = NonZeroU32::new(100_000).unwrap();
+        let iterations = NonZeroU32::new(100_000).expect("iteration count must be non-zero");
 
         pbkdf2::verify(
             pbkdf2::PBKDF2_HMAC_SHA256,

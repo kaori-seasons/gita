@@ -10,6 +10,7 @@ use tokio::time::{Duration, Instant};
 use serde::{Deserialize, Serialize};
 
 use crate::core::offset_tracker::WindowData;
+use crate::core::{TaskSpawner, SpawnConfig};
 
 /// 滑动窗口聚合器
 pub struct SlidingWindowAggregator {
@@ -136,7 +137,8 @@ impl SlidingWindowAggregator {
         windows: &mut HashMap<String, WindowBuffer>,
         measurement_point_id: &str,
     ) -> std::result::Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let window = windows.get_mut(measurement_point_id).unwrap();
+        let window = windows.get_mut(measurement_point_id)
+            .ok_or_else(|| format!("Window for measurement point {} not found", measurement_point_id))?;
         
         // 检查窗口大小是否达到阈值
         if window.data.len() >= self.config.window_size {
@@ -162,7 +164,8 @@ impl SlidingWindowAggregator {
         windows: &mut HashMap<String, WindowBuffer>,
         measurement_point_id: &str,
     ) -> std::result::Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        let window = windows.get_mut(measurement_point_id).unwrap();
+        let window = windows.get_mut(measurement_point_id)
+            .ok_or_else(|| format!("Window for measurement point {} not found", measurement_point_id))?;
         
         // 提取窗口数据
         let window_size = self.config.window_size.min(window.data.len());
@@ -209,56 +212,59 @@ impl SlidingWindowAggregator {
         let config = self.config.clone();
         let trigger_callback = Arc::clone(&self.trigger_callback);
         
-        tokio::spawn(async move {
-            let mut interval = tokio::time::interval(Duration::from_millis(1000));
-            
-            loop {
-                interval.tick().await;
+        TaskSpawner::spawn_with_config(
+            async move {
+                let mut interval = tokio::time::interval(Duration::from_millis(1000));
                 
-                // 检查所有窗口的超时
-                let mut windows_guard = windows.write().await;
-                let measurement_point_ids: Vec<String> = windows_guard.keys().cloned().collect();
-                
-                for measurement_point_id in measurement_point_ids {
-                    let window = windows_guard.get(&measurement_point_id).unwrap();
-                    let elapsed = window.last_updated_at.elapsed();
+                loop {
+                    interval.tick().await;
                     
-                    if elapsed.as_millis() as u64 >= config.window_timeout_ms {
-                        // 窗口超时，触发不完整窗口（如果允许）
-                        if config.allow_incomplete_window && !window.data.is_empty() {
-                            // 需要重新获取可变引用
-                            drop(windows_guard);
-                            let mut windows_guard = windows.write().await;
-                            
-                            // 触发窗口
-                            if let Some(window) = windows_guard.get_mut(&measurement_point_id) {
-                                let window_size = window.data.len();
-                                if window_size > 0 {
-                                    let mut window_data: Vec<WindowData> = Vec::with_capacity(window_size);
-                                    
-                                    for _ in 0..window_size {
-                                        if let Some(data) = window.data.pop_front() {
-                                            window_data.push(data);
+                    // 检查所有窗口的超时
+                    let mut windows_guard = windows.write().await;
+                    let measurement_point_ids: Vec<String> = windows_guard.keys().cloned().collect();
+                    
+                    for measurement_point_id in measurement_point_ids {
+                        let window = windows_guard.get(&measurement_point_id)
+                            .expect("Window should exist for measurement point in timeout checker");
+                        let elapsed = window.last_updated_at.elapsed();
+                        
+                        if elapsed.as_millis() as u64 >= config.window_timeout_ms {
+                            // 窗口超时，触发不完整窗口（如果允许）
+                            if config.allow_incomplete_window && !window.data.is_empty() {
+                                // 需要重新获取可变引用
+                                drop(windows_guard);
+                                let mut windows_guard = windows.write().await;
+                                
+                                // 触发窗口
+                                if let Some(window) = windows_guard.get_mut(&measurement_point_id) {
+                                    let window_size = window.data.len();
+                                    if window_size > 0 {
+                                        let mut window_data: Vec<WindowData> = Vec::with_capacity(window_size);
+                                        
+                                        for _ in 0..window_size {
+                                            if let Some(data) = window.data.pop_front() {
+                                                window_data.push(data);
+                                            }
                                         }
-                                    }
-                                    
-                                    if !window_data.is_empty() {
-                                        let start_offset = window_data.first().map(|d| d.sequence).unwrap_or(0);
-                                        let end_offset = window_data.last().map(|d| d.sequence).unwrap_or(0);
-                                        let start_time = window_data.first().map(|d| d.timestamp).unwrap_or(0);
-                                        let end_time = window_data.last().map(|d| d.timestamp).unwrap_or(0);
                                         
-                                        let batch = WindowBatch {
-                                            measurement_point_id: measurement_point_id.clone(),
-                                            start_offset,
-                                            end_offset,
-                                            data: window_data,
-                                            time_range: (start_time, end_time),
-                                            count: window_size,
-                                        };
-                                        
-                                        if let Err(e) = (trigger_callback)(batch) {
-                                            tracing::error!("Failed to trigger timeout window: {}", e);
+                                        if !window_data.is_empty() {
+                                            let start_offset = window_data.first().map(|d| d.sequence).unwrap_or(0);
+                                            let end_offset = window_data.last().map(|d| d.sequence).unwrap_or(0);
+                                            let start_time = window_data.first().map(|d| d.timestamp).unwrap_or(0);
+                                            let end_time = window_data.last().map(|d| d.timestamp).unwrap_or(0);
+                                            
+                                            let batch = WindowBatch {
+                                                measurement_point_id: measurement_point_id.clone(),
+                                                start_offset,
+                                                end_offset,
+                                                data: window_data,
+                                                time_range: (start_time, end_time),
+                                                count: window_size,
+                                            };
+                                            
+                                            if let Err(e) = (trigger_callback)(batch) {
+                                                tracing::error!("Failed to trigger timeout window: {}", e);
+                                            }
                                         }
                                     }
                                 }
@@ -266,8 +272,10 @@ impl SlidingWindowAggregator {
                         }
                     }
                 }
-            }
-        });
+            },
+            SpawnConfig::new("window_timeout_checker")
+                .with_detailed_errors(true)
+        );
     }
     
     /// 获取窗口状态信息

@@ -19,9 +19,14 @@ pub async fn run_complete_ffi_example() -> Result<(), Box<dyn std::error::Error 
 
     // 2. 启动后台服务
     let gc_manager = Arc::clone(&memory_manager);
-    tokio::spawn(async move {
-        gc_manager.start_auto_gc().await;
-    });
+    crate::core::TaskSpawner::spawn_with_config(
+        async move {
+            gc_manager.start_auto_gc().await;
+            Ok(())
+        },
+        crate::core::SpawnConfig::new("gc_auto")
+            .with_log_success(false)
+    );
 
     println!("✅ FFI系统组件初始化完成");
 
@@ -84,7 +89,7 @@ pub async fn run_complete_ffi_example() -> Result<(), Box<dyn std::error::Error 
 /// 执行复杂计算的完整流程
 async fn execute_complex_computation(
     input_data: &serde_json::Value,
-    memory_manager: &crate::ffi::MemoryManager,
+    _memory_manager: &crate::ffi::MemoryManager,
     memory_mapper: &crate::ffi::MemoryMapper,
     cpp_allocator: &crate::ffi::CppAllocator,
     exception_handler: &crate::ffi::ExceptionHandler,
@@ -138,7 +143,7 @@ async fn execute_complex_computation(
             println!("   ❌ C++算法执行失败: {}", e);
 
             // 异常处理
-            let translated_error = exception_handler.catch_cpp_exception(&e.to_string()).await?;
+            let _translated_error = exception_handler.catch_cpp_exception(&e.to_string()).await?;
             let exception_id = format!("complex_computation_{}", chrono::Utc::now().timestamp_millis());
             let exception_result = exception_handler.handle_exception(&exception_id).await?;
 
@@ -325,7 +330,7 @@ pub async fn run_type_conversion_demo() -> Result<(), Box<dyn std::error::Error 
     println!("   内存已分配: {}", conversion_result.memory_allocated);
 
     println!("3️⃣ 结果转换测试");
-    let rust_result = type_converter.convert_result_back(&conversion_result.data).await?;
+    let rust_result: serde_json::Value = type_converter.convert_result_back(&conversion_result.data).await?;
     println!("   转换回的数据: {:?}", rust_result);
 
     // 显示统计信息
@@ -344,7 +349,7 @@ pub async fn run_type_conversion_demo() -> Result<(), Box<dyn std::error::Error 
 pub async fn run_performance_monitoring_demo() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     println!("📈 性能监控专项演示");
 
-    let performance_monitor = crate::ffi::PerformanceMonitor::new();
+    let performance_monitor = Arc::new(crate::ffi::PerformanceMonitor::new());
 
     println!("1️⃣ 基础监控测试");
     let result = performance_monitor.execute_with_monitoring("demo_call", || async {
@@ -360,18 +365,22 @@ pub async fn run_performance_monitoring_demo() -> Result<(), Box<dyn std::error:
 
     for i in 0..5 {
         let monitor = Arc::clone(&performance_monitor);
-        let handle = tokio::spawn(async move {
-            monitor.execute_with_monitoring(&format!("concurrent_call_{}", i), || async {
-                tokio::time::sleep(tokio::time::Duration::from_millis(20 + (i as u64 * 10))).await;
-                Ok(format!("并发任务 {} 完成", i))
-            }).await
-        });
+        let handle = crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                let _ = monitor.execute_with_monitoring(&format!("concurrent_call_{}", i), || async {
+                    tokio::time::sleep(tokio::time::Duration::from_millis(20 + (i as u64 * 10))).await;
+                    Ok::<(), String>(())
+                }).await.map_err(|e| Box::new(std::io::Error::new(std::io::ErrorKind::Other, e)) as Box<dyn std::error::Error + Send + Sync>)?;
+                Ok::<(), Box<dyn std::error::Error + Send + Sync>>(())
+            },
+            crate::core::SpawnConfig::new(format!("concurrent_call_{}", i))
+        );
         handles.push(handle);
     }
 
-    for handle in handles {
-        let result = handle.await??;
-        println!("   {}", result);
+    for (i, handle) in handles.into_iter().enumerate() {
+        handle.await??;
+        println!("   并发任务 {} 完成", i);
     }
 
     println!("3️⃣ 性能报告生成");

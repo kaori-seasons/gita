@@ -2,12 +2,11 @@
 //!
 //! 提供任务状态、错误统计和配置数据的持久化存储
 
-use sled::{Db, IVec};
+use sled::Db;
 use std::path::Path;
 use std::sync::Arc;
-use tokio::sync::Mutex;
 
-use super::{EdgeComputeError, ErrorRecord, ErrorStats, ScheduledTask, TaskPriority};
+use super::{EdgeComputeError, ErrorRecord, ErrorStats, ScheduledTask};
 use crate::Result;
 
 /// 持久化存储
@@ -238,7 +237,7 @@ impl PersistenceStore {
         let cutoff_time = std::time::SystemTime::now()
             - std::time::Duration::from_secs(max_age_days * 24 * 60 * 60);
 
-        let mut removed_tasks = 0;
+        let removed_tasks = 0;
         let mut removed_errors = 0;
 
         // 清理过期的任务（简化实现，实际应该基于任务状态和时间）

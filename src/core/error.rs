@@ -4,13 +4,16 @@ use std::collections::HashMap;
 use thiserror::Error;
 use serde::{Deserialize, Serialize};
 
+/// Result类型别名
+pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
+
 /// 框架错误类型
 #[derive(Error, Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 pub enum EdgeComputeError {
     /// 配置错误
     #[error("Configuration error: {message}")]
-    Config { message: String, source: Option<String> },
+    Config { message: String, error_source: Option<String> },
 
     /// 任务调度错误
     #[error("Task scheduling error: {message}")]
@@ -252,46 +255,51 @@ impl ErrorHandler {
 
     /// 记录错误统计
     async fn record_error(&self, error: &EdgeComputeError) {
-        let mut stats = self.stats.lock().unwrap();
-
-        // 更新错误计数
         let error_type = self.get_error_type_name(error);
-        *stats.error_counts.entry(error_type.clone()).or_insert(0) += 1;
-
+        let severity = self.get_error_severity(error);
+        let context = self.extract_error_context(error);
+        
         // 创建错误记录
         let record = ErrorRecord {
             id: uuid::Uuid::new_v4().to_string(),
             error_type: error_type.clone(),
             message: error.to_string(),
-            severity: self.get_error_severity(error),
+            severity,
             timestamp: std::time::SystemTime::now(),
-            context: self.extract_error_context(error),
+            context,
             stack_trace: None, // 在生产环境中可以添加堆栈跟踪
         };
 
-        // 持久化存储错误记录
+        // 在锁内更新统计数据
+        {
+            let mut stats = self.stats.lock().unwrap();
+            *stats.error_counts.entry(error_type.clone()).or_insert(0) += 1;
+            stats.recent_errors.push(record.clone());
+
+            // 保持最近错误列表的大小
+            if stats.recent_errors.len() > 100 {
+                stats.recent_errors.remove(0);
+            }
+
+            // 更新时间戳
+            stats.last_updated = std::time::SystemTime::now();
+
+            // 计算错误率（简化实现）
+            stats.error_rate = stats.error_counts.values().sum::<u64>() as f64 / 300.0; // 过去5分钟
+        }
+        // 锁已释放
+        
+        // 持久化存储错误记录（在锁外）
         if let Some(ref store) = self.persistence_store {
             if let Err(e) = store.store_error_record(&record).await {
                 tracing::error!("Failed to persist error record: {}", e);
             }
         }
 
-        stats.recent_errors.push(record);
-
-        // 保持最近错误列表的大小
-        if stats.recent_errors.len() > 100 {
-            stats.recent_errors.remove(0);
-        }
-
-        // 更新时间戳
-        stats.last_updated = std::time::SystemTime::now();
-
-        // 计算错误率（简化实现）
-        stats.error_rate = stats.error_counts.values().sum::<u64>() as f64 / 300.0; // 过去5分钟
-
-        // 持久化错误统计
+        // 持久化错误统计（在锁外）
         if let Some(ref store) = self.persistence_store {
-            if let Err(e) = store.store_error_stats(&*stats).await {
+            let stats = self.stats.lock().unwrap().clone();
+            if let Err(e) = store.store_error_stats(&stats).await {
                 tracing::error!("Failed to persist error stats: {}", e);
             }
         }

@@ -26,22 +26,10 @@
 - ✅ **代码质量检查**：Rustfmt、Clippy
 - ✅ **并行构建**：多 crate workspace 并行编译
 - ✅ **智能缓存**：加速构建过程
-- ✅ **按 Executor 分包**：为每个 executor 创建独立的依赖包
-- ✅ **多特性支持**：支持不同的特性组合（CUDA、Metal、Python、WASM 等）
 - ✅ **自动打包**：创建发布包
 - ✅ **部署管理**：支持测试和生产环境部署
 
-### 分包特性
-
-- **核心库包**：所有 executor 共享的基础库
-- **C++ Executor 包**：包含 C++ 头文件和库文件
-- **ML Executor 包**：支持 CPU、CUDA、Metal 等变体
-- **Python Executor 包**：支持 Base、Python、WASM、Full 等变体
-
-详细使用说明请参考：
-- [CI/CD 使用指南](docs/ci-cd-guide.md)
-- [Executor 分包使用指南](docs/ci-cd-executor-packages.md)
-- [CI/CD 重构方案](docs/ci-cd-refactor-plan.md)
+详细使用说明请参考 [CI/CD 使用指南](docs/ci-cd-guide.md)。
 
 ## 项目结构
 

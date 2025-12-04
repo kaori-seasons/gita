@@ -5,5 +5,7 @@
 pub mod handlers;
 pub mod routes;
 pub mod server;
+pub mod auth_middleware;
+pub mod container_handlers;
 
 pub use server::*;

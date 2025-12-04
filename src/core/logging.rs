@@ -63,22 +63,13 @@ impl Logger {
 
         // 控制台输出层
         if config.console_output {
-            if config.json_format {
-                let console_layer = tracing_subscriber::fmt::layer()
-                    .json()
-                    .with_current_span(false)
-                    .with_span_list(false);
+            let console_layer = tracing_subscriber::fmt::layer()
+                .with_target(false)
+                .with_thread_ids(false)
+                .with_thread_names(false)
+                .compact();
 
-                layers.push(console_layer.boxed());
-            } else {
-                let console_layer = tracing_subscriber::fmt::layer()
-                    .with_target(false)
-                    .with_thread_ids(false)
-                    .with_thread_names(false)
-                    .compact();
-
-                layers.push(console_layer.boxed());
-            }
+            layers.push(console_layer.boxed());
         }
 
         // 文件输出层
@@ -106,21 +97,25 @@ impl Logger {
                 .with_file(true)
                 .with_line_number(config.include_location);
 
-            if config.json_format {
-                let file_layer = file_layer.json();
-                layers.push(file_layer.boxed());
-            } else {
-                layers.push(file_layer.boxed());
-            }
+            layers.push(file_layer.boxed());
         }
 
         // 注册层
         let registry = tracing_subscriber::registry().with(filter);
         
-        // 直接添加所有层到registry
-        let registry = layers.into_iter().fold(registry, |reg, layer| reg.with(layer));
-        
-        registry.init();
+        // 根据层数量初始化
+        if layers.is_empty() {
+            registry.init();
+        } else {
+            // 动态添加所有层
+            match layers.len() {
+                1 => registry.with(layers.into_iter().next().unwrap()).init(),
+                _ => {
+                    // 对于多个层，使用 Vec 包装
+                    registry.with(layers).init();
+                }
+            }
+        }
 
         tracing::info!("Logger initialized with level: {}", config.level);
         if config.console_output {
@@ -520,7 +515,8 @@ impl LogRotationManager {
                 while let Some(entry) = entries.next_entry().await? {
                     let path = entry.path();
                     if let Some(extension) = path.extension() {
-                        if extension == "log" && path.to_string_lossy().contains(&log_path.file_stem().unwrap().to_string_lossy()) {
+                        let file_stem = log_path.file_stem().unwrap().to_string_lossy().to_string();
+                        if extension == "log" && path.to_string_lossy().contains(&file_stem) {
                             if let Ok(metadata) = entry.metadata().await {
                                 log_files.push((path, metadata.modified().unwrap_or(std::time::SystemTime::UNIX_EPOCH)));
                             }

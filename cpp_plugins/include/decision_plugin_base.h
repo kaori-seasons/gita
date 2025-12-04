@@ -22,6 +22,10 @@ public:
     bool isInitialized() const override { return initialized_; }
     std::string getLastError() const override { return last_error_; }
     
+    // process()默认实现：委托给classifyStatus()
+    bool process(std::shared_ptr<PluginData> input, 
+                std::shared_ptr<PluginResult> output) override;
+    
     // 状态识别核心接口
     virtual bool classifyStatus(std::shared_ptr<PluginData> input, 
                                std::shared_ptr<PluginResult> output) = 0;
@@ -93,7 +97,7 @@ protected:
     virtual bool handleTimeSeriesTransition(int current_status, int previous_status) = 0;
     
     // 参数
-    int offline_length_ = 3600;  // 离线重置时长（秒）
+    int offline_length_ = 3600;  // 离线重置时长(秒)
     int transition_status_ = 2;   // 过渡状态值
     int time_series_status_ = 5;   // 时序过渡状态值
     std::vector<int> transition_width_ = {60, 10};  // 过渡时长配置
@@ -114,6 +118,15 @@ protected:
     
     // 重置状态
     void resetState();
+    
+    // 特征状态计算(可以由子类需要的特征判断)
+    int calculateFeatureStatus(double feature_value, const std::vector<double>& threshold);
+    
+    // 综合状态计算(可以由子类需要的可信度计算)
+    int calculateOverallStatus(const std::vector<int>& feature_statuses);
+    
+    // 可信度计算(可以由子类重写)
+    virtual double calculateConfidence(const std::vector<int>& feature_statuses);
 };
 
 /**
@@ -156,14 +169,8 @@ private:
     bool alarm_enabled_ = false;
     std::map<std::string, std::map<std::string, std::string>> alarm_rules_;
     
-    // 特征状态计算
-    int calculateFeatureStatus(double feature_value, const std::vector<double>& threshold);
-    
-    // 综合状态计算
-    int calculateOverallStatus(const std::vector<int>& feature_statuses);
-    
-    // 报警处理
-    bool processAlarm(int status);
+    // 报警规则解析
+    void parseAlarmRules(const std::string& rules_str);
 };
 
 /**
@@ -200,18 +207,16 @@ protected:
     int classifyByFeatures(const std::map<std::string, double>& features) override;
     bool handleTransition(int current_status, int previous_status) override;
     bool handleTimeSeriesTransition(int current_status, int previous_status) override;
-    
+
 private:
     std::vector<std::string> select_features_;
     std::vector<std::vector<double>> thresholds_;
     std::vector<std::string> statistics_;
     std::vector<std::vector<int>> window_widths_;
+    std::vector<std::vector<std::deque<double>>> sliding_windows_;
     std::map<int, std::string> status_mapping_;
     
-    // 滑动窗口数据
-    std::vector<std::vector<std::deque<double>>> sliding_windows_;
-    
-    // 统计量计算
+    // 统计量提取
     std::vector<double> extractStatistic(const std::map<std::string, double>& features);
     
     // 特征状态计算

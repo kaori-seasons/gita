@@ -3,7 +3,6 @@
 //! 提供在线更新、版本管理和安全部署功能
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::path::Path;
 use std::sync::Arc;
 use tokio::sync::Mutex;

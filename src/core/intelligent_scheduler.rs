@@ -472,7 +472,7 @@ impl IntelligentScheduler {
 }
 
 /// 智能调度统计信息
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct IntelligentStats {
     /// 总调度决策数
     pub total_decisions: usize,
@@ -485,6 +485,7 @@ pub struct IntelligentStats {
     /// 模型训练样本数
     pub model_training_samples: usize,
     /// 模型最后更新时间
+    #[allow(dead_code)]
     pub model_last_updated: Instant,
     /// 学习配置
     pub learning_config: LearningConfig,
@@ -549,11 +550,15 @@ mod tests {
         // 设置不同的负载水平
         let mut worker1_mut = worker1.clone();
         worker1_mut.cpu_usage = 0.8; // 高负载
-        worker1_mut.success_rate = 0.9;
+
+        worker1_mut.record_task_result(false); // 90% 成功率
 
         let mut worker2_mut = worker2.clone();
         worker2_mut.cpu_usage = 0.3; // 低负载
-        worker2_mut.success_rate = 0.95;
+        for _ in 0..19 {
+            worker2_mut.record_task_result(true);
+        }
+        worker2_mut.record_task_result(false); // 95% 成功率
 
         let workers = vec![&worker1_mut, &worker2_mut];
 

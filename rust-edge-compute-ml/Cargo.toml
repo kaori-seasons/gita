@@ -15,9 +15,10 @@ crate-type = ["cdylib", "rlib"]
 rust-edge-compute-core = { path = "../rust-edge-compute-core" }
 
 # Candle核心库（使用外部依赖）
-candle-core = "0.9.2-alpha.1"
-candle-nn = "0.9.2-alpha.1"
-candle-transformers = "0.9.2-alpha.1"
+# Note: Disable default-features to prevent objc2 on Linux, but keep CPU backend
+candle-core = { version = "0.9.2-alpha.1", default-features = false }
+candle-nn = { version = "0.9.2-alpha.1", default-features = false }
+candle-transformers = { version = "0.9.2-alpha.1", default-features = false }
 
 # 异步运行时
 tokio = { workspace = true }
@@ -45,8 +46,8 @@ cuda = ["candle-core/cuda", "candle-nn/cuda"]
 cudnn = ["cuda", "candle-core/cudnn"]
 # MKL优化
 mkl = ["candle-core/mkl"]
-# Accelerate优化
+# Accelerate优化（macOS专用）
 accelerate = ["candle-core/accelerate"]
-# Metal支持
+# Metal支持（仅macOS）- 包含objc2依赖
 metal = ["candle-core/metal"]
 

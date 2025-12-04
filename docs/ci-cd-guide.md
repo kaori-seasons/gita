@@ -6,7 +6,6 @@
 
 - [概述](#概述)
 - [流水线阶段](#流水线阶段)
-- [按 Executor 分包](#按-executor-分包)
 - [配置说明](#配置说明)
 - [使用方法](#使用方法)
 - [优化建议](#优化建议)
@@ -15,8 +14,6 @@
 ## 概述
 
 本项目使用 GitLab CI/CD 进行持续集成和持续部署。流水线配置基于 [rust-ci](https://gitlab.com/rust-ci/rust-ci) 项目的最佳实践，并针对多 crate workspace 项目进行了优化。
-
-**注意**：本项目的 CI/CD 配置是完全本地化的，不依赖任何远端资源，所有作业和工具都在本地定义和安装。
 
 ### 主要特性
 
@@ -68,101 +65,12 @@
 
 - **package:release**：创建压缩包，包含所有二进制文件和库文件
 
-### 7. Analyze（分析阶段）
-
-分析依赖和包体积。
-
-- **analyze:dependencies:***：分析各个 executor 的依赖
-- **analyze:size**：分析包体积
-
-### 8. Package（打包阶段）
-
-为每个 executor 创建独立的发布包。
-
-- **package:core**：核心库包
-- **package:cpp**：C++ Executor 包
-- **package:ml:***：ML Executor 包（CPU、CUDA、Metal 等变体）
-- **package:python:***：Python Executor 包（Base、Python、WASM、Full 等变体）
-
-### 9. Deploy（部署阶段）
+### 6. Deploy（部署阶段）
 
 部署到不同环境（可选）。
 
 - **deploy:staging**：部署到测试环境
 - **deploy:production**：部署到生产环境
-
-## 按 Executor 分包
-
-### 分包策略
-
-本项目支持为不同的 executor 创建独立的依赖包，实现模块化部署：
-
-#### 1. 核心库包 (`rust-edge-compute-core`)
-- **用途**：所有 executor 共享的基础库
-- **内容**：核心库的 `.rlib` 和 `.so` 文件
-- **依赖**：基础依赖（tokio、serde 等）
-
-#### 2. C++ Executor 包 (`rust-edge-compute-cpp`)
-- **用途**：C++ 算法执行器
-- **内容**：
-  - 库文件（`.so`, `.rlib`）
-  - C++ 头文件（`cpp_bridge.h`, `json_parser.h`）
-  - 依赖列表
-- **特性**：支持 `fftw` 特性（可选）
-
-#### 3. ML Executor 包 (`rust-edge-compute-ml`)
-- **用途**：机器学习模型推理执行器
-- **内容**：
-  - 库文件
-  - 依赖列表
-- **变体**：
-  - **CPU 版本**：基础版本，无 GPU 支持
-  - **CUDA 版本**：支持 NVIDIA GPU（需要手动触发）
-  - **Metal 版本**：支持 Apple Metal（需要手动触发）
-
-#### 4. Python Executor 包 (`rust-edge-compute-python`)
-- **用途**：Python 和 WASM 执行器
-- **内容**：
-  - 库文件
-  - Python 模块（如果启用 `python` 特性）
-  - WASM 模块（如果启用 `wasm` 特性）
-  - 依赖列表
-- **变体**：
-  - **Base 版本**：基础版本，无特性
-  - **Python 版本**：支持 Python 执行
-  - **WASM 版本**：支持 WASM 执行
-  - **Full 版本**：Python + WASM（需要手动触发）
-
-### 包结构示例
-
-```
-dist/
-├── rust-edge-compute-core-{version}.tar.gz
-├── rust-edge-compute-cpp-{version}.tar.gz
-│   └── rust-edge-compute-cpp-{version}/
-│       ├── lib/
-│       │   ├── librust_edge_compute_cpp.so
-│       │   └── librust_edge_compute_cpp.rlib
-│       ├── include/
-│       │   ├── cpp_bridge.h
-│       │   └── json_parser.h
-│       ├── README.md
-│       ├── LICENSE
-│       ├── VERSION
-│       └── dependencies.txt
-├── rust-edge-compute-ml-{version}-cpu.tar.gz
-├── rust-edge-compute-ml-{version}-cuda.tar.gz
-├── rust-edge-compute-python-{version}-base.tar.gz
-├── rust-edge-compute-python-{version}-python.tar.gz
-└── rust-edge-compute-python-{version}-wasm.tar.gz
-```
-
-### 使用分包
-
-1. **选择性部署**：只部署需要的 executor
-2. **体积优化**：每个包只包含必要的依赖
-3. **版本管理**：每个 executor 可以独立版本管理
-4. **特性组合**：支持不同的特性组合（如 CUDA、Metal 等）
 
 ## 配置说明
 
@@ -318,34 +226,6 @@ only:
 - 修复 Clippy 警告
 - 如果警告是误报，可以使用 `#[allow(clippy::warning_name)]` 忽略
 - 临时允许失败：设置 `allow_failure: true`
-
-### 6. Cargo.lock 需要更新
-
-**问题**：`validate:dependencies` 作业失败，报错 "the lock file needs to be updated but --locked was passed"
-
-**原因**：
-- `Cargo.toml` 中的依赖发生了变化（版本更新、添加新依赖等）
-- `Cargo.lock` 文件没有同步更新
-
-**解决方案**：
-1. 在本地运行以下命令更新 `Cargo.lock`：
-   ```bash
-   cargo generate-lockfile
-   ```
-2. 检查 `Cargo.lock` 的更改：
-   ```bash
-   git diff Cargo.lock
-   ```
-3. 提交更新后的 `Cargo.lock` 文件：
-   ```bash
-   git add Cargo.lock
-   git commit -m "Update Cargo.lock"
-   git push
-   ```
-
-**注意**：
-- `Cargo.lock` 应该被提交到版本控制系统（对于应用程序和库项目）
-- CI 会自动检测 `Cargo.lock` 是否需要更新，如果检测到更改会报错，要求开发者手动更新并提交
 
 ## 高级配置
 

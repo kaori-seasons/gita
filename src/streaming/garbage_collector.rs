@@ -544,13 +544,17 @@ impl GarbageCollector {
     /// 启动GC调度器
     fn start_gc_scheduler(&self, mut receiver: mpsc::UnboundedReceiver<GCTrigger>) {
         let gc = Arc::new(self.clone());
-        tokio::spawn(async move {
-            while let Some(trigger) = receiver.recv().await {
-                if let Err(e) = gc.trigger_gc(trigger).await {
-                    tracing::error!("Scheduled GC failed: {}", e);
+        crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                while let Some(trigger) = receiver.recv().await {
+                    if let Err(e) = gc.trigger_gc(trigger).await {
+                        tracing::error!("Scheduled GC failed: {}", e);
+                    }
                 }
-            }
-        });
+            },
+            crate::core::SpawnConfig::new("gc_scheduler")
+                .with_detailed_errors(true)
+        );
     }
 }
 

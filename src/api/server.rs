@@ -43,7 +43,7 @@ impl HttpServer {
     }
 
     /// 启动服务器
-    pub async fn start(self) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    pub async fn start(self) -> std::result::Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let addr: SocketAddr = format!("{}:{}", self.config.host, self.config.port)
             .parse()
             .map_err(|e| format!("Invalid address: {}", e))?;

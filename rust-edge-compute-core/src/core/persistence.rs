@@ -2,12 +2,11 @@
 //!
 //! 提供任务状态、错误统计和配置数据的持久化存储
 
-use sled::{Db, IVec};
+use sled::{Db};
 use std::path::Path;
 use std::sync::Arc;
-use tokio::sync::Mutex;
 
-use super::{EdgeComputeError, ErrorRecord, ErrorStats, ScheduledTask, TaskPriority};
+use super::{EdgeComputeError, ErrorRecord, ErrorStats, ScheduledTask};
 use crate::Result;
 
 /// 持久化存储

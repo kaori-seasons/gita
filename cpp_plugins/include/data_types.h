@@ -274,6 +274,7 @@ public:
     bool getBool(const std::string& key, bool defaultValue = false) const override;
     std::vector<double> getDoubleArray(const std::string& key) const override;
     std::vector<int> getIntArray(const std::string& key) const override;
+    std::vector<std::string> getStringArray(const std::string& key) const override;
     
     void setString(const std::string& key, const std::string& value) override;
     void setDouble(const std::string& key, double value) override;
@@ -281,6 +282,7 @@ public:
     void setBool(const std::string& key, bool value) override;
     void setDoubleArray(const std::string& key, const std::vector<double>& value) override;
     void setIntArray(const std::string& key, const std::vector<int>& value) override;
+    void setStringArray(const std::string& key, const std::vector<std::string>& value) override;
     
     std::string serialize() const override;
     bool deserialize(const std::string& data) override;
@@ -292,6 +294,7 @@ private:
     std::map<std::string, bool> bool_params_;
     std::map<std::string, std::vector<double>> double_array_params_;
     std::map<std::string, std::vector<int>> int_array_params_;
+    std::map<std::string, std::vector<std::string>> string_array_params_;
 };
 
 } // namespace AlgorithmPlugins

@@ -6,8 +6,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+use std::cmp::Ordering;
 use tokio::sync::Mutex;
 use reqwest;
+
+use crate::core::{TaskSpawner, SpawnConfig};
 
 /// 性能配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -182,7 +185,9 @@ impl PerformanceAnalyzer {
             return PerformanceStats::default();
         }
 
-        let latest = history.last().unwrap();
+        let latest = history
+            .last()
+            .expect("metrics history should be non-empty after earlier check");
 
         // 计算趋势
         let mut response_times: Vec<f64> = history.iter()
@@ -191,7 +196,7 @@ impl PerformanceAnalyzer {
             .map(|m| m.avg_response_time_ms)
             .collect();
 
-        response_times.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        response_times.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal));
 
         let p50_response_time = response_times[response_times.len() / 2];
         let p95_response_time = response_times[(response_times.len() as f64 * 0.95) as usize];
@@ -367,9 +372,14 @@ impl LoadTester {
             let client = self.http_client.clone();
             let url = target_url.to_string();
 
-            let handle = tokio::spawn(async move {
-                Self::run_user_simulation(client, url, user_id, config).await
-            });
+            let handle = TaskSpawner::spawn_with_config(
+                async move {
+                    Self::run_user_simulation(client, url, user_id, config).await
+                },
+                SpawnConfig::new(format!("load_test_user_{}", user_id))
+                    .with_timeout(self.config.duration_seconds + 10)
+                    .with_detailed_errors(true)
+            );
 
             handles.push(handle);
 
@@ -377,7 +387,7 @@ impl LoadTester {
             let ramp_up_config = self.config.clone();
             if ramp_up_config.ramp_up_seconds > 0 {
                 let delay = Duration::from_millis(
-                    (ramp_up_config.ramp_up_seconds * 1000 / ramp_up_config.concurrent_users as u64)
+                    ramp_up_config.ramp_up_seconds * 1000 / ramp_up_config.concurrent_users as u64
                 );
                 tokio::time::sleep(delay).await;
             }

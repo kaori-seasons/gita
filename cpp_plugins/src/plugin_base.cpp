@@ -5,13 +5,8 @@
 namespace AlgorithmPlugins {
 
 // PluginData基类实现
-PluginData::~PluginData() = default;
-
 // PluginResult基类实现
-PluginResult::~PluginResult() = default;
-
 // PluginParameter基类实现
-PluginParameter::~PluginParameter() = default;
 
 // AlgorithmWork基类实现
 AlgorithmWork::AlgorithmWork() {

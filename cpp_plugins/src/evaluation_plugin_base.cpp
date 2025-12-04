@@ -2,8 +2,15 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
+#include <set>
 
 namespace AlgorithmPlugins {
+
+// EvaluationPluginBase的process()实现
+bool EvaluationPluginBase::process(std::shared_ptr<PluginData> input, 
+                                  std::shared_ptr<PluginResult> output) {
+    return evaluateHealth(input, output);
+}
 
 // EvaluationPluginBase实现
 EvaluationPluginBase::EvaluationPluginBase() = default;
@@ -579,8 +586,9 @@ bool Error18Plugin::validateParameters() {
         return false;
     }
     
-    // 转换参数
-    thresholds_ = threshold_array;
+    // 转换参数 - 将一维数组包装为二维数组
+    thresholds_.clear();
+    thresholds_.push_back(threshold_array);
     upper_limits_ = upper_limit_array;
     
     // 获取可选参数
@@ -642,9 +650,9 @@ std::map<std::string, double> Error18Plugin::calculateErrorHealth(const ErrorCon
         // 平滑处理
         std::vector<double> smoothed_data = smoothData(data, config.smooth_param);
         
-        // 计算错误分数
+        // 计算错误分数 - 使用向量版本的calculateScore
         double value = smoothed_data.back(); // 使用最新值
-        double score = calculateScore(value, config.thresholds, config.upper_limit);
+        double score = calculateScore(value, config.thresholds);
         
         scores[config.feature_name + "_error"] = score;
         

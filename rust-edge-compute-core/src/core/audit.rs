@@ -517,11 +517,13 @@ pub mod middleware {
         let headers = response.headers_mut();
         headers.insert(
             "X-Request-ID",
-            uuid::Uuid::new_v4().to_string().parse().unwrap(),
+            uuid::Uuid::new_v4().to_string().parse()
+                .expect("Failed to parse X-Request-ID header value"),
         );
         headers.insert(
             "X-Response-Time",
-            format!("{}ms", duration.as_millis()).parse().unwrap(),
+            format!("{}ms", duration.as_millis()).parse()
+                .expect("Failed to parse X-Response-Time header value"),
         );
 
         response

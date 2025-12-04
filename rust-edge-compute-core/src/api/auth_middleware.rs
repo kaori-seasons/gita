@@ -5,6 +5,7 @@ use axum::{
     http::{header, StatusCode},
     middleware::Next,
     response::{IntoResponse, Response},
+    Json,
 };
 use std::sync::Arc;
 use serde_json::json;
@@ -88,23 +89,28 @@ pub async fn security_headers_middleware(
     let headers = response.headers_mut();
     headers.insert(
         "X-Content-Type-Options",
-        "nosniff".parse().unwrap(),
+        "nosniff".parse()
+            .expect("Failed to parse X-Content-Type-Options header value"),
     );
     headers.insert(
         "X-Frame-Options",
-        "DENY".parse().unwrap(),
+        "DENY".parse()
+            .expect("Failed to parse X-Frame-Options header value"),
     );
     headers.insert(
         "X-XSS-Protection",
-        "1; mode=block".parse().unwrap(),
+        "1; mode=block".parse()
+            .expect("Failed to parse X-XSS-Protection header value"),
     );
     headers.insert(
         "Strict-Transport-Security",
-        "max-age=31536000; includeSubDomains".parse().unwrap(),
+        "max-age=31536000; includeSubDomains".parse()
+            .expect("Failed to parse Strict-Transport-Security header value"),
     );
     headers.insert(
         "Content-Security-Policy",
-        "default-src 'self'".parse().unwrap(),
+        "default-src 'self'".parse()
+            .expect("Failed to parse Content-Security-Policy header value"),
     );
 
     response
@@ -181,15 +187,18 @@ pub async fn cors_middleware(
     let headers = response.headers_mut();
     headers.insert(
         "Access-Control-Allow-Origin",
-        "*".parse().unwrap(),
+        "*".parse()
+            .expect("Failed to parse Access-Control-Allow-Origin header value"),
     );
     headers.insert(
         "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS".parse().unwrap(),
+        "GET, POST, PUT, DELETE, OPTIONS".parse()
+            .expect("Failed to parse Access-Control-Allow-Methods header value"),
     );
     headers.insert(
         "Access-Control-Allow-Headers",
-        "Content-Type, Authorization".parse().unwrap(),
+        "Content-Type, Authorization".parse()
+            .expect("Failed to parse Access-Control-Allow-Headers header value"),
     );
 
     response

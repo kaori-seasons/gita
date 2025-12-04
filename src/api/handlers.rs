@@ -11,7 +11,7 @@ use tokio::sync::oneshot;
 
 // 由于在main.rs中直接导入模块，这里使用相对路径
 use super::super::core::{ComputeRequest, ComputeResponse, EdgeComputeError, TaskScheduler, ScheduledTask, TaskPriority, QueueStatus};
-use super::super::core::task::TaskStatus;
+use crate::core::types::TaskStatus;
 
 // 定义Result类型
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
@@ -36,7 +36,7 @@ pub async fn health_check() -> impl IntoResponse {
 
 /// 计算任务处理器
 pub async fn compute_task(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
     Json(request): Json<ComputeRequest>,
 ) -> Response {
     tracing::info!("Received compute request: {}", request.id);
@@ -78,7 +78,7 @@ pub async fn compute_task(
 
 /// 获取任务状态处理器
 pub async fn get_task_status(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
     axum::extract::Path(task_id): axum::extract::Path<String>,
 ) -> Response {
     match state.scheduler.get_task_status(&task_id).await {
@@ -135,7 +135,7 @@ pub async fn list_algorithms() -> impl IntoResponse {
 
 /// 获取调度器队列状态
 pub async fn get_scheduler_status(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
 ) -> Response {
     let queue_status = state.scheduler.get_queue_status().await;
 
@@ -154,7 +154,7 @@ pub async fn get_scheduler_status(
 
 /// 获取错误统计
 pub async fn get_error_stats(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
 ) -> Response {
     let error_stats = state.error_handler.get_stats().await;
 
@@ -184,10 +184,9 @@ pub async fn get_error_stats(
 
 /// 重置错误统计
 pub async fn reset_error_stats(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
 ) -> Response {
     state.error_handler.reset_stats().await;
-
     (
         StatusCode::OK,
         Json(json!({
@@ -201,7 +200,7 @@ pub async fn reset_error_stats(
 
 /// 取消任务处理器
 pub async fn cancel_task(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
     axum::extract::Path(task_id): axum::extract::Path<String>,
 ) -> Response {
     match state.scheduler.cancel_task(&task_id).await {
@@ -244,7 +243,7 @@ pub async fn cancel_task(
 
 /// 获取数据库统计信息
 pub async fn get_database_stats(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
 ) -> Response {
     // 这里应该从应用状态中获取持久化管理器
     // 暂时返回占位符响应
@@ -265,7 +264,7 @@ pub async fn get_database_stats(
 
 /// 备份数据库
 pub async fn backup_database(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
     axum::extract::Query(params): axum::extract::Query<std::collections::HashMap<String, String>>,
 ) -> Response {
     let backup_path = params.get("path").unwrap_or(&"./backup/db".to_string()).clone();
@@ -285,7 +284,7 @@ pub async fn backup_database(
 
 /// 清理过期数据
 pub async fn cleanup_expired_data(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
     axum::extract::Query(params): axum::extract::Query<std::collections::HashMap<String, String>>,
 ) -> Response {
     let max_age_days = params.get("max_age_days")
@@ -331,7 +330,7 @@ pub fn handle_error(error: EdgeComputeError) -> Response {
 
 /// 启用智能调度
 pub async fn enable_intelligent_scheduling(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
 ) -> Response {
     tracing::info!("Enabling intelligent scheduling");
 
@@ -349,7 +348,7 @@ pub async fn enable_intelligent_scheduling(
 
 /// 禁用智能调度
 pub async fn disable_intelligent_scheduling(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
 ) -> Response {
     tracing::info!("Disabling intelligent scheduling");
 
@@ -365,7 +364,7 @@ pub async fn disable_intelligent_scheduling(
 
 /// 获取智能调度状态
 pub async fn get_intelligent_scheduling_status(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
 ) -> Response {
     tracing::info!("Getting intelligent scheduling status");
 
@@ -384,7 +383,7 @@ pub async fn get_intelligent_scheduling_status(
 
 /// 获取智能调度统计信息
 pub async fn get_intelligent_scheduling_stats(
-    state: axum::extract::State<AppState>,
+    _state: axum::extract::State<AppState>,
 ) -> Response {
     tracing::info!("Getting intelligent scheduling statistics");
 

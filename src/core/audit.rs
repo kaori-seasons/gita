@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::{error, info, warn};
+use tracing::{error, info};
 
 /// 审计事件类型
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -325,18 +325,20 @@ impl AuditLogger {
             AuditSeverity::Critical => tracing::Level::ERROR,
         };
 
+        let result_str = match &event.result {
+            AuditResult::Success => "SUCCESS".to_string(),
+            AuditResult::Failure(msg) => format!("FAILURE: {}", msg),
+            AuditResult::Denied => "DENIED".to_string(),
+            AuditResult::Warning(msg) => format!("WARNING: {}", msg),
+        };
+
         let message = format!(
             "AUDIT [{}] {} {} {} {} - {:?}",
             event.event_type.as_ref(),
             event.user_id.as_deref().unwrap_or("anonymous"),
             event.action,
             event.resource,
-            match &event.result {
-                AuditResult::Success => "SUCCESS",
-                AuditResult::Failure(msg) => &format!("FAILURE: {}", msg),
-                AuditResult::Denied => "DENIED",
-                AuditResult::Warning(msg) => &format!("WARNING: {}", msg),
-            },
+            result_str,
             event.details
         );
 
@@ -474,7 +476,7 @@ pub struct AuditStats {
 pub mod middleware {
     use axum::{
         extract::{ConnectInfo, Request},
-        http::{header, StatusCode},
+
         middleware::Next,
         response::Response,
     };

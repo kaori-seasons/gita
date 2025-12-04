@@ -21,6 +21,10 @@ public:
     bool isInitialized() const override { return initialized_; }
     std::string getLastError() const override { return last_error_; }
     
+    // process()默认实现：委托给extractFeatures()
+    bool process(std::shared_ptr<PluginData> input, 
+                std::shared_ptr<PluginResult> output) override;
+    
     // 特征提取核心接口
     virtual bool extractFeatures(std::shared_ptr<PluginData> input, 
                                  std::shared_ptr<PluginResult> output) = 0;
@@ -86,6 +90,10 @@ protected:
                                 const std::vector<double>& speed_data,
                                 std::vector<std::vector<double>>& segments,
                                 std::vector<int>& statuses);
+    
+    // 工况状态判断
+    int determineStatus(const std::vector<double>& speed_data,
+                       size_t start, size_t end);
     
     // 参数
     int sampling_rate_ = 1000;

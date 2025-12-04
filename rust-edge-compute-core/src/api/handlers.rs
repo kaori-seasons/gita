@@ -9,7 +9,7 @@ use serde_json::json;
 use std::sync::Arc;
 use tokio::sync::oneshot;
 
-use crate::core::{ComputeRequest, ComputeResponse, EdgeComputeError, TaskScheduler, ScheduledTask, TaskPriority, QueueStatus, TaskStatus, ErrorHandler, ExecutorRegistry};
+use crate::core::{ComputeRequest, ComputeResponse, EdgeComputeError, TaskScheduler, ScheduledTask, TaskPriority, QueueStatus, types::TaskStatus, ErrorHandler, ExecutorRegistry};
 
 // 定义Result类型
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
@@ -184,7 +184,7 @@ pub async fn get_error_stats(
 
 /// 重置错误统计
 pub async fn reset_error_stats(
-    state: axum::extract::State<AppState>,
+    axum::extract::State(state): axum::extract::State<AppState>,
 ) -> Response {
     state.error_handler.reset_stats().await;
 

@@ -29,7 +29,7 @@ pub mod ffi {
 
     // C++函数声明
     unsafe extern "C++" {
-        include!("src/ffi/cpp_bridge.h");
+        include!("cpp_bridge.h");
 
         // CppAlgorithmExecutor类
         type CppAlgorithmExecutor;

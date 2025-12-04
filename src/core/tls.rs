@@ -91,11 +91,11 @@ impl TlsManager {
             }
         }
 
-        config
+        let server_config = config
             .with_single_cert(certs, key)
             .map_err(|e| format!("Failed to create TLS config: {}", e))?;
 
-        self.acceptor = Some(TlsAcceptor::from(Arc::new(config)));
+        self.acceptor = Some(TlsAcceptor::from(Arc::new(server_config)));
         Ok(())
     }
 
@@ -139,15 +139,14 @@ impl TlsManager {
     pub fn generate_self_signed_cert(
         &self,
         domain: &str,
-        validity_days: u32,
+        _validity_days: u32,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         use ring::rand::SystemRandom;
         use ring::signature::{EcdsaKeyPair, ECDSA_P256_SHA256_FIXED_SIGNING};
-        use std::io::Write;
 
         let rng = SystemRandom::new();
         let alg = &ECDSA_P256_SHA256_FIXED_SIGNING;
-        let pkcs8_bytes = EcdsaKeyPair::generate_pkcs8(alg, &rng)
+        let _pkcs8_bytes = EcdsaKeyPair::generate_pkcs8(alg, &rng)
             .map_err(|_| "Failed to generate key pair")?;
 
         // 简单的自签名证书生成（生产环境应该使用正式的CA证书）
@@ -167,7 +166,7 @@ fn load_certs(path: &str) -> Result<Vec<Certificate>, Box<dyn std::error::Error 
         .map_err(|e| format!("Failed to read certificate file {}: {}", path, e))?;
 
     let mut reader = std::io::BufReader::new(cert_data.as_slice());
-    let certs = rustls_pemfile::certs(&mut reader)
+    let certs: Vec<Certificate> = rustls_pemfile::certs(&mut reader)
         .map_err(|e| format!("Failed to parse certificate: {}", e))?
         .into_iter()
         .map(Certificate)

@@ -205,9 +205,13 @@ impl DataFlowManager {
 
         let manager = Arc::new(self.clone());
 
-        tokio::spawn(async move {
-            manager.message_loop(receiver).await;
-        });
+        crate::core::TaskSpawner::spawn_with_config(
+            async move {
+                manager.message_loop(receiver).await;
+            },
+            crate::core::SpawnConfig::new("data_flow_message_loop")
+                .with_detailed_errors(true)
+        );
 
         tracing::info!("Data flow manager started");
         Ok(())

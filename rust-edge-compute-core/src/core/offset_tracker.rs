@@ -7,7 +7,7 @@ use std::collections::{BTreeSet, HashMap, VecDeque};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use serde::{Deserialize, Serialize};
-use crate::core::error::Result;
+use crate::Result;
 
 /// 位移跟踪管理器
 pub struct OffsetTracker {

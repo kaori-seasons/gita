@@ -29,27 +29,10 @@ void EventPluginBase::cleanup() {
     parameters_.reset();
 }
 
-bool EventPluginBase::processEvent(std::shared_ptr<PluginData> input, 
-                                  std::shared_ptr<PluginResult> output) {
-    if (!initialized_) {
-        setError("插件未初始化");
-        return false;
-    }
-    
-    if (!input || !output) {
-        setError("输入或输出数据为空");
-        return false;
-    }
-    
-    try {
-        // 这里应该调用具体的事件处理实现
-        // 由于这是基类，子类需要重写processEvent方法
-        setError("事件处理方法未实现");
-        return false;
-    } catch (const std::exception& e) {
-        setError("事件处理异常: " + std::string(e.what()));
-        return false;
-    }
+// EventPluginBase的process()实现
+bool EventPluginBase::process(std::shared_ptr<PluginData> input, 
+                             std::shared_ptr<PluginResult> output) {
+    return processEvent(input, output);
 }
 
 void EventPluginBase::generateEvent(std::shared_ptr<PluginResult> output,
@@ -61,8 +44,8 @@ void EventPluginBase::generateEvent(std::shared_ptr<PluginResult> output,
     output->setData("event_name", event_name);
     output->setData("event_description", description);
     output->setData("severity_level", severity_level);
-    output->setData("timestamp", std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count());
+    output->setData("timestamp", static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count()));
 }
 
 int EventPluginBase::calculateAlarmLevel(double score, const std::vector<double>& alarm_lines) {
@@ -321,8 +304,8 @@ bool StatusAlarm4Plugin::validateParameters() {
     }
     
     // 解析参数
-    parseStatusMapping(status_mapping_str);
-    parseAlarmRules(alarm_rule_str);
+    parseStatusMapping();
+    parseAlarmRules();
     
     // 获取可选参数
     alarm_enabled_ = parameters_->getBool("alarm", true);
@@ -339,7 +322,7 @@ std::map<int, std::map<std::string, std::string>> StatusAlarm4Plugin::getAlarmRu
 }
 
 bool StatusAlarm4Plugin::processStatusAlarm(int status, const std::string& status_name) {
-    auto it = alarm_rules_.find(std::to_string(status));
+    auto it = alarm_rules_.find(status);
     if (it != alarm_rules_.end()) {
         // 处理报警逻辑
         return true;
@@ -348,16 +331,16 @@ bool StatusAlarm4Plugin::processStatusAlarm(int status, const std::string& statu
     return false;
 }
 
-void StatusAlarm4Plugin::parseStatusMapping(const std::string& mapping_str) {
+void StatusAlarm4Plugin::parseStatusMapping() {
     // 简化的状态映射解析
     // 生产环境应使用JSON解析库
-    status_mapping_[0] = "停机";
-    status_mapping_[1] = "运行";
-    status_mapping_[2] = "过渡";
-    status_mapping_[3] = "异常";
+    status_mapping_[0] = "Shutdown";
+    status_mapping_[1] = "Running";
+    status_mapping_[2] = "Transition";
+    status_mapping_[3] = "Abnormal";
 }
 
-void StatusAlarm4Plugin::parseAlarmRules(const std::string& rules_str) {
+void StatusAlarm4Plugin::parseAlarmRules() {
     // 简化的报警规则解析
     // 生产环境应使用JSON解析库
     std::map<std::string, std::string> rule;
@@ -366,9 +349,9 @@ void StatusAlarm4Plugin::parseAlarmRules(const std::string& rules_str) {
     rule["max_alarm_num"] = "1";
     rule["recovery_reset_time"] = "3600";
     rule["force_reset_time"] = "604800";
-    rule["name"] = "停机";
+    rule["name"] = "Shutdown";
     
-    alarm_rules_["0"] = rule;
+    alarm_rules_[0] = rule;
 }
 
 } // namespace AlgorithmPlugins

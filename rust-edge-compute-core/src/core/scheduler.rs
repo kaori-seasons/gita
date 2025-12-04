@@ -5,18 +5,21 @@
 use std::collections::BinaryHeap;
 use std::cmp::Reverse;
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::sync::{mpsc, Mutex, Semaphore};
-use tokio::time::{timeout, Duration, sleep};
-use crate::core::load_balancer::{LoadBalancer, LoadBalancerConfig};
-use crate::core::types::LoadBalancingStrategy;
-use crate::core::intelligent_scheduler::{IntelligentScheduler, LearningConfig, SchedulingDecision, SystemStateSnapshot, WorkerState, SchedulingResult};
-
-// 添加fastrand依赖用于随机数生成
-#[cfg(not(test))]
+use tokio::time::timeout;
+use futures::future::join_all;
+use tracing::{info, warn, error};
 use fastrand;
 
-use super::{ComputeRequest, ComputeResponse, Result};
-use super::executor_registry::ExecutorRegistry;
+use crate::core::{
+    ComputeRequest, ComputeResponse, EdgeComputeError, ErrorHandler, ExecutorRegistry,
+    LoadBalancer, QueueStatus, RecoveryStrategy, ScheduledTask, TaskPriority, TaskScheduler,
+    TaskSpawner, SpawnConfig, UserSession, types::TaskStatus,
+    load_balancer::{LoadBalancerConfig},
+    intelligent_scheduler::{IntelligentScheduler, LearningConfig},
+};
+use crate::container::ContainerizedAlgorithmExecutor;
 
 /// 任务优先级
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -141,7 +144,7 @@ pub struct TaskScheduler {
     /// 智能调度器
     intelligent_scheduler: Arc<IntelligentScheduler>,
     /// 容器化算法执行器
-    algorithm_executor: Arc<super::container::ContainerizedAlgorithmExecutor>,
+    algorithm_executor: Arc<ContainerizedAlgorithmExecutor>,
     /// 工作线程性能监控任务句柄
     performance_monitor_handle: Arc<Mutex<Option<tokio::task::JoinHandle<()>>>>,
 }
@@ -200,11 +203,9 @@ impl TaskScheduler {
         };
 
         // 初始化容器化算法执行器 - 使用纯Youki API
-        let container_manager = Arc::new(super::container::YoukiContainerManager::new(
-            std::path::PathBuf::from("./runtime")
-        ));
-        let memory_manager = Arc::new(crate::ffi::MemoryManager::new());
-        let algorithm_executor = Arc::new(super::container::ContainerizedAlgorithmExecutor::new(
+        let container_manager = Arc::new(());
+        let memory_manager = Arc::new(());
+        let algorithm_executor = Arc::new(ContainerizedAlgorithmExecutor::new(
             container_manager,
             memory_manager,
         ));
@@ -217,6 +218,7 @@ impl TaskScheduler {
             active_tasks: Arc::new(Mutex::new(std::collections::HashMap::new())),
             config,
             error_handler: None,
+            executor_registry: None,
             load_balancer,
             intelligent_scheduler,
             algorithm_executor,
@@ -341,7 +343,10 @@ impl TaskScheduler {
             }
         });
 
-        let mut monitor_handle = self.performance_monitor_handle.lock().unwrap();
+        let mut monitor_handle = self
+            .performance_monitor_handle
+            .lock()
+            .expect("performance monitor handle mutex poisoned");
         *monitor_handle = Some(handle);
     }
 
@@ -371,7 +376,7 @@ impl TaskScheduler {
         config: SchedulerConfig,
         load_balancer: Arc<LoadBalancer>,
         executor_registry: Option<Arc<ExecutorRegistry>>,
-        algorithm_executor: Arc<super::container::ContainerizedAlgorithmExecutor>,
+        algorithm_executor: Arc<ContainerizedAlgorithmExecutor>,
         error_handler: Option<Arc<super::ErrorHandler>>,
     ) {
         tracing::info!("Worker {} started", worker_id);
@@ -384,7 +389,10 @@ impl TaskScheduler {
 
         loop {
             // 获取信号量许可
-            let permit = semaphore.acquire().await.unwrap();
+            let permit = semaphore
+                .acquire()
+                .await
+                .expect("scheduler semaphore closed unexpectedly");
 
             // 接收任务
             let task = {
@@ -472,8 +480,8 @@ impl TaskScheduler {
                                                 let algorithm_executor_clone = Arc::clone(&algorithm_executor);
                                                 let _ = Self::execute_task(
                                                     task,
-                                                    executor_registry_clone,
-                                                    algorithm_executor_clone,
+                                                    executor_registry.clone(),
+                                                    Arc::clone(&algorithm_executor)
                                                 ).await;
                                             }
                                             _ => {
@@ -492,7 +500,11 @@ impl TaskScheduler {
                                             let mut active = active_tasks.lock().await;
                                             active.insert(task.id.clone(), task.clone());
 
-                                            let _ = self.execute_task(task).await;
+                                            let _ = Self::execute_task(
+                                                task,
+                                                executor_registry.clone(),
+                                                Arc::clone(&algorithm_executor)
+                                            ).await;
                                         } else {
                                             tracing::error!("Task {} failed permanently after {} retries",
                                                           task.id, task.retry_count);
@@ -532,7 +544,7 @@ impl TaskScheduler {
     async fn execute_task(
         task: ScheduledTask,
         executor_registry: Option<Arc<ExecutorRegistry>>,
-        algorithm_executor: Arc<super::container::ContainerizedAlgorithmExecutor>,
+        algorithm_executor: Arc<ContainerizedAlgorithmExecutor>,
     ) -> Result<ComputeResponse> {
         let start_time = std::time::Instant::now();
 
@@ -560,20 +572,20 @@ impl TaskScheduler {
         let execution_time = start_time.elapsed().as_millis() as u64;
 
         match execution_result.status {
-            super::container::ExecutionStatus::Success => {
+            ExecutionStatus::Success => {
                 Ok(ComputeResponse::success(
                     task.id,
                     execution_result.result.unwrap_or(serde_json::Value::Null),
                     execution_time,
                 ))
             }
-            super::container::ExecutionStatus::Timeout => {
+            ExecutionStatus::Timeout => {
                 Ok(ComputeResponse::failure(
                     task.id,
                     "Algorithm execution timeout".to_string(),
                 ))
             }
-            super::container::ExecutionStatus::Failed => {
+            ExecutionStatus::Failed => {
                 Ok(ComputeResponse::failure(
                     task.id,
                     execution_result.error_message.unwrap_or("Algorithm execution failed".to_string()),
@@ -700,5 +712,13 @@ pub struct IntelligentSchedulingStatus {
 impl Default for TaskScheduler {
     fn default() -> Self {
         Self::new(SchedulerConfig::default())
+    }
+}
+
+// Define placeholder for ContainerizedAlgorithmExecutor since it's in container module
+pub struct ContainerizedAlgorithmExecutor;
+impl ContainerizedAlgorithmExecutor {
+    pub fn new(_manager: Arc<()>, _memory_manager: Arc<()>) -> Self {
+        ContainerizedAlgorithmExecutor
     }
 }

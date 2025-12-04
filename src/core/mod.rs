@@ -17,6 +17,7 @@ pub mod updates;
 pub mod performance;
 pub mod load_balancer;
 pub mod intelligent_scheduler;
+pub mod task_spawn;
 
 pub use types::*;
 pub use error::*;
@@ -33,3 +34,4 @@ pub use updates::*;
 pub use performance::*;
 pub use load_balancer::*;
 pub use intelligent_scheduler::*;
+pub use task_spawn::*;

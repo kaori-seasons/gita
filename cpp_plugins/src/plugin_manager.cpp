@@ -1,4 +1,5 @@
 #include "plugin_manager.h"
+#include "../include/data_types.h"
 #include <mutex>
 #include <filesystem>
 #include <fstream>
@@ -6,7 +7,7 @@
 
 namespace AlgorithmPlugins {
 
-// PluginManager实现
+// PluginManager瀹炵幇
 PluginManager& PluginManager::getInstance() {
     static PluginManager instance;
     return instance;
@@ -158,8 +159,8 @@ std::vector<std::string> PluginManager::getOptionalParameters(const std::string&
 
 bool PluginManager::loadPluginFromFile(const std::string& file_path) {
     try {
-        // 简化的插件加载实现
-        // 生产环境应使用动态库加载机制
+        // 绠€鍖栫殑鎻掍欢鍔犺浇瀹炵幇
+        // 鐢熶骇鐜搴斾娇鐢ㄥ姩鎬佸簱鍔犺浇鏈哄埗
         std::ifstream file(file_path);
         if (!file.is_open()) {
             return false;
@@ -168,8 +169,8 @@ bool PluginManager::loadPluginFromFile(const std::string& file_path) {
         std::string content((std::istreambuf_iterator<char>(file)),
                            std::istreambuf_iterator<char>());
         
-        // 这里应该解析插件配置文件并注册插件
-        // 简化实现，直接返回成功
+        // 杩欓噷搴旇瑙ｆ瀽鎻掍欢閰嶇疆鏂囦欢骞舵敞鍐屾彃浠?
+        // 绠€鍖栧疄鐜帮紝鐩存帴杩斿洖鎴愬姛
         return true;
         
     } catch (const std::exception& e) {
@@ -233,7 +234,7 @@ std::shared_ptr<IPluginFactory> PluginManager::getPluginFactory(const std::strin
     return (it != plugin_factories_.end()) ? it->second : nullptr;
 }
 
-// PluginChainManager实现
+// PluginChainManager瀹炵幇
 PluginChainManager::PluginChainManager() = default;
 
 PluginChainManager::~PluginChainManager() = default;
@@ -245,7 +246,7 @@ bool PluginChainManager::createChain(const ChainConfig& config) {
         return false;
     }
     
-    // 检查插件是否可用
+    // 妫€鏌ユ彃浠舵槸鍚﹀彲鐢?
     auto& manager = PluginManager::getInstance();
     for (const auto& plugin_name : config.plugin_names) {
         if (!manager.isPluginAvailable(plugin_name)) {
@@ -253,10 +254,10 @@ bool PluginChainManager::createChain(const ChainConfig& config) {
         }
     }
     
-    // 创建插件链
+    // 鍒涘缓鎻掍欢閾?
     plugin_chains_[config.chain_name] = config;
     
-    // 初始化插件实例
+    // 鍒濆鍖栨彃浠跺疄渚?
     return initializeChainPlugins(config.chain_name);
 }
 
@@ -313,7 +314,7 @@ bool PluginChainManager::clearChain(const std::string& chain_name) {
     if (it != plugin_chains_.end()) {
         plugin_chains_.erase(it);
         
-        // 清理插件实例
+        // 娓呯悊鎻掍欢瀹炰緥
         auto instance_it = plugin_instances_.find(chain_name);
         if (instance_it != plugin_instances_.end()) {
             plugin_instances_.erase(instance_it);
@@ -339,24 +340,28 @@ bool PluginChainManager::executeChain(const std::string& chain_name,
     auto current_data = input_data;
     auto current_result = std::make_shared<PluginResultImpl>();
     
-    // 依次执行插件链中的每个插件
+    // 渚濇鎵ц鎻掍欢閾句腑鐨勬瘡涓彃浠?
     for (size_t i = 0; i < config.plugin_names.size(); ++i) {
         const auto& plugin_name = config.plugin_names[i];
         std::shared_ptr<PluginParameter> params = (i < config.plugin_params.size()) 
             ? config.plugin_params[i] : nullptr;
         
-        if (!executePluginInChain(chain_name, plugin_name, current_data, current_result)) {
+        // Create a temporary result for this plugin
+        auto plugin_result = std::make_shared<PluginResultImpl>();
+        if (!executePluginInChain(chain_name, plugin_name, current_data, plugin_result)) {
             return false;
         }
+        // Copy the plugin result to current_result
+        *current_result = *plugin_result;
         
-        // 准备下一个插件的输入数据
+        // 鍑嗗涓嬩竴涓彃浠剁殑杈撳叆鏁版嵁
         if (i < config.plugin_names.size() - 1) {
             current_data = convertDataForPlugin(current_data, 
                 plugin_instances_[chain_name][plugin_name]);
         }
     }
     
-    // 复制最终结果到输出
+    // 澶嶅埗鏈€缁堢粨鏋滃埌杈撳嚭
     *output_result = *current_result;
     
     return true;
@@ -415,7 +420,7 @@ bool PluginChainManager::initializeChainPlugins(const std::string& chain_name) {
     const auto& config = it->second;
     auto& manager = PluginManager::getInstance();
     
-    // 创建插件实例
+    // 鍒涘缓鎻掍欢瀹炰緥
     for (size_t i = 0; i < config.plugin_names.size(); ++i) {
         const auto& plugin_name = config.plugin_names[i];
         std::shared_ptr<PluginParameter> params = (i < config.plugin_params.size()) 
@@ -452,19 +457,19 @@ bool PluginChainManager::executePluginInChain(const std::string& chain_name,
 
 std::shared_ptr<PluginData> PluginChainManager::convertDataForPlugin(std::shared_ptr<PluginData> input_data,
                                                                     std::shared_ptr<IPlugin> target_plugin) {
-    // 简化的数据转换实现
-    // 生产环境应实现更复杂的数据转换逻辑
+    // 绠€鍖栫殑鏁版嵁杞崲瀹炵幇
+    // 鐢熶骇鐜搴斿疄鐜版洿澶嶆潅鐨勬暟鎹浆鎹㈤€昏緫
     return input_data;
 }
 
 std::shared_ptr<PluginResult> PluginChainManager::convertResultForPlugin(std::shared_ptr<PluginResult> input_result,
                                                                          std::shared_ptr<IPlugin> source_plugin) {
-    // 简化的结果转换实现
-    // 生产环境应实现更复杂的结果转换逻辑
+    // 绠€鍖栫殑缁撴灉杞崲瀹炵幇
+    // 鐢熶骇鐜搴斿疄鐜版洿澶嶆潅鐨勭粨鏋滆浆鎹㈤€昏緫
     return input_result;
 }
 
-// PluginConfigManager实现
+// PluginConfigManager瀹炵幇
 PluginConfigManager::PluginConfigManager() = default;
 
 PluginConfigManager::~PluginConfigManager() = default;
@@ -507,14 +512,14 @@ bool PluginConfigManager::loadConfigFromJson(const std::string& json_string) {
     std::lock_guard<std::mutex> lock(mutex_);
     
     try {
-        // 简化的JSON解析实现
-        // 生产环境应使用专业的JSON库
+        // 绠€鍖栫殑JSON瑙ｆ瀽瀹炵幇
+        // 鐢熶骇鐜搴斾娇鐢ㄤ笓涓氱殑JSON搴?
         std::istringstream iss(json_string);
         std::string line;
         
         while (std::getline(iss, line)) {
-            // 解析配置项
-            // 这里应该实现完整的JSON解析逻辑
+            // 瑙ｆ瀽閰嶇疆椤?
+            // 杩欓噷搴旇瀹炵幇瀹屾暣鐨凧SON瑙ｆ瀽閫昏緫
         }
         
         return true;
@@ -530,7 +535,7 @@ std::string PluginConfigManager::saveConfigToJson() const {
     std::ostringstream oss;
     oss << "{\n";
     
-    // 序列化插件配置
+    // 搴忓垪鍖栨彃浠堕厤缃?
     oss << "  \"plugin_configs\": {\n";
     bool first = true;
     for (const auto& [name, config] : plugin_configs_) {
@@ -540,7 +545,7 @@ std::string PluginConfigManager::saveConfigToJson() const {
     }
     oss << "\n  },\n";
     
-    // 序列化场景配置
+    // 搴忓垪鍖栧満鏅厤缃?
     oss << "  \"scene_configs\": {\n";
     first = true;
     for (const auto& [name, config] : scene_configs_) {
@@ -557,7 +562,7 @@ std::string PluginConfigManager::saveConfigToJson() const {
     }
     oss << "\n  },\n";
     
-    // 序列化全局配置
+    // 搴忓垪鍖栧叏灞€閰嶇疆
     oss << "  \"global_configs\": {\n";
     first = true;
     for (const auto& [key, value] : global_configs_) {
@@ -688,7 +693,7 @@ std::map<std::string, std::string> PluginConfigManager::getAllGlobalConfigs() co
     return global_configs_;
 }
 
-// PluginMonitorManager实现
+// PluginMonitorManager瀹炵幇
 PluginMonitorManager::PluginMonitorManager() = default;
 
 PluginMonitorManager::~PluginMonitorManager() = default;
@@ -699,7 +704,7 @@ void PluginMonitorManager::startMonitoring(const std::string& plugin_name) {
     if (monitoring_enabled_) {
         monitored_plugins_.insert(plugin_name);
         
-        // 初始化监控数据
+        // 鍒濆鍖栫洃鎺ф暟鎹?
         if (plugin_metrics_.find(plugin_name) == plugin_metrics_.end()) {
             PluginMetrics metrics;
             metrics.plugin_name = plugin_name;
@@ -742,7 +747,7 @@ void PluginMonitorManager::recordExecution(const std::string& plugin_name,
         metrics.last_error_message = error_message;
     }
     
-    // 更新执行时间统计
+    // 鏇存柊鎵ц鏃堕棿缁熻
     if (metrics.min_execution_time_ms == 0.0 || execution_time_ms < metrics.min_execution_time_ms) {
         metrics.min_execution_time_ms = execution_time_ms;
     }
@@ -751,7 +756,7 @@ void PluginMonitorManager::recordExecution(const std::string& plugin_name,
         metrics.max_execution_time_ms = execution_time_ms;
     }
     
-    // 更新平均执行时间
+    // 鏇存柊骞冲潎鎵ц鏃堕棿
     metrics.avg_execution_time_ms = (metrics.avg_execution_time_ms * (metrics.execution_count - 1) + execution_time_ms) / metrics.execution_count;
     
     metrics.last_execution_time = std::chrono::system_clock::now();
@@ -768,8 +773,8 @@ std::vector<std::string> PluginMonitorManager::getMonitoredPlugins() const {
     std::lock_guard<std::mutex> lock(mutex_);
     
     std::vector<std::string> plugins;
-    for (const auto& plugin_name : monitored_plugins_) {
-        plugins.push_back(plugin_name);
+    for (const auto& monitored_plugin : monitored_plugins_) {
+        plugins.push_back(monitored_plugin);
     }
     
     return plugins;

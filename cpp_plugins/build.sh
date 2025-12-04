@@ -39,17 +39,52 @@ check_dependencies() {
         exit 1
     fi
     
-    # 检查编译器
-    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
-        if ! command -v cl &> /dev/null; then
-            print_error "MSVC 编译器未找到，请安装 Visual Studio 2019 或更高版本"
-            exit 1
-        fi
-    else
-        if ! command -v g++ &> /dev/null; then
-            print_error "GCC 编译器未找到，请安装 GCC 7 或更高版本"
-            exit 1
-        fi
+    # 检查编译器 - Windows和Unix/Linux
+    local compiler_found=0
+    local compiler_type=""
+    
+    # 首先尝试找到任何可用的C++编译器
+    # 优先级: MSVC > Clang++ > G++
+    
+    # 检查MSVC (Windows native)
+    if command -v cl &> /dev/null; then
+        compiler_found=1
+        compiler_type="MSVC"
+        print_success "找到MSVC编译器"
+    fi
+    
+    # 检查Clang++
+    if [ $compiler_found -eq 0 ] && command -v clang++ &> /dev/null; then
+        compiler_found=1
+        compiler_type="Clang++"
+        print_success "找到Clang++编译器"
+    fi
+    
+    # 检查G++
+    if [ $compiler_found -eq 0 ] && command -v g++ &> /dev/null; then
+        compiler_found=1
+        compiler_type="G++"
+        print_success "找到G++编译器"
+    fi
+    
+    # 如果没有找到任何编译器
+    if [ $compiler_found -eq 0 ]; then
+        print_error "未找到C++编译器！"
+        echo ""
+        print_error "请安装以下之一："
+        echo "  Windows: Visual Studio 2019+ (安装MSVC)"
+        echo "           或 MinGW with GCC"
+        echo "           或 Clang"
+        echo "  Linux:   GCC: sudo apt-get install build-essential"
+        echo "           或 Clang: sudo apt-get install clang"
+        echo "  macOS:   GCC: brew install gcc"
+        echo "           或 Clang (已预装)"
+        echo ""
+        echo "Windows用户注意：如已安装VS 2019+但仍报错，请："
+        echo "  1. 使用PowerShell脚本: .\build.ps1"
+        echo "  2. 或使用批处理脚本: build.bat"
+        echo "  3. 或运行vcvarsall.bat x64来设置环境变量后再运行此脚本"
+        exit 1
     fi
     
     print_success "依赖检查完成"
@@ -76,15 +111,23 @@ configure_cmake() {
     
     local cmake_args=""
     
-    # 根据平台设置不同的配置
-    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
-        # Windows平台
+    # 根据不同的编译器设置不同的配置
+    # 检查MSVC (Windows native)
+    if command -v cl &> /dev/null; then
+        # Windows平台使Visual Studio 2019+生成器
         cmake_args="-G \"Visual Studio 16 2019\" -A x64"
-        print_info "使用 Visual Studio 2019 生成器"
+        print_info "检测到MSVC, 使Visual Studio 2019 生成器"
+    elif command -v clang++ &> /dev/null; then
+        # 使Clang++编译器
+        cmake_args="-DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release"
+        print_info "检测到Clang++, 使Clang++编译器"
+    elif command -v g++ &> /dev/null; then
+        # 使G++编译器
+        cmake_args="-DCMAKE_CXX_COMPILER=g++ -DCMAKE_BUILD_TYPE=Release"
+        print_info "检测到G++, 使G++编译器"
     else
-        # Linux平台
-        cmake_args="-DCMAKE_BUILD_TYPE=Release"
-        print_info "使用 Release 构建类型"
+        print_error "未找到有效的C++编译器"
+        return 1
     fi
     
     # 设置安装前缀

@@ -252,7 +252,10 @@ impl ErrorHandler {
 
     /// 记录错误统计
     async fn record_error(&self, error: &EdgeComputeError) {
-        let mut stats = self.stats.lock().unwrap();
+        let mut stats = self
+            .stats
+            .lock()
+            .expect("error stats mutex poisoned");
 
         // 更新错误计数
         let error_type = self.get_error_type_name(error);
@@ -444,7 +447,11 @@ impl ErrorHandler {
 
     /// 获取错误统计
     pub async fn get_stats(&self) -> ErrorStats {
-        let mut stats = self.stats.lock().unwrap().clone();
+        let mut stats = self
+            .stats
+            .lock()
+            .expect("error stats mutex poisoned")
+            .clone();
 
         // 如果有持久化存储，尝试从存储中恢复数据
         if let Some(ref store) = self.persistence_store {
@@ -469,7 +476,10 @@ impl ErrorHandler {
 
     /// 重置错误统计
     pub async fn reset_stats(&self) {
-        let mut stats = self.stats.lock().unwrap();
+        let mut stats = self
+            .stats
+            .lock()
+            .expect("error stats mutex poisoned");
         stats.error_counts.clear();
         stats.recent_errors.clear();
         stats.error_rate = 0.0;

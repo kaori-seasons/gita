@@ -91,16 +91,21 @@ async fn main() -> Result<()> {
     // 启动调度器
     let scheduler_clone = Arc::clone(&scheduler);
     let error_handler_clone = Arc::clone(&error_handler);
-    tokio::spawn(async move {
-        if let Err(e) = scheduler_clone.start().await {
-            let error = rust_edge_compute_core::core::EdgeComputeError::TaskScheduling {
-                message: format!("Failed to start scheduler: {}", e),
-                task_id: None,
-                queue_size: None,
-            };
-            let _ = error_handler_clone.handle_error(error).await;
-        }
-    });
+    rust_edge_compute::core::TaskSpawner::spawn_with_config(
+        async move {
+            if let Err(e) = scheduler_clone.start().await {
+                let error = rust_edge_compute_core::core::EdgeComputeError::TaskScheduling {
+                    message: format!("Failed to start scheduler: {}", e),
+                    task_id: None,
+                    queue_size: None,
+                };
+                let _ = error_handler_clone.handle_error(error).await;
+            }
+        },
+        rust_edge_compute::core::SpawnConfig::new("scheduler_start")
+            .with_timeout(300)
+            .with_detailed_errors(true)
+    );
 
     // 创建服务器配置
     let server_config = ServerConfig {

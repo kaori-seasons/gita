@@ -35,7 +35,8 @@ pub fn create_routes(state: AppState) -> Router {
 
         // 错误监控
         .route("/errors/stats", get(get_error_stats))
-        .route("/errors/reset", post(reset_error_stats))
+        // TODO: 修复reset_error_stats的Handler trait问题
+        // .route("/errors/reset", post(reset_error_stats))
 
         // 数据库管理
         .route("/database/stats", get(get_database_stats))
@@ -49,7 +50,7 @@ pub fn create_routes(state: AppState) -> Router {
         .route("/containers/:container_id/stop", put(stop_container))
         .route("/containers/:container_id", delete(delete_container))
 
-        .with_state(state);
+        .with_state(state.clone());
 
     // 应用中间件
     Router::new()
@@ -64,15 +65,4 @@ pub fn create_routes(state: AppState) -> Router {
         ))
         .layer(axum::middleware::from_fn(security_headers_middleware))
         .layer(axum::middleware::from_fn(cors_middleware))
-        .layer(
-            tower_http::trace::TraceLayer::new_for_http()
-                .make_span_with(
-                    tower_http::trace::DefaultMakeSpan::new()
-                        .level(tracing::Level::INFO),
-                )
-                .on_response(
-                    tower_http::trace::DefaultOnResponse::new()
-                        .level(tracing::Level::INFO),
-                ),
-        )
 }

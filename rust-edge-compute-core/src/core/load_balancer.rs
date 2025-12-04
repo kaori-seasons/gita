@@ -438,7 +438,11 @@ impl LoadBalancer {
         let avg_response_time = self.calculate_average_response_time().await;
 
         // 根据负载和响应时间决定新的策略
-        let new_strategy = self.determine_optimal_strategy(system_load, avg_response_time);
+        let new_strategy = self.determine_optimal_strategy(
+            system_load,
+            avg_response_time,
+            &adjuster.performance_thresholds,
+        );
 
         // 如果策略发生变化，记录历史
         if new_strategy != self.config.strategy {
@@ -457,12 +461,15 @@ impl LoadBalancer {
     }
 
     /// 根据系统状态确定最优策略
-    fn determine_optimal_strategy(&self, system_load: f64, avg_response_time: f64) -> LoadBalancingStrategy {
-        let adjuster = self.dynamic_strategy_adjuster.lock().unwrap();
-
+    fn determine_optimal_strategy(
+        &self,
+        system_load: f64,
+        avg_response_time: f64,
+        thresholds: &PerformanceThresholds,
+    ) -> LoadBalancingStrategy {
         // 高负载情况
-        if system_load > adjuster.performance_thresholds.high_load_threshold {
-            if avg_response_time > adjuster.performance_thresholds.high_response_time_threshold {
+        if system_load > thresholds.high_load_threshold {
+            if avg_response_time > thresholds.high_response_time_threshold {
                 // 高负载且高响应时间：使用资源感知调度
                 LoadBalancingStrategy::ResourceAware
             } else {
@@ -471,8 +478,8 @@ impl LoadBalancer {
             }
         }
         // 中等负载情况
-        else if system_load > adjuster.performance_thresholds.low_load_threshold {
-            if avg_response_time > adjuster.performance_thresholds.high_response_time_threshold {
+        else if system_load > thresholds.low_load_threshold {
+            if avg_response_time > thresholds.high_response_time_threshold {
                 // 中等负载但响应时间高：使用响应时间感知调度
                 LoadBalancingStrategy::ResponseTimeAware
             } else {
@@ -482,7 +489,7 @@ impl LoadBalancer {
         }
         // 低负载情况
         else {
-            if avg_response_time < adjuster.performance_thresholds.low_response_time_threshold {
+            if avg_response_time < thresholds.low_response_time_threshold {
                 // 低负载且响应时间低：使用负载感知调度（预测性）
                 LoadBalancingStrategy::LoadAware
             } else {

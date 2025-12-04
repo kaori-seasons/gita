@@ -13,7 +13,7 @@ use tokio::sync::{mpsc, RwLock};
 use serde::{Deserialize, Serialize};
 use zeromq::prelude::*;
 use zeromq::ZmqMessage;
-use crate::core::error::Result;
+use crate::Result;
 
 /// ZeroMQ 消息
 #[derive(Debug, Clone, Serialize, Deserialize)]
