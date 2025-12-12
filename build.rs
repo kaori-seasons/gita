@@ -114,4 +114,6 @@ fn compile_capnp() {
         .file(src_dir.join("src/capnp/algorithm.capnp"))
         .run()
         .expect("Failed to compile Cap'n Proto schema");
+    
+    println!("cargo:warning=Compiled Cap'n Proto schema");
 }

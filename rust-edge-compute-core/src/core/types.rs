@@ -151,7 +151,7 @@ impl ComputeResponse {
 }
 
 /// 负载均衡策略
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum LoadBalancingStrategy {
     /// 轮询调度
     RoundRobin,

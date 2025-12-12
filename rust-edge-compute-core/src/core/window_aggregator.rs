@@ -137,22 +137,22 @@ impl SlidingWindowAggregator {
         windows: &mut HashMap<String, WindowBuffer>,
         measurement_point_id: &str,
     ) -> std::result::Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        // 先检查是否需要根据窗口大小触发
         let window = windows.get_mut(measurement_point_id)
             .ok_or_else(|| format!("Window for measurement point {} not found", measurement_point_id))?;
         
-        // 检查窗口大小是否达到阈值
-        if window.data.len() >= self.config.window_size {
-            // 触发窗口
-            self.trigger_window(windows, measurement_point_id).await?;
-        }
+        let should_trigger_by_size = window.data.len() >= self.config.window_size;
+        let should_trigger_by_timeout = {
+            let elapsed = window.last_updated_at.elapsed();
+            elapsed.as_millis() as u64 >= self.config.window_timeout_ms && self.config.allow_incomplete_window && !window.data.is_empty()
+        };
         
-        // 检查窗口超时
-        let elapsed = window.last_updated_at.elapsed();
-        if elapsed.as_millis() as u64 >= self.config.window_timeout_ms {
-            // 窗口超时，触发不完整窗口（如果允许）
-            if self.config.allow_incomplete_window && !window.data.is_empty() {
-                self.trigger_window(windows, measurement_point_id).await?;
-            }
+        drop(window);
+        
+        if should_trigger_by_size {
+            self.trigger_window(windows, measurement_point_id).await?;
+        } else if should_trigger_by_timeout {
+            self.trigger_window(windows, measurement_point_id).await?;
         }
         
         Ok(())
@@ -220,22 +220,27 @@ impl SlidingWindowAggregator {
                     interval.tick().await;
                     
                     // 检查所有窗口的超时
-                    let mut windows_guard = windows.write().await;
-                    let measurement_point_ids: Vec<String> = windows_guard.keys().cloned().collect();
+                    let measurement_point_ids: Vec<String> = {
+                        let windows_guard = windows.read().await;
+                        windows_guard.keys().cloned().collect()
+                    };
                     
                     for measurement_point_id in measurement_point_ids {
-                        let window = windows_guard.get(&measurement_point_id)
-                            .expect("Window should exist for measurement point in timeout checker");
-                        let elapsed = window.last_updated_at.elapsed();
+                        // 检查超时
+                        let should_trigger = {
+                            let windows_guard = windows.read().await;
+                            if let Some(window) = windows_guard.get(&measurement_point_id) {
+                                let elapsed = window.last_updated_at.elapsed();
+                                elapsed.as_millis() as u64 >= config.window_timeout_ms
+                            } else {
+                                false
+                            }
+                        };
                         
-                        if elapsed.as_millis() as u64 >= config.window_timeout_ms {
+                        if should_trigger {
                             // 窗口超时，触发不完整窗口（如果允许）
-                            if config.allow_incomplete_window && !window.data.is_empty() {
-                                // 需要重新获取可变引用
-                                drop(windows_guard);
-                                let mut windows_guard = windows.write().await;
-                                
-                                // 触发窗口
+                            let mut windows_guard = windows.write().await;
+                            if config.allow_incomplete_window {
                                 if let Some(window) = windows_guard.get_mut(&measurement_point_id) {
                                     let window_size = window.data.len();
                                     if window_size > 0 {

@@ -1,210 +1,208 @@
-# Gita(边缘计算框架)
+# Gita - 企业级边缘计算框架
+
+<div align="center">
+
+![Rust](https://img.shields.io/badge/Rust-1.70+-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-blue)
+
+**Rust边缘计算框架**
+
+[快速开始](#快速开始) • [架构设计](#架构设计) • [API文档](#api文档) • [部署指南](#部署指南) • [贡献指南](#贡献指南)
+
+</div>
+
+---
 
 ## 项目概述
 
-这是一个基于Rust的边缘计算框架项目，旨在构建高性能、安全、可靠的边缘计算解决方案。项目采用现代化的Rust技术栈，包括Tokio异步运行时、CXX跨语言互操作和Youki容器运行时。
+**Gita** 是一个企业级的边缘计算框架，采用三层架构设计（控制平面、FFI层、执行平面），完整支持从PoC原型到生产环境的全生命周期。
 
-## 技术架构
+### 核心优势
+
+- 🚀 **高性能**：Tokio异步运行时，支持1000+并发连接
+- 🔒 **企业级安全**：TLS 1.3、JWT认证、审计日志、数据加密
+- 🐳 **容器化部署**：原生支持Docker、Kubernetes、Helm
+- 🔄 **跨语言互操作**：Rust与C++无缝集成，零开销FFI
+- 📊 **可观测性**：Prometheus指标、Grafana仪表板、结构化日志
+- ✅ **生产就绪**：完善的错误处理、优雅关机、数据持久化
+
+---
+
+## 架构设计
+
+### 三层架构
+
+```
+┌─────────────────────────────────────┐
+│    控制平面 (Rust/Axum)              │
+│ • API服务器  • 任务调度  • 认证授权   │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│   FFI层 (CXX桥接)                   │
+│ • 类型安全的跨语言调用  • 内存管理   │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│   执行平面 (C++/Youki)              │
+│ • 算法执行  • 容器管理  • 性能监控   │
+└─────────────────────────────────────┘
+```
 
 ### 核心技术栈
-- **Rust**: 主要开发语言，提供内存安全和零成本抽象
-- **Tokio**: 异步运行时，处理高并发I/O操作
-- **CXX**: 安全的Rust-C++互操作库
-- **Youki**: 基于Rust的OCI容器运行时
 
-### 架构设计原则
-1. **内存安全优先**: 利用Rust的所有权系统避免内存相关漏洞
-2. **异步优先**: 使用Tokio处理高并发场景
-3. **零开销抽象**: 在保证安全的前提下最大化性能
-4. **容器化隔离**: 使用Youki提供安全的执行环境
+| 层级 | 技术 | 用途 |
+|------|------|------|
+| **运行时** | Tokio | 高性能异步I/O和任务调度 |
+| **Web框架** | Axum | 轻量级异步HTTP服务器 |
+| **跨语言** | CXX | 类型安全的Rust-C++互操作 |
+| **容器** | Youki | OCI标准的容器运行时 |
+| **持久化** | Sled | 嵌入式键值数据库 |
+| **安全** | rustls/OpenSSL | TLS 1.3加密通信 |
+| **监控** | Prometheus/Grafana | 指标收集和可视化 |
 
-## CI/CD 流水线
+### 设计原则
 
-本项目使用基于 [rust-ci](https://gitlab.com/rust-ci/rust-ci) 的高效 CI/CD 流水线，支持：
+1. **内存安全优先** - 利用Rust的所有权系统避免内存漏洞
+2. **异步优先** - Tokio处理高并发，支持io_uring
+3. **零开销抽象** - 保证安全的前提下最大化性能
+4. **容器化隔离** - Youki提供安全的进程隔离和资源控制
 
-- ✅ **自动化测试**：单元测试、集成测试、文档测试
-- ✅ **代码质量检查**：Rustfmt、Clippy
-- ✅ **并行构建**：多 crate workspace 并行编译
-- ✅ **智能缓存**：加速构建过程
-- ✅ **自动打包**：创建发布包
-- ✅ **部署管理**：支持测试和生产环境部署
-
-详细使用说明请参考 [CI/CD 使用指南](docs/ci-cd-guide.md)。
+---
 
 ## 项目结构
 
+### 核心模块
+
 ```
-rust-edge-compute/
-├── README.md              # 项目说明文档
-├── design.md              # 详细架构设计文档
-├── Cargo.toml             # Rust项目配置文件
-├── config/
-│   └── default.toml       # 默认配置文件
-└── src/
-    ├── main.rs            # 主程序入口
-    ├── lib.rs             # 库入口点
-    ├── core/              # 核心模块
-    │   ├── mod.rs
-    │   ├── types.rs       # 核心数据类型
-    │   └── error.rs       # 错误处理
-    ├── api/               # HTTP API模块
-    │   ├── mod.rs
-    │   ├── handlers.rs    # 请求处理器
-    │   ├── routes.rs      # 路由定义
-    │   └── server.rs      # HTTP服务器
-    ├── config/            # 配置管理模块
-    │   ├── mod.rs
-    │   └── settings.rs    # 配置结构体
-    ├── ffi/               # CXX桥接模块
-    │   ├── mod.rs
-    │   └── bridge.rs      # 跨语言桥接
-    └── container/         # 容器管理模块
-        ├── mod.rs
-        └── manager.rs     # 容器管理器
+gita/
+├── src/                          # 主程序源码
+│   ├── core/                     # 核心逻辑
+│   │   ├── scheduler.rs          # 任务调度系统
+│   │   ├── error.rs              # 错误处理与统计
+│   │   ├── persistence.rs        # 数据持久化
+│   │   ├── audit.rs              # 审计日志
+│   │   ├── tls.rs                # TLS安全传输
+│   │   └── types.rs              # 核心数据类型
+│   ├── api/                      # HTTP接口层
+│   │   ├── handlers.rs           # 业务逻辑处理
+│   │   ├── routes.rs             # 路由定义
+│   │   ├── server.rs             # HTTP服务器
+│   │   ├── auth_middleware.rs    # 认证中间件
+│   │   └── container_handlers.rs # 容器管理
+│   ├── ffi/                      # Rust-C++互操作
+│   │   ├── bridge.rs             # CXX桥接
+│   │   ├── cpp/                  # C++算法实现
+│   │   ├── memory_manager.rs     # 内存管理
+│   │   └── type_converter.rs     # 类型转换
+│   ├── config/                   # 配置管理
+│   └── lib.rs & main.rs          # 入口点
+│
+├── rust-edge-compute-core/       # 核心库
+├── rust-edge-compute-cpp/        # C++互操作crate
+├── rust-edge-compute-ml/         # ML推理支持
+├── rust-edge-compute-python/     # Python集成
+│
+├── cpp_plugins/                  # C++插件实现
+│   ├── src/                      # 插件源码
+│   ├── include/                  # 头文件
+│   ├── tests/                    # 测试用例
+│   └── CMakeLists.txt            # CMake构建
+│
+├── examples/                     # 使用示例
+├── tests/                        # 集成测试
+├── config/                       # 配置文件
+├── deploy/                       # 部署配置
+├── docker/                       # Docker文件
+├── helm/                         # K8s部署
+└── scripts/                      # 自动化脚本
 ```
 
-## 设计思想分析
+---
 
-### 基于Monoio的异步编程思想
+## 核心功能模块
 
-通过分析Monoio的设计理念，我们了解到以下关键思想：
+### 1. 任务调度系统
 
-#### 1. io_uring vs epoll的性能优势
-- **io_uring**: Linux 5.1+引入的新异步I/O接口，提供更高的性能
-- **epoll**: 传统的I/O多路复用机制，广泛兼容但性能相对较低
-- **Monoio选择**: 优先使用io_uring，在不可用时回退到epoll
+- **优先级队列**：支持高/中/低三个优先级
+- **并发控制**：可配置最大并发任务数（默认10）
+- **队列容量**：10000个任务缓冲
+- **重试机制**：失败自动重试，可配置重试次数
+- **超时控制**：支持任务级别超时设置（默认300s）
+- **负载均衡**：任务自动分配到可用worker
 
-#### 2. 线程模型设计
-- **Thread-per-core**: 每个CPU核心一个线程，避免线程间竞争
-- **工作窃取**: 线程间可以动态平衡负载
-- **无锁设计**: 减少锁竞争，提高并发性能
+### 2. 数据持久化
 
-#### 3. 异步任务调度
-- **协作式多任务**: 任务主动让出CPU控制权
-- **Future状态机**: 编译时生成高效的状态机
-- **Waker机制**: 高效的唤醒机制，避免轮询开销
+- **Sled嵌入式数据库**：零配置的键值存储
+- **自动备份**：关机时自动保存应用状态
+- **错误统计持久化**：记录所有错误和恢复信息
+- **任务状态保存**：支持任务中断后恢复
+- **配置存储**：运行时配置持久化
 
-## 实施计划
+### 3. 安全体系
 
-### 阶段1: 概念验证 (PoC) - 2-3个月 ✅ 全部完成
-- [x] 搭建基础Rust项目结构 ✅
-- [x] 实现简单的异步HTTP服务器 ✅
-- [x] 集成CXX进行C++库调用 ✅
-- [x] 实现基础容器管理 ✅
-- [x] 端到端原型测试 ✅
+| 维度 | 实现 | 说明 |
+|------|------|------|
+| **传输安全** | TLS 1.3 | HTTPS加密通信 |
+| **认证** | JWT | Token认证，24h过期 |
+| **授权** | RBAC | 角色-权限访问控制 |
+| **加密存储** | AES-256-GCM | 敏感数据加密 |
+| **速率限制** | 令牌桶 | 防DDoS、防滥用 |
+| **审计日志** | 结构化日志 | 所有操作记录 |
+| **输入验证** | 白名单校验 | 防注入攻击 |
 
-### 阶段2: 最小可行产品 (MVP) - 4-6个月 ✅ 全部完成
-- [x] 完整的任务调度系统 ✅
-- [x] 容器生命周期管理 ✅
-- [x] 错误处理和日志系统 ✅
-- [x] 基础安全配置 ✅
-- [x] 数据持久化 ✅
-- [x] 优雅关机 ✅
+### 4. 可观测性
 
-### 阶段3: 生产就绪 - 6个月以上 ✅ 全部完成
-- [x] 全面的安全加固（TLS证书、加密存储）✅
-- [x] 性能优化和基准测试（负载测试、性能监控）✅
-- [x] 监控和运维工具（指标收集、可观测性）✅
-- [x] OTA更新系统（自动更新、版本管理）✅
-- [x] 生产部署（Docker化、Kubernetes部署）✅
-- [x] 文档完善（API文档、部署指南）✅
+- **Prometheus指标**：性能、错误率、队列深度等
+- **Grafana仪表板**：实时监控可视化
+- **结构化日志**：JSON格式日志，便于查询
+- **分布式追踪**：OpenTelemetry集成（可选）
+- **健康检查**：端点监控系统整体健康状态
 
-## 🏆 项目完成总结
+### 5. 错误处理与恢复
 
-### ✅ 已完成的核心功能
+- **分层错误处理**：API层、业务层、FFI层统一处理
+- **错误分类**：临时错误、永久错误、业务错误
+- **自动恢复**：临时错误自动重试，定期健康检查
+- **错误统计**：详细的错误率和趋势分析
+- **优雅降级**：单点故障不影响整体服务
 
-#### Phase 1: 概念验证 (PoC) ✅
-- **项目架构搭建**：三层架构（控制平面、FFI层、执行平面）
-- **基础HTTP服务**：基于Axum的异步Web服务器
-- **跨语言互操作**：CXX桥接实现Rust与C++互操作
-- **容器管理**：Youki容器运行时集成
-- **端到端测试**：完整的集成测试套件
+### 6. 容器管理
 
-#### Phase 2: 最小可行产品 (MVP) ✅
-- **任务调度系统**：优先级队列、并发控制、重试机制
-- **错误处理机制**：分层错误处理、统计监控、恢复策略
-- **数据持久化**：Sled数据库集成、状态保存、数据备份
-- **优雅关机**：信号处理、状态保存、组件协调
-- **安全配置**：认证授权、速率限制、输入验证、安全头
+- **Youki运行时**：OCI标准兼容的轻量级容器
+- **生命周期管理**：创建、启动、停止、删除容器
+- **资源控制**：CPU、内存、I/O限制
+- **隔离执行**：安全的进程隔离和沙箱环境
+- **状态监控**：容器运行状态实时跟踪
 
-#### Phase 3: 生产就绪 ✅
-- **安全加固**：TLS/HTTPS支持、数据加密、审计日志、访问控制
-- **性能优化**：负载测试、性能监控、基准测试、优化建议
-- **监控工具**：Prometheus指标、Grafana仪表板、可观测性
-- **OTA更新**：在线更新检查、版本管理、安全部署
-- **生产部署**：Docker容器化、Kubernetes部署、Helm Charts
-- **文档完善**：完整API文档、生产配置、部署指南
+### 7. 优雅关机
 
-### 🚀 技术亮点
+- **信号处理**：SIGTERM/SIGINT优雅关闭
+- **状态保存**：关闭前保存所有重要数据
+- **组件协调**：确保各组件有序关闭
+- **超时控制**：防止无限等待（默认30s）
+- **再启动恢复**：关闭前保存的状态自动恢复
 
-1. **高性能架构**
-   - Tokio异步运行时，处理高并发场景
-   - io_uring兼容性，为未来性能优化奠定基础
-   - 零拷贝数据传递，减少内存开销
-   - 性能监控和自动优化建议
+---
 
-2. **企业级安全**
-   - TLS/HTTPS加密传输
-   - 数据加密存储和传输
-   - JWT认证和角色授权
-   - 审计日志和安全监控
-   - 速率限制和DDoS防护
+## 快速开始
 
-3. **生产就绪部署**
-   - Docker容器化支持
-   - Kubernetes原生部署
-   - Helm Charts包管理
-   - 自动化监控和告警
-   - OTA在线更新系统
+### 环境要求
 
-4. **可观测性和监控**
-   - Prometheus指标收集
-   - Grafana可视化仪表板
-   - 结构化日志系统
-   - 性能基准测试
-   - 负载测试工具
+- **Rust**: 1.70+ ([rustup](https://rustup.rs/) 安装)
+- **C++**: 编译器（gcc/clang）用于CXX桥接
+- **Linux**: 推荐Linux环境（Youki容器支持）
+- **Docker**: 可选，用于容器化部署
 
-### 📊 系统规格
-
-- **并发处理**：支持1000+并发连接，10个并发任务
-- **队列容量**：10000个任务缓冲，支持优先级调度
-- **响应时间**：<100ms任务调度，<1s平均响应时间
-- **内存效率**：零拷贝算法执行，智能内存管理
-- **安全性**：TLS 1.3 + JWT认证 + 速率限制 + 输入验证 + 审计日志
-- **可观测性**：Prometheus指标 + Grafana仪表板 + 结构化日志
-- **部署灵活性**：Docker + Kubernetes + Helm Charts
-- **高可用性**：优雅关机 + 数据持久化 + 自动恢复
-
-### 🎯 项目里程碑达成！
-
-**所有Phase 1、Phase 2、Phase 3任务已100%完成！** 🎊
-
-#### ✅ 完整的技术栈
-- **语言框架**：Rust + Tokio + Axum + CXX
-- **安全体系**：TLS 1.3 + JWT + 加密存储 + 审计日志
-- **部署运维**：Docker + Kubernetes + Helm + Prometheus + Grafana
-- **监控可观测**：性能指标 + 结构化日志 + 健康检查 + 告警系统
-- **开发工具**：自动化测试 + 性能基准 + 负载测试 + 更新系统
-
-#### 🚀 立即可用的企业级功能
-- **生产部署**：一键Docker部署，Kubernetes集群部署
-- **监控告警**：完整的可观测性栈，实时性能监控
-- **安全合规**：企业级安全标准，审计和日志记录
-- **高可用性**：优雅关机，数据持久化，自动恢复
-- **扩展性**：模块化设计，支持自定义算法和中间件
-
-这是一个**完整、健壮、高性能**的企业级边缘计算平台，已经达到了**生产就绪**的标准！🏆
-
-**恭喜！你现在拥有了一个世界级的边缘计算框架！** 🌟
-
-## 🚀 快速开始
-
-### 本地开发部署
+### 本地开发
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/your-org/rust-edge-compute.git
-cd rust-edge-compute
+git clone <repository-url>
+cd gita
 
 # 2. 构建项目
 cargo build --release
@@ -212,471 +210,397 @@ cargo build --release
 # 3. 运行服务
 ./target/release/rust-edge-compute
 
-# 4. 测试API
+# 4. 测试API（新开终端）
 curl http://localhost:3000/api/v1/health
+```
+
+### 运行测试
+
+```bash
+# 完整测试套件
+./test_runner.sh
+
+# 单元测试
+cargo test --lib
+
+# 集成测试
+cargo test --test '*'
+
+# 特定测试
+cargo test algorithm_name
+
+# 显示println输出
+cargo test -- --nocapture
 ```
 
 ### Docker部署
 
 ```bash
-# 1. 构建镜像
-docker build -t rust-edge-compute:latest .
+# 构建镜像
+docker build -t gita:latest .
 
-# 2. 运行容器
-docker run -p 3000:3000 -p 443:443 rust-edge-compute:latest
+# 运行容器
+docker run -p 3000:3000 -p 443:443 gita:latest
 
-# 3. 使用Docker Compose（推荐）
+# 使用Docker Compose（含监控栈）
 docker-compose -f docker/docker-compose.yml up -d
 ```
 
 ### Kubernetes部署
 
 ```bash
-# 1. 安装Helm Chart
-helm install rust-edge-compute ./helm
+# 使用Helm部署
+helm install gita ./helm
 
-# 2. 检查部署状态
+# 检查部署
 kubectl get pods
-kubectl get services
+kubectl logs -f deployment/gita
 
-# 3. 查看日志
-kubectl logs -f deployment/rust-edge-compute
+# 查看服务
+kubectl get svc
 ```
-
-### 监控设置
-
-```bash
-# 1. 启动监控栈
-docker-compose -f docker/docker-compose.yml --profile monitoring up -d
-
-# 2. 访问Grafana
-open http://localhost:3001  # admin/admin
-
-# 3. 导入仪表板
-# 使用 monitoring/grafana-dashboard.json
-```
-
-## 📚 完整文档
-
-项目包含以下文档和配置文件：
-
-- **API文档**：完整的RESTful API接口说明
-- **部署指南**：Docker、Kubernetes、Helm部署配置
-- **监控配置**：Prometheus、Grafana仪表板配置
-- **安全配置**：TLS证书、加密存储、安全策略
-- **性能优化**：基准测试、负载测试、优化建议
-
-## 🎯 项目状态
-
-### ✅ 所有Phase任务完成情况
-
-**Phase 1 (概念验证)** ✅ 100%完成
-- 1.1 初始化Rust项目结构 ✅
-- 1.2 实现基础HTTP API服务器 ✅  
-- 1.3 集成CXX跨语言桥接 ✅
-- 1.4 实现基础容器管理 ✅
-- 1.5 端到端原型测试 ✅
-
-**Phase 2 (最小可行产品)** ✅ 100%完成
-- 2.1 实现任务调度系统 ✅
-- 2.2 完善错误处理机制 ✅
-- 2.3 添加数据持久化 ✅
-- 2.4 实现优雅关机 ✅
-- 2.5 安全配置和隔离 ✅
-
-**Phase 3 (生产就绪)** ✅ 100%完成
-- 3.1 完善安全加固 ✅
-- 3.2 添加监控和日志 ✅
-- 3.3 实现OTA更新系统 ✅
-- 3.4 性能优化和测试 ✅
-- 3.5 生产部署和文档 ✅
 
 ---
 
-## 🏆 最终成果
-
-你现在拥有了一个**完整的企业级边缘计算框架**，具备以下特性：
-
-### 🔧 核心功能
-- **高性能计算**：异步任务调度，支持10+并发任务
-- **跨语言互操作**：Rust + C++算法执行
-- **容器化部署**：Youki容器运行时集成
-- **数据持久化**：Sled数据库 + 自动备份
-- **错误恢复**：智能重试 + 优雅降级
-
-### 🔒 企业级安全
-- **传输安全**：TLS 1.3加密
-- **认证授权**：JWT + 角色权限
-- **访问控制**：速率限制 + 输入验证
-- **审计日志**：完整的安全事件记录
-- **数据加密**：敏感数据加密存储
-
-### 📊 可观测性
-- **性能监控**：Prometheus指标收集
-- **可视化**：Grafana仪表板
-- **日志系统**：结构化日志 + 轮转
-- **健康检查**：自动化健康监控
-- **告警系统**：智能阈值告警
-
-### 🚀 部署运维
-- **容器化**：Docker多阶段构建
-- **集群部署**：Kubernetes原生支持
-- **包管理**：Helm Charts
-- **自动化**：CI/CD管道
-- **更新系统**：OTA在线更新
-
-这个框架已经达到了**生产就绪**的标准，可以直接部署到企业环境中使用！🎊
-   - 三层架构（控制平面、FFI层、执行平面）
-   - 生产级代码质量和错误处理
-   - 模块化设计便于扩展
-
-2. **跨语言互操作能力**
-   - Rust与C++无缝集成
-   - 零开销的FFI调用
-   - 类型安全的接口设计
-
-3. **容器化执行环境**
-   - OCI标准兼容
-   - 安全隔离和资源控制
-   - 轻量级和高性能
-
-4. **完整的测试覆盖**
-   - 单元测试和集成测试
-   - 自动化测试流程
-   - 端到端验证
-
-## 🚀 下一步：Phase 2 MVP开发
-
-现在Phase 1的概念验证已经完成，框架具备了核心功能。接下来进入Phase 2，构建最小可行产品（MVP）。
-
-### Phase 2 重点任务：
-1. **任务调度系统** - 实现工作队列和任务优先级
-2. **错误处理机制** - 完善错误传播和恢复
-3. **数据持久化** - 添加状态存储和配置持久化
-4. **优雅关机** - 实现信号处理和平滑关闭
-5. **安全配置** - 加强安全措施和访问控制
-
-## 学习资源
-
-- [Monoio设计思想](https://rustmagazine.github.io/rust_magazine_2021/chapter_12/monoio.html)
-- [Tokio官方文档](https://tokio.rs/)
-- [CXX库文档](https://cxx.rs/)
-- [Youki项目](https://github.com/containers/youki)
-
-## 快速开始
-
-### 环境要求
-- Rust 1.70+
-- Linux环境（支持Youki容器运行时）
-- C++编译器（用于CXX桥接）
-
-### 构建项目
-```bash
-# 克隆项目
-git clone <repository-url>
-cd rust-edge-compute
-
-# 构建项目
-cargo build --release
-
-# 运行项目
-cargo run --release
-```
-
-### 运行测试
-```bash
-# 运行完整的端到端测试套件
-./test_runner.sh
-
-# 或者手动运行测试
-cargo test --test integration_test
-
-# 编译并运行服务器
-cargo build --release
-./target/release/rust-edge-compute
-```
-
-### 测试API
-```bash
-# 健康检查
-curl http://localhost:3000/api/v1/health
-
-# 用户认证
-curl -X POST http://localhost:3000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "password": "testpass"}'
-
-# 列出可用算法
-curl http://localhost:3000/api/v1/algorithms
-
-# 提交计算任务
-curl -X POST http://localhost:3000/api/v1/compute \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer your-jwt-token" \
-  -d '{
-    "algorithm": "add",
-    "parameters": {"a": 5.0, "b": 3.0}
-  }'
-
-# 查询任务状态
-curl http://localhost:3000/api/v1/task/your-task-id
-
-# 取消任务
-curl -X PUT http://localhost:3000/api/v1/task/your-task-id/cancel
-
-# 调度器状态
-curl http://localhost:3000/api/v1/scheduler/status
-
-# 错误统计
-curl http://localhost:3000/api/v1/errors/stats
-
-# 容器管理
-curl http://localhost:3000/api/v1/containers
-curl -X POST http://localhost:3000/api/v1/containers \
-  -H "Content-Type: application/json" \
-  -d '{"algorithm": "add", "config": {"name": "test"}}'
-```
-
 ## API文档
-
-### 概述
-
-Rust Edge Compute 提供完整的RESTful API，支持以下功能模块：
-
-- **认证授权**：JWT token认证和角色权限管理
-- **计算任务**：异步任务提交、状态查询和取消
-- **系统监控**：健康检查、性能指标和错误统计
-- **容器管理**：容器生命周期管理和资源监控
-- **数据库管理**：数据持久化、备份和清理
-- **OTA更新**：在线更新检查、下载和安装
 
 ### 认证
 
-API使用JWT (JSON Web Token) 进行认证：
+所有API均需JWT认证（除登录外）：
 
 ```bash
-# 1. 获取访问令牌
+# 1. 登录获取token
 curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "secure_password"}'
+  -d '{"username": "admin", "password": "password"}'
 
-# 2. 使用令牌访问受保护的端点
-curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+# 响应
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "expires_in": 86400
+}
+
+# 2. 使用token访问API
+curl -H "Authorization: Bearer <token>" \
   http://localhost:3000/api/v1/compute
 ```
 
-### 错误处理
+### 主要端点
 
-API返回标准HTTP状态码和JSON错误响应：
+#### 健康检查
+```bash
+GET /api/v1/health
 
-```json
+# 响应
 {
-  "error": "详细错误信息",
-  "status_code": 400,
-  "timestamp": "2024-01-01T12:00:00Z"
-}
-```
-
-## API接口 (v1)
-
-所有API端点都以 `/api/v1` 为前缀
-
-### 认证接口
-
-#### POST /api/v1/auth/login
-用户登录
-
-**请求体：**
-```json
-{
-  "username": "string",
-  "password": "string"
-}
-```
-
-**响应：**
-```json
-{
-  "token": "jwt_token",
-  "user": {
-    "id": "string",
-    "username": "string",
-    "roles": ["string"],
-    "permissions": ["string"]
-  },
-  "expires_in": 3600
-}
-```
-
-#### GET /api/v1/auth/me
-获取当前用户信息
-
-#### POST /api/v1/auth/logout
-用户注销
-
-### 计算任务接口
-
-#### POST /api/v1/compute
-提交计算任务
-
-**请求头：**
-```
-Authorization: Bearer <jwt_token>
-```
-
-**请求体：**
-```json
-{
-  "id": "optional-task-id",
-  "algorithm": "algorithm-name",
-  "parameters": {
-    "param1": "value1",
-    "param2": "value2"
-  },
-  "timeout_seconds": 300
-}
-```
-
-**响应：**
-```json
-{
-  "task_id": "generated-task-id",
-  "status": "submitted",
-  "message": "Task submitted to scheduler"
-}
-```
-
-#### GET /api/v1/task/{task_id}
-查询任务状态
-
-#### PUT /api/v1/task/{task_id}/cancel
-取消任务
-
-### 系统监控接口
-
-#### GET /api/v1/health
-健康检查接口
-
-**响应：**
-```json
-{
-  "status": "healthy|degraded",
-  "service": "rust-edge-compute",
+  "status": "healthy",
+  "service": "gita",
   "version": "0.1.0",
-  "scheduler": {
-    "active_tasks": 2,
-    "queued_tasks": 0,
-    "max_concurrent": 10
-  },
-  "errors": {
-    "total_count": 5,
-    "error_rate": 0.002,
-    "recent_errors": 3
-  },
   "timestamp": "2024-01-01T12:00:00Z"
 }
 ```
 
-#### GET /api/v1/scheduler/status
-获取调度器状态
+#### 提交任务
+```bash
+POST /api/v1/compute
+Authorization: Bearer <token>
+Content-Type: application/json
 
-#### GET /api/v1/errors/stats
-获取错误统计
+{
+  "algorithm": "matrix_multiplication",
+  "priority": "high",
+  "timeout_seconds": 300,
+  "parameters": {"a": [[1, 2]], "b": [[3], [4]]}
+}
 
-#### POST /api/v1/errors/reset
-重置错误统计
+# 响应
+{
+  "task_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "submitted",
+  "created_at": "2024-01-01T12:00:00Z"
+}
+```
 
-### 容器管理接口
+#### 查询任务状态
+```bash
+GET /api/v1/task/{task_id}
+Authorization: Bearer <token>
 
-#### POST /api/v1/containers
-创建容器
+# 响应
+{
+  "task_id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "completed",
+  "result": {...},
+  "created_at": "2024-01-01T12:00:00Z",
+  "completed_at": "2024-01-01T12:00:15Z"
+}
+```
 
-#### GET /api/v1/containers
-列出所有容器
+#### 调度器状态
+```bash
+GET /api/v1/scheduler/status
+Authorization: Bearer <token>
 
-#### GET /api/v1/containers/{container_id}
-获取容器状态
+# 响应
+{
+  "active_tasks": 5,
+  "queued_tasks": 12,
+  "max_concurrent": 10,
+  "average_latency_ms": 45.2,
+  "uptime_seconds": 86400
+}
+```
 
-#### PUT /api/v1/containers/{container_id}/stop
-停止容器
+#### 错误统计
+```bash
+GET /api/v1/errors/stats
+Authorization: Bearer <token>
 
-#### DELETE /api/v1/containers/{container_id}
-删除容器
+# 响应
+{
+  "total_errors": 15,
+  "error_rate": 0.001,
+  "recent_errors": [
+    {"error": "timeout", "count": 5, "timestamp": "..."}
+  ]
+}
+```
 
-### 数据库管理接口
+详细API文档请参考 [API完整文档](docs/api.md)
 
-#### GET /api/v1/database/stats
-获取数据库统计信息
+---
 
-#### POST /api/v1/database/backup
-备份数据库
+## 部署指南
 
-#### POST /api/v1/database/cleanup
-清理过期数据
+### 生产环境检查清单
+
+- [ ] 配置TLS证书（`deploy/config/`）
+- [ ] 设置强密码和JWT密钥
+- [ ] 配置监控告警规则
+- [ ] 准备数据备份策略
+- [ ] 配置日志轮转和保留期
+- [ ] 进行负载测试和性能基准
+- [ ] 编写运维手册和故障响应流程
+- [ ] 设置自动化健康检查
+
+### 关键配置文件
+
+- `config/production.toml` - 生产环境配置
+- `deploy/config/production.toml` - 部署特定配置
+- `deploy/monitoring/monitor.sh` - 监控脚本
+
+详细部署说明请参考 [部署指南](DEPLOYMENT_QUICK_REFERENCE.md)
+
+---
 
 ## 开发指南
 
-### 代码结构说明
-- `src/core/` - 核心模块
-  - `types.rs` - 数据类型定义
-  - `error.rs` - 错误处理和统计
-  - `scheduler.rs` - 任务调度系统
-  - `persistence.rs` - 数据持久化
-  - `shutdown.rs` - 优雅关机
-  - `security.rs` - 安全和认证
-- `src/api/` - HTTP API层
-  - `handlers.rs` - 请求处理器
-  - `routes.rs` - 路由定义
-  - `server.rs` - HTTP服务器
-  - `auth_middleware.rs` - 认证中间件
-  - `container_handlers.rs` - 容器管理处理器
-- `src/ffi/` - 跨语言互操作
-  - `bridge.rs` - CXX桥接
-  - `cpp/` - C++算法实现
-- `src/container/` - 容器管理
-  - `manager.rs` - 容器生命周期管理
-- `src/main.rs` - 应用程序入口点
+### 项目构建
+
+```bash
+# 所有crate编译
+cargo build --release
+
+# 特定crate编译
+cargo build -p rust-edge-compute-core --release
+
+# 编译并运行
+cargo run --release
+
+# 编译C++部分
+cd cpp_plugins && ./build.sh
+```
+
+### 代码规范
+
+```bash
+# 格式检查
+cargo fmt --check
+
+# 自动格式化
+cargo fmt
+
+# Lint检查
+cargo clippy -- -D warnings
+
+# 文档生成
+cargo doc --open
+```
 
 ### 添加新的算法
-1. **C++算法**：
-   - 在`src/ffi/cpp/bridge.h`中添加函数声明
-   - 在`src/ffi/cpp/bridge.cc`中实现算法逻辑
-   - 在`src/ffi/bridge.rs`中添加CXX桥接
-   - 在`src/api/handlers.rs`中添加API处理器
 
-2. **Rust算法**：
-   - 在`src/ffi/bridge.rs`中添加算法实现
-   - 在`src/api/handlers.rs`中更新算法列表
+#### 方式1：C++算法
 
-### 安全配置
-项目实现了全面的安全措施：
-- **认证授权**：JWT token和角色-based访问控制
-- **速率限制**：防止DDoS攻击和滥用
-- **输入验证**：防止注入攻击和恶意输入
-- **安全头**：XSS、CSRF等安全防护
-- **CORS控制**：跨域资源访问控制
+1. 在 `cpp_plugins/include/` 中定义接口
+2. 在 `cpp_plugins/src/` 中实现逻辑
+3. 在 `src/ffi/bridge.rs` 中添加CXX桥接
+4. 在 `src/api/handlers.rs` 中注册API端点
 
-### 数据持久化
-项目使用Sled嵌入式数据库：
-- **自动备份**：关机时保存应用状态
-- **错误统计**：持久化错误记录和统计信息
-- **任务状态**：保存任务执行状态和历史
-- **配置存储**：持久化系统配置
+#### 方式2：Rust算法
 
-### 优雅关机
-支持多种关机场景：
-- **信号处理**：响应SIGTERM、SIGINT等系统信号
-- **状态保存**：关机前保存重要数据
-- **组件协调**：确保所有组件有序关闭
-- **超时控制**：防止无限等待
+1. 在 `src/core/` 中添加算法模块
+2. 在 `src/ffi/bridge.rs` 中实现算法逻辑
+3. 在 `src/api/handlers.rs` 中注册API端点
+
+---
+
+## 生产实践
+
+### 性能调优
+
+1. **并发配置**
+   ```toml
+   [scheduler]
+   max_concurrent_tasks = 20  # 根据服务器能力调整
+   queue_capacity = 50000
+   ```
+
+2. **内存优化**
+   ```bash
+   # 构建优化二进制
+   cargo build --release
+   strip target/release/rust-edge-compute
+   ```
+
+3. **监控优化**
+   - 配置合理的metrics采集间隔
+   - 生产环境日志级别设为INFO
+   - 启用结构化日志便于分析
+
+### 故障处理
+
+| 故障 | 症状 | 排查步骤 |
+|------|------|---------|
+| **高CPU占用** | 任务调度不及时 | 检查并发配置，增加worker数 |
+| **内存溢出** | OOM杀进程 | 检查持久化配置，清理过期数据 |
+| **连接超时** | 客户端请求失败 | 检查网络配置，增加超时时间 |
+| **任务堆积** | 队列不空 | 检查算法执行时间，调整并发数 |
+
+详细故障排查参考 [运维手册](docs/operations.md)
+
+---
+
+## 常见问题
+
+### Q: 如何修改服务监听的端口？
+A: 编辑 `config/production.toml`，修改 `server.port` 参数。
+
+### Q: 如何启用HTTPS？
+A: 配置TLS证书：
+```toml
+[server]
+use_tls = true
+cert_path = "/path/to/cert.pem"
+key_path = "/path/to/key.pem"
+```
+
+### Q: 如何扩展任务调度的并发数？
+A: 修改配置后重启服务：
+```toml
+[scheduler]
+max_concurrent_tasks = 20  # 增加此值
+```
+
+### Q: 如何查看系统日志？
+A:
+```bash
+# 本地运行
+journalctl -f -u gita
+
+# Docker容器
+docker logs -f <container_id>
+
+# Kubernetes
+kubectl logs -f -l app=gita
+```
+
+### Q: 性能基准是多少？
+A: 详见 [MEMORY_MANAGER_PRODUCTION_REPORT.md](MEMORY_MANAGER_PRODUCTION_REPORT.md)
+
+---
+
+## 文档导航
+
+- 📖 [API完整文档](docs/api.md) - 所有API接口详细说明
+- 🏗️ [架构设计文档](docs/architecture.md) - 深入理解系统设计
+- 🚀 [部署指南](DEPLOYMENT_QUICK_REFERENCE.md) - Docker/K8s部署步骤
+- 📊 [监控配置](deploy/monitoring/) - Prometheus/Grafana配置
+- 🔒 [安全策略](docs/security.md) - TLS、认证、审计
+- ⚙️ [运维手册](docs/operations.md) - 运维和故障处理
+- 📈 [性能基准](MEMORY_MANAGER_PRODUCTION_REPORT.md) - 性能测试结果
+
+---
+
+## 项目进度
+
+### ✅ 已完成功能
+
+| 阶段 | 内容 | 进度 |
+|------|------|------|
+| **Phase 1: PoC** | 项目架构、HTTP服务、CXX集成、容器管理、端到端测试 | ✅ 100% |
+| **Phase 2: MVP** | 任务调度、错误处理、数据持久化、优雅关机、安全配置 | ✅ 100% |
+| **Phase 3: 生产就绪** | 安全加固、性能优化、监控工具、OTA更新、生产部署 | ✅ 100% |
+
+### 📊 系统规格
+
+| 指标 | 规格 |
+|------|------|
+| **并发连接** | 1000+ |
+| **并发任务** | 10个 |
+| **队列容量** | 10000个任务 |
+| **任务调度延迟** | <100ms |
+| **平均响应时间** | <1s |
+| **加密方案** | TLS 1.3 + AES-256-GCM |
+| **认证方式** | JWT + RBAC |
+| **可用性** | 优雅关机 + 自动恢复 + 数据持久化 |
+
+---
 
 ## 贡献指南
 
-欢迎贡献代码、文档或提出改进建议。请确保：
-1. 代码符合Rust最佳实践
-2. 添加适当的测试和文档
-3. 遵循项目的编码规范
+我们欢迎所有贡献！请遵循以下步骤：
+
+1. **Fork项目** - 创建自己的副本
+2. **创建分支** - 为新功能创建分支
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. **提交代码** - 遵循代码规范
+   ```bash
+   cargo fmt
+   cargo clippy
+   cargo test
+   ```
+4. **提交PR** - 描述你的改进
+
+### 开发规范
+
+- ✅ 所有代码必须通过 `cargo fmt` 和 `cargo clippy`
+- ✅ 新功能必须包含单元测试
+- ✅ 必须更新相关文档
+- ✅ 提交信息要清晰明确
+- ✅ 遵循Rust API文档惯例
+
+---
 
 ## 许可证
 
-本项目采用MIT许可证，详见LICENSE文件。
+MIT License - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 联系方式
+
+- 📧 Email: support@example.com
+- 📝 Issues: [GitHub Issues](https://github.com/your-org/gita/issues)
+- 📚 Wiki: [项目Wiki](https://github.com/your-org/gita/wiki)
+
+---
+
+<div align="center">
+
+**Made with ❤️ by the Edge Compute Team**
+
+[⬆ 返回顶部](#gita---企业级边缘计算框架)
+
+</div>

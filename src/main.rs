@@ -56,6 +56,44 @@ async fn main() -> Result<()> {
 
     tracing::info!("Task scheduler created with max_concurrent_tasks: {}", 10);
 
+    // 启动内存监控任务
+    let metrics = core::metrics_collector::GLOBAL_METRICS.clone();
+    crate::core::TaskSpawner::spawn_with_config(
+        async move {
+            let mut interval = tokio::time::interval(std::time::Duration::from_secs(5));
+            loop {
+                interval.tick().await;
+
+                // 更新 Rust 堆内存（从 GlobalAllocator）
+                metrics.update_rust_heap_bytes_from_allocator();
+
+                // 更新系统资源指标
+                metrics.update_rss_from_system().await;
+                metrics.update_vm_total_from_system().await;
+                metrics.update_mapped_from_system().await;
+
+                // 更新 CPU 使用率
+                let cpu = core::metrics_collector::system_metrics::get_cpu_usage();
+                metrics.set_cpu_usage(cpu).await;
+
+                // 每 30 秒记录一次日志
+                static COUNTER: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+                let count = COUNTER.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                if count % 6 == 0 {
+                    tracing::debug!(
+                        "Memory metrics: Rust={}MB, RSS={}MB, VmSize={}MB, Mapped={}MB",
+                        metrics.get_rust_heap_bytes() / 1024 / 1024,
+                        metrics.get_rss_bytes().await / 1024 / 1024,
+                        metrics.get_vm_total_bytes().await / 1024 / 1024,
+                        metrics.get_mapped_bytes().await / 1024 / 1024,
+                    );
+                }
+            }
+        },
+        crate::core::SpawnConfig::new("memory_monitor")
+            .with_detailed_errors(true)
+    );
+
     // 启动调度器
     let scheduler_clone = Arc::clone(&scheduler);
     let error_handler_clone = Arc::clone(&error_handler);

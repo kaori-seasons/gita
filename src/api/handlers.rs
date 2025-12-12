@@ -39,41 +39,66 @@ pub async fn compute_task(
     axum::extract::State(state): axum::extract::State<AppState>,
     Json(request): Json<ComputeRequest>,
 ) -> Response {
-    tracing::info!("Received compute request: {}", request.id);
+    let start_time = std::time::Instant::now();
+    let request_id = request.id.clone();
+    tracing::info!("Received compute request: {}", request_id);
+    
+    // ... existing code ...
+    // 使用新的指标收集器
+    use crate::core::metrics_collector::GLOBAL_METRICS;
+    GLOBAL_METRICS.increment_active_connections();
+
+    // ... existing code ...
 
     // 创建调度任务
     let scheduled_task = ScheduledTask::new(request)
         .with_priority(TaskPriority::Normal);
 
     // 提交任务到调度器
-    match state.scheduler.submit_task(scheduled_task).await {
+    let result = match state.scheduler.submit_task(scheduled_task).await {
         Ok(task_id) => {
             tracing::info!("Task {} submitted to scheduler", task_id);
 
-            // 注意：这里简化了实现，实际应该异步等待结果
-            // 在生产环境中，应该使用WebSocket或轮询来获取结果
+            // 记录指标
+            GLOBAL_METRICS.increment_http_requests();
+            let response_time_ms = start_time.elapsed().as_secs_f64() * 1000.0;
+            GLOBAL_METRICS.record_response_time(response_time_ms).await;
+            
             (
                 StatusCode::ACCEPTED,
                 Json(json!({
                     "task_id": task_id,
                     "status": "submitted",
-                    "message": "Task submitted to scheduler"
+                    "message": "Task submitted to scheduler",
+                    "response_time_ms": response_time_ms
                 })),
             )
                 .into_response()
         }
         Err(e) => {
             tracing::error!("Failed to submit task: {}", e);
+            
+            // 记录错误指标
+            GLOBAL_METRICS.increment_http_errors();
+            let response_time_ms = start_time.elapsed().as_secs_f64() * 1000.0;
+            GLOBAL_METRICS.record_response_time(response_time_ms).await;
+            
             (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(json!({
                     "error": "Failed to submit task",
-                    "message": e.to_string()
+                    "message": e.to_string(),
+                    "response_time_ms": response_time_ms
                 })),
             )
                 .into_response()
         }
-    }
+    };
+
+    // 减少活跃连接计数
+    GLOBAL_METRICS.decrement_active_connections();
+
+    result
 }
 
 /// 获取任务状态处理器
@@ -402,4 +427,55 @@ pub async fn get_intelligent_scheduling_stats(
         })),
     )
         .into_response()
+}
+
+/// 获取指标统计 (Prometheus 格式)
+pub async fn get_metrics() -> impl IntoResponse {
+    use crate::core::metrics_collector::GLOBAL_METRICS;
+    
+    let metrics_text = GLOBAL_METRICS.export_prometheus_metrics();
+    
+    (
+        StatusCode::OK,
+        [("Content-Type", "text/plain; charset=utf-8")],
+        metrics_text,
+    )
+}
+
+/// 获取指标统计 (JSON 格式)
+pub async fn get_metrics_json() -> impl IntoResponse {
+    use crate::core::metrics_collector::GLOBAL_METRICS;
+    
+    let metrics = json!({
+        "scheduler": {
+            "active_tasks": GLOBAL_METRICS.get_active_tasks(),
+            "queued_tasks": GLOBAL_METRICS.get_queued_tasks(),
+            "completed_tasks": GLOBAL_METRICS.get_completed_tasks(),
+            "timeouts": GLOBAL_METRICS.get_timeouts(),
+            "retries": GLOBAL_METRICS.get_retries(),
+        },
+        "http": {
+            "requests_total": GLOBAL_METRICS.get_http_requests(),
+            "errors_total": GLOBAL_METRICS.get_http_errors(),
+            "connections_active": GLOBAL_METRICS.get_active_connections(),
+        },
+        "performance": {
+            "avg_response_time_ms": GLOBAL_METRICS.get_avg_response_time().await,
+            "p95_response_time_ms": GLOBAL_METRICS.get_percentile_response_time(0.95).await,
+            "p99_response_time_ms": GLOBAL_METRICS.get_percentile_response_time(0.99).await,
+        },
+        "ffi": {
+            "calls_total": GLOBAL_METRICS.get_ffi_calls(),
+            "errors_total": GLOBAL_METRICS.get_ffi_errors(),
+        },
+        "container": {
+            "instances_active": GLOBAL_METRICS.get_active_containers(),
+            "instances_created_total": GLOBAL_METRICS.get_created_containers(),
+        },
+    });
+    
+    (
+        StatusCode::OK,
+        Json(metrics),
+    )
 }

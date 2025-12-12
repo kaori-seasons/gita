@@ -113,8 +113,8 @@ set_target_properties(AlgorithmPlugins PROPERTIES
 )
 
 # 创建示例程序
-add_executable(plugin_example examples/plugin_example.cpp)
-target_link_libraries(plugin_example AlgorithmPluginsCore)
+# add_executable(plugin_example examples/plugin_example.cpp)
+# target_link_libraries(plugin_example AlgorithmPluginsCore)
 
 # 创建测试程序
 # add_executable(plugin_tests tests/plugin_tests.cpp)

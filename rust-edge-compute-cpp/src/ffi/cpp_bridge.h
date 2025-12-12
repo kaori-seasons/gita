@@ -1,47 +1,31 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include <cstdint>
 #include <memory>
+#include <string>
+#include <chrono>
 
-// 算法输入结构
-struct AlgorithmInput {
-    std::string algorithm_name;
-    std::string parameters_json;
-    std::string device_id;
-    uint64_t timestamp_ms;
-};
+// 前向声明
+struct AlgorithmOutput;
 
-// 算法输出结构
-struct AlgorithmOutput {
-    bool success;
-    std::string result_json;
-    std::string error_message;
-    uint64_t execution_time_ms;
-    uint64_t memory_used_bytes;
-};
-
-// C++算法执行器类（简化版本，实际应该从cpp_plugins集成）
+/// C++ 算法执行器接口
 class CppAlgorithmExecutor {
 public:
     CppAlgorithmExecutor();
     ~CppAlgorithmExecutor();
 
-    // 初始化插件管理器
-    bool initialize();
-
-    // 执行通用算法
-    AlgorithmOutput execute_algorithm(const AlgorithmInput& input);
-
-    // 获取插件信息
-    std::vector<std::string> get_available_plugins() const;
-    std::string get_plugin_info(const std::string& plugin_name) const;
+    /// 初始化执行器
+    bool initialize() const;
 
 private:
-    bool initialized_;
+    // 空私有区域
+
+public:
+    // execute_algorithm will be provided as a free function wrapper below
 };
+std::unique_ptr<CppAlgorithmExecutor> new_cpp_executor();
 
-// 简单数学函数（向后兼容）
-AlgorithmOutput simple_math_add(double a, double b);
-AlgorithmOutput simple_math_multiply(double a, double b);
-
+// cpp_plugins 命名空间函数声明
+namespace AlgorithmPlugins {
+    void registerAllPlugins();
+}

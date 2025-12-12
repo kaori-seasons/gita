@@ -10,6 +10,10 @@ description = "Rust Edge Compute Framework - Main Application"
 name = "rust-edge-compute"
 path = "src/main.rs"
 
+[lib]
+name = "rust_edge_compute"
+path = "src/lib.rs"
+
 [dependencies]
 # 核心库
 rust-edge-compute-core = { path = "../rust-edge-compute-core" }
@@ -36,6 +40,13 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 
+# 跨语言互操作
+cxx = { workspace = true }
+
+# Cap'n Proto RPC 支持
+capnp = { workspace = true, optional = true }
+capnp-rpc = { workspace = true, optional = true }
+
 # 日志（优化：只启用必要的 features）
 tracing = { workspace = true, default-features = false }
 tracing-subscriber = { workspace = true, default-features = false, features = ["env-filter", "fmt", "std"] }
@@ -50,12 +61,73 @@ uuid = { workspace = true }
 futures = { workspace = true }
 chrono = { workspace = true }
 
+# 异步特质
+async-trait = { workspace = true }
+
+# 容器管理
+oci-spec = { workspace = true }
+tokio-process = { workspace = true }
+
+# 系统调用
+libc = "0.2"
+
+# 加密和安全
+ring = { workspace = true }
+base64 = { workspace = true }
+rustls = { workspace = true }
+rustls-pemfile = { workspace = true }
+tokio-rustls = { workspace = true }
+aes-gcm = { workspace = true }
+argon2 = { workspace = true }
+rand = { workspace = true }
+hex = { workspace = true }
+
+# 审计和监控
+opentelemetry = { workspace = true }
+opentelemetry-jaeger = { workspace = true }
+tracing-opentelemetry = { workspace = true }
+
+# 工具库
+fastrand = { workspace = true }
+lazy_static = { workspace = true }
+
+# 数据库
+sled = { workspace = true }
+bincode = { workspace = true }
+
+# Tokio监控和调试
+console-subscriber = { version = "0.3", optional = true }
+tokio-metrics = { version = "0.4", optional = true }
+
+# HTTP客户端
+reqwest = { workspace = true }
+
+[dev-dependencies]
+# 测试依赖
+reqwest = { workspace = true }
+tokio-test = "0.4"
+tokio-console = "0.1"
+
+[build-dependencies]
+cxx-build = { workspace = true }
+capnpc = { workspace = true, optional = true }
+
 [features]
 default = []
-# 启用不同executor
+# 启用不同的executor
 cpp = ["dep:rust-edge-compute-cpp"]
 ml = ["dep:rust-edge-compute-ml"]
 python = ["dep:rust-edge-compute-python"]
+# Cap'n Proto 支持
+capnproto = ["dep:capnp", "dep:capnp-rpc", "dep:capnpc"]
 # 全部启用
-full = ["cpp", "ml", "python"]
+full = ["cpp", "ml", "python", "capnproto"]
+# 监控
+tokio-console = ["dep:console-subscriber"]
+tokio-metrics = ["dep:tokio-metrics"]
+monitoring = ["tokio-console", "tokio-metrics"]
+
+# libcontainer仅在Linux上可用
+[target.'cfg(target_os = "linux")'.dependencies]
+libcontainer = { git = "https://github.com/containers/youki.git", branch = "main" }
 

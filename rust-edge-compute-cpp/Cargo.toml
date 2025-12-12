@@ -33,6 +33,8 @@ tracing = { workspace = true }
 
 [build-dependencies]
 cxx-build = "1.0"
+cc = "1.0"
+bindgen = "0.69"
 which = "4.4"
 
 [features]

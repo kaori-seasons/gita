@@ -332,10 +332,10 @@ impl AuditLogger {
             event.action,
             event.resource,
             match &event.result {
-                AuditResult::Success => "SUCCESS",
-                AuditResult::Failure(msg) => &format!("FAILURE: {}", msg),
-                AuditResult::Denied => "DENIED",
-                AuditResult::Warning(msg) => &format!("WARNING: {}", msg),
+                AuditResult::Success => "SUCCESS".to_string(),
+                AuditResult::Failure(msg) => format!("FAILURE: {}", msg),
+                AuditResult::Denied => "DENIED".to_string(),
+                AuditResult::Warning(msg) => format!("WARNING: {}", msg),
             },
             event.details
         );

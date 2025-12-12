@@ -18,6 +18,9 @@ use crate::container::{ContainerizedAlgorithmExecutor, ExecutionStatus, YoukiCon
 #[cfg(not(test))]
 use fastrand;
 
+// 导入指标收集器
+use crate::core::metrics_collector::GLOBAL_METRICS;
+
 use crate::core::{ComputeRequest, ComputeResponse, Result};
 
 /// 任务优先级
@@ -254,6 +257,14 @@ impl TaskScheduler {
         {
             let mut active = self.active_tasks.lock().await;
             active.insert(task_id.clone(), task.clone());
+            // 更新指标：记录活跃任务数和队列任务数
+            GLOBAL_METRICS.set_active_tasks(active.len());
+        }
+
+        // 更新队列长度指标
+        {
+            let queue = self.task_queue.lock().await;
+            GLOBAL_METRICS.set_queued_tasks(queue.len());
         }
 
         // 发送到处理通道
@@ -402,6 +413,9 @@ impl TaskScheduler {
                     let task_start = std::time::Instant::now();
                     tracing::info!("Worker {} processing task {}", worker_id, task.id);
 
+                    // 更新指标：任务开始执行
+                    GLOBAL_METRICS.increment_active_tasks();
+
                     // 更新负载均衡器状态（增加连接数）
                     load_balancer.release_worker(worker_id).await; // 先释放之前的连接
 
@@ -424,6 +438,9 @@ impl TaskScheduler {
                     let task_duration = task_start.elapsed().as_millis() as f64;
                     task_count += 1;
                     total_response_time = (total_response_time * (task_count - 1) as f64 + task_duration) / task_count as f64;
+                    
+                    // 记录响应时间指标
+                    GLOBAL_METRICS.record_response_time(task_duration).await;
 
                     // 模拟CPU和内存使用率（实际应用中应该从系统获取）
                     cpu_usage = (cpu_usage * 0.8) + (fastrand::f64() * 0.2); // 随机波动
@@ -444,15 +461,23 @@ impl TaskScheduler {
                                 Ok(_response) => {
                                     tracing::info!("Task {} completed successfully in {:.2}ms", task.id, task_duration);
 
+                                    // 更新指标：任务完成
+                                    GLOBAL_METRICS.decrement_active_tasks();
+                                    GLOBAL_METRICS.increment_completed_tasks();
+
                                     // 记录成功任务分配
                                     load_balancer.record_task_assignment(worker_id, true).await;
 
                                     // 从活动任务中移除
                                     let mut active = active_tasks.lock().await;
                                     active.remove(&task.id);
+                                    GLOBAL_METRICS.set_active_tasks(active.len());
                                 }
                                 Err(e) => {
                                     tracing::error!("Task {} execution failed: {}", task.id, e);
+
+                                    // 更新指标：任务执行失败
+                                    GLOBAL_METRICS.decrement_active_tasks();
 
                                     // 记录失败任务分配
                                     load_balancer.record_task_assignment(worker_id, false).await;
@@ -470,6 +495,8 @@ impl TaskScheduler {
                                             super::RecoveryStrategy::Retry { .. } if task.can_retry() => {
                                                 task.increment_retry();
                                                 tracing::info!("Retrying task {} (attempt {})", task.id, task.retry_count);
+                                                // 记录重试指标
+                                                GLOBAL_METRICS.increment_retries();
 
                                                 // 重新提交任务
                                                 let mut active = active_tasks.lock().await;
@@ -490,6 +517,8 @@ impl TaskScheduler {
                                         if task.can_retry() {
                                             task.increment_retry();
                                             tracing::info!("Retrying task {} (attempt {})", task.id, task.retry_count);
+                                            // 记录重试指标
+                                            GLOBAL_METRICS.increment_retries();
 
                                             let mut active = active_tasks.lock().await;
                                             active.insert(task.id.clone(), task.clone());
@@ -509,12 +538,17 @@ impl TaskScheduler {
                         Err(_) => {
                             tracing::error!("Task {} timed out after {:.2}ms", task.id, task_duration);
 
+                            // 更新指标：任务超时
+                            GLOBAL_METRICS.decrement_active_tasks();
+                            GLOBAL_METRICS.increment_timeouts();
+
                             // 记录超时任务分配（算作失败）
                             load_balancer.record_task_assignment(worker_id, false).await;
 
                             // 超时处理逻辑
                             let mut active = active_tasks.lock().await;
                             active.remove(&task.id);
+                            GLOBAL_METRICS.set_active_tasks(active.len());
                         }
                     }
                 }

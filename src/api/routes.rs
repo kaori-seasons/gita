@@ -5,9 +5,10 @@ use axum::{
     Router,
 };
 
-use super::handlers::{health_check, compute_task, get_task_status, list_algorithms, get_scheduler_status, cancel_task, get_error_stats, reset_error_stats, get_database_stats, backup_database, cleanup_expired_data, enable_intelligent_scheduling, disable_intelligent_scheduling, get_intelligent_scheduling_status, get_intelligent_scheduling_stats, AppState};
+use super::handlers::{health_check, compute_task, get_task_status, list_algorithms, get_scheduler_status, cancel_task, get_error_stats, reset_error_stats, get_database_stats, backup_database, cleanup_expired_data, enable_intelligent_scheduling, disable_intelligent_scheduling, get_intelligent_scheduling_status, get_intelligent_scheduling_stats, get_metrics, get_metrics_json, AppState};
 use super::auth_middleware::{login, get_current_user, logout, auth_middleware, rate_limit_middleware, security_headers_middleware, cors_middleware};
 use super::container_handlers::{create_container, get_container_status, stop_container, delete_container, list_containers};
+use super::ffi_handlers::{execute_cpp_algorithm, list_cpp_algorithms, get_cpp_algorithm_info};
 
 /// 创建API路由
 pub fn create_routes(state: AppState) -> Router {
@@ -43,12 +44,17 @@ pub fn create_routes(state: AppState) -> Router {
         .route("/database/backup", post(backup_database))
         .route("/database/cleanup", post(cleanup_expired_data))
 
-        // 容器管理
-        .route("/containers", post(create_container))
+        // 指标管理
+        .route("/metrics", get(get_metrics))
+        .route("/metrics/json", get(get_metrics_json))
         .route("/containers", get(list_containers))
         .route("/containers/:container_id", get(get_container_status))
         .route("/containers/:container_id/stop", put(stop_container))
         .route("/containers/:container_id", delete(delete_container))
+        // C++ FFI 算法
+        .route("/cpp/algorithms/execute", post(execute_cpp_algorithm))
+        .route("/cpp/algorithms", get(list_cpp_algorithms))
+        .route("/cpp/algorithms/:algorithm_name", get(get_cpp_algorithm_info))
 
         .with_state(state.clone());
 

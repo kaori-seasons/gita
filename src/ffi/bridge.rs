@@ -162,6 +162,13 @@ impl CppAlgorithmExecutor {
             return Err("CppAlgorithmExecutor not initialized".into());
         }
 
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+
         // 分配内存用于输入数据
         let input_size = request.algorithm.len() + serde_json::to_string(&request.parameters)
             .unwrap_or_default()
@@ -169,22 +176,39 @@ impl CppAlgorithmExecutor {
         let input_memory = self.memory_manager.allocate(input_size).await
             .unwrap_or(0);
 
-        // 将请求转换为C++输入格式
+        // 将请求转换为 C++ 输入格式
         let input = self.create_algorithm_input(&request)?;
 
-        // 调用C++算法
+        // 调用 C++ 算法
         let output = self.executor.execute_algorithm(&input);
 
         let execution_time = start_time.elapsed().as_millis() as u64;
+
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(&request.algorithm, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 释放输入内存
         if input_memory > 0 {
             let _ = self.memory_manager.deallocate(input_memory).await;
         }
 
-        // 处理C++输出结果
+        // 处理 C++ 输出结果
         if output.success {
-            // 解析C++返回的JSON结果
+            tracing::debug!("FFI call succeeded, memory_delta={}B", cpp_memory_delta);
+            
+            // 解析 C++ 返回的 JSON 结果
             let result: serde_json::Value = serde_json::from_str(&output.result_json)
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
 
@@ -194,6 +218,10 @@ impl CppAlgorithmExecutor {
                 execution_time,
             ))
         } else {
+            // FFI 调用失败
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
+            tracing::warn!("FFI call failed: {}", output.error_message);
+            
             Ok(ComputeResponse::failure(
                 request.id,
                 format!("C++ algorithm error: {}", output.error_message),
@@ -235,11 +263,20 @@ impl CppAlgorithmExecutor {
         }
     }
 
-    /// 执行振动特征提取插件
+    /// 振动特征提取插件
     async fn execute_vibration_plugin(&self,
                                      _plugin_name: &str,
                                      input_data: &serde_json::Value,
                                      parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 提取振动数据
         let wave_data = input_data.get("wave_data")
             .and_then(|v| v.as_array())
@@ -276,6 +313,23 @@ impl CppAlgorithmExecutor {
         // 调用C++执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
         
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm("vibrate31", cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
+        
         // 调试：打印output状态
         println!("Output success: {}", output.success);
         println!("Output execution_time: {}", output.execution_time_ms);
@@ -300,6 +354,7 @@ impl CppAlgorithmExecutor {
                 });
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("Vibrate31 execution failed: {}", output.error_message).into())
         }
     }
@@ -309,11 +364,37 @@ impl CppAlgorithmExecutor {
                                    plugin_name: &str,
                                    input_data: &serde_json::Value,
                                    parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 构建算法输入
         let algorithm_input = self.build_algorithm_input(plugin_name, input_data, parameters)?;
 
         // 执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
+        
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(plugin_name, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 处理结果
         if output.success {
@@ -321,6 +402,7 @@ impl CppAlgorithmExecutor {
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("{} execution failed: {}", plugin_name, output.error_message).into())
         }
     }
@@ -330,11 +412,37 @@ impl CppAlgorithmExecutor {
                                     plugin_name: &str,
                                     input_data: &serde_json::Value,
                                     parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 构建算法输入
         let algorithm_input = self.build_algorithm_input(plugin_name, input_data, parameters)?;
 
         // 执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
+        
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(plugin_name, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 处理结果
         if output.success {
@@ -342,6 +450,7 @@ impl CppAlgorithmExecutor {
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("{} execution failed: {}", plugin_name, output.error_message).into())
         }
     }
@@ -351,11 +460,37 @@ impl CppAlgorithmExecutor {
                                       plugin_name: &str,
                                       input_data: &serde_json::Value,
                                       parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 构建算法输入
         let algorithm_input = self.build_algorithm_input(plugin_name, input_data, parameters)?;
 
         // 执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
+        
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(plugin_name, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 处理结果
         if output.success {
@@ -363,6 +498,7 @@ impl CppAlgorithmExecutor {
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("{} execution failed: {}", plugin_name, output.error_message).into())
         }
     }
@@ -372,11 +508,37 @@ impl CppAlgorithmExecutor {
                                  plugin_name: &str,
                                  input_data: &serde_json::Value,
                                  parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 构建算法输入
         let algorithm_input = self.build_algorithm_input(plugin_name, input_data, parameters)?;
 
         // 执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
+        
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(plugin_name, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 处理结果
         if output.success {
@@ -384,6 +546,7 @@ impl CppAlgorithmExecutor {
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("{} execution failed: {}", plugin_name, output.error_message).into())
         }
     }
@@ -393,11 +556,37 @@ impl CppAlgorithmExecutor {
                                    plugin_name: &str,
                                    input_data: &serde_json::Value,
                                    parameters: HashMap<String, String>) -> Result<serde_json::Value> {
+        let start_time = Instant::now();
+        
+        // 记录 FFI 调用起始
+        crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_calls();
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_before = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_before = cpp_stats_before.active_allocated_bytes;
+        
         // 构建算法输入
         let algorithm_input = self.build_algorithm_input(plugin_name, input_data, parameters)?;
 
         // 执行算法
         let output = self.executor.execute_algorithm(&algorithm_input);
+        
+        let execution_time = start_time.elapsed().as_millis() as u64;
+        
+        // 记录 C++ 内存变化
+        let cpp_stats_after = self.memory_manager.get_allocator_stats().await;
+        let cpp_memory_after = cpp_stats_after.active_allocated_bytes;
+        let cpp_memory_delta = if cpp_memory_after >= cpp_memory_before {
+            cpp_memory_after - cpp_memory_before
+        } else {
+            0
+        };
+        
+        // 更新指标
+        crate::core::metrics_collector::GLOBAL_METRICS
+            .record_cpp_memory_delta_by_algorithm(plugin_name, cpp_memory_delta)
+            .await;
+        crate::core::metrics_collector::GLOBAL_METRICS.record_ffi_call_duration(execution_time as f64).await;
 
         // 处理结果
         if output.success {
@@ -405,6 +594,7 @@ impl CppAlgorithmExecutor {
                 .unwrap_or_else(|_| json!({"result": "parse_error"}));
             Ok(result)
         } else {
+            crate::core::metrics_collector::GLOBAL_METRICS.increment_ffi_errors();
             Err(format!("{} execution failed: {}", plugin_name, output.error_message).into())
         }
     }

@@ -1,37 +1,31 @@
-//! 核心模块
-//!
-//! 包含框架的核心类型、错误定义和共享数据结构
+//! 核心模块 - 包含任务调度、指标收集、错误处理等核心功能
 
 pub mod types;
 pub mod error;
 pub mod scheduler;
-pub mod persistence;
-pub mod shutdown;
-pub mod security;
-pub mod tls;
-pub mod encryption;
-pub mod audit;
-pub mod metrics;
+pub mod task_spawn;
 pub mod logging;
-pub mod updates;
+pub mod tls;
+pub mod audit;
 pub mod performance;
+pub mod persistence;
+pub mod metrics_collector;
 pub mod load_balancer;
 pub mod intelligent_scheduler;
-pub mod task_spawn;
+pub mod allocator;
 
-pub use types::*;
-pub use error::*;
-pub use scheduler::*;
-pub use persistence::*;
-pub use shutdown::*;
-pub use security::*;
-pub use tls::*;
-pub use encryption::*;
-pub use audit::*;
-pub use metrics::*;
-pub use logging::*;
-pub use updates::*;
-pub use performance::*;
-pub use load_balancer::*;
-pub use intelligent_scheduler::*;
-pub use task_spawn::*;
+// 重新导出常用类型和函数
+pub use types::{ComputeRequest, ComputeResponse, TaskStatus, ContainerConfig, LoadBalancingStrategy};
+pub use scheduler::{TaskScheduler, SchedulerConfig, ScheduledTask, TaskPriority, QueueStatus};
+pub use error::{EdgeComputeError, ErrorHandler, RecoveryStrategy};
+pub use task_spawn::{TaskSpawner, SpawnConfig};
+pub use logging::{LogManager, LogLevel};
+pub use persistence::{PersistenceManager, PersistenceStore};
+pub use audit::AuditLogger;
+pub use performance::PerformanceMetrics;
+pub use metrics_collector::{CoreMetrics, GLOBAL_METRICS, metric_names};
+
+// 导入与关闭相关的类型（如果存在）
+pub use crate::core::error::{ShutdownManager, ShutdownConfig, ShutdownHooks, ShutdownHook, ShutdownError, ShutdownSignal, SignalHandler};
+
+pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;

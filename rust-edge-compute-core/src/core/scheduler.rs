@@ -11,14 +11,19 @@ use tokio::time::timeout;
 use futures::future::join_all;
 use tracing::{info, warn, error};
 use fastrand;
+use serde::{Serialize, Deserialize};
 
 use crate::core::{
-    ComputeRequest, ComputeResponse, EdgeComputeError, ErrorHandler, ExecutorRegistry,
-    LoadBalancer, QueueStatus, RecoveryStrategy, ScheduledTask, TaskPriority, TaskScheduler,
-    TaskSpawner, SpawnConfig, UserSession, types::TaskStatus,
+    types::{ComputeRequest, ComputeResponse, TaskStatus},
+    error::{EdgeComputeError, ErrorHandler, RecoveryStrategy},
+    executor_registry::ExecutorRegistry,
+    task_spawn::{TaskSpawner, SpawnConfig},
+    security::UserSession,
+    LoadBalancer,
     load_balancer::{LoadBalancerConfig},
     intelligent_scheduler::{IntelligentScheduler, LearningConfig},
 };
+use crate::core::types::QueueStatus;
 use crate::container::ContainerizedAlgorithmExecutor;
 
 /// 任务优先级
@@ -37,13 +42,14 @@ impl Default for TaskPriority {
 }
 
 /// 调度任务
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ScheduledTask {
     /// 任务ID
     pub id: String,
     /// 优先级（用于排序，值越大优先级越高）
     pub priority: TaskPriority,
-    /// 提交时间戳
+    /// 提交时间戳（使用u64存储以支持序列化）
+    #[serde(skip)]
     pub submitted_at: std::time::Instant,
     /// 计算请求
     pub request: ComputeRequest,
@@ -672,53 +678,9 @@ impl TaskScheduler {
     }
 }
 
-/// 队列状态
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct QueueStatus {
-    /// 队列中任务数
-    pub queued_tasks: usize,
-    /// 活动任务数
-    pub active_tasks: usize,
-    /// 最大并发数
-    pub max_concurrent: usize,
-}
-
-/// 任务状态信息
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct TaskStatus {
-    /// 任务ID
-    pub id: String,
-    /// 优先级
-    pub priority: TaskPriority,
-    /// 提交时间
-    pub submitted_at: std::time::Instant,
-    /// 重试次数
-    pub retry_count: u32,
-    /// 当前状态
-    pub status: String,
-}
-
-/// 智能调度状态信息
-#[derive(Debug, Clone, serde::Serialize)]
-pub struct IntelligentSchedulingStatus {
-    /// 是否启用智能调度
-    pub enabled: bool,
-    /// 当前调度策略
-    pub strategy: LoadBalancingStrategy,
-    /// 是否有足够的训练数据
-    pub has_sufficient_data: bool,
-}
-
 impl Default for TaskScheduler {
     fn default() -> Self {
         Self::new(SchedulerConfig::default())
     }
 }
 
-// Define placeholder for ContainerizedAlgorithmExecutor since it's in container module
-pub struct ContainerizedAlgorithmExecutor;
-impl ContainerizedAlgorithmExecutor {
-    pub fn new(_manager: Arc<()>, _memory_manager: Arc<()>) -> Self {
-        ContainerizedAlgorithmExecutor
-    }
-}
