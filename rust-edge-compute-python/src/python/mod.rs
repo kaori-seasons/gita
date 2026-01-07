@@ -5,11 +5,16 @@
 pub mod dependency_manager;
 pub mod model_loader;
 
-use rust_edge_compute_core::core::error::{Result, EdgeComputeError};
+use rust_edge_compute_core::core::error::EdgeComputeError;
+use rust_edge_compute_core::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use std::time::Duration;
+
+// 添加PyO3导入
+#[cfg(feature = "python")]
+use pyo3::prelude::*;
 
 use dependency_manager::{DependencyManager, DependencyManagerConfig};
 use model_loader::{ModelLoader, ModelLoaderConfig};
@@ -57,6 +62,11 @@ pub struct PythonExecutor {
     model_loader: Option<Arc<ModelLoader>>,
     /// 资源限制监控
     resource_monitor: Arc<RwLock<ResourceMonitor>>,
+    /// 是否已初始化
+    initialized: bool,
+    /// JSON模块引用
+    #[cfg(feature = "python")]
+    json_module: Option<pyo3::PyObject>,
 }
 
 /// 资源监控
@@ -96,10 +106,7 @@ impl PythonExecutor {
         let dependency_manager = if config.sandbox_mode {
             Some(Arc::new(
                 DependencyManager::new(DependencyManagerConfig::default())
-                    .map_err(|e| EdgeComputeError::Config {
-                        message: format!("Failed to create dependency manager: {}", e),
-                        source: Some("python-executor".to_string()),
-                    })?
+                    .map_err(|e| Box::new(EdgeComputeError(format!("Failed to create dependency manager: {}", e))))?
             ))
         } else {
             None
@@ -108,10 +115,7 @@ impl PythonExecutor {
         // 创建模型加载器
         let model_loader = Some(Arc::new(
             ModelLoader::new(ModelLoaderConfig::default())
-                .map_err(|e| EdgeComputeError::Config {
-                    message: format!("Failed to create model loader: {}", e),
-                    source: Some("python-executor".to_string()),
-                })?
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to create model loader: {}", e))))?
         ));
         
         Ok(Self {
@@ -120,9 +124,123 @@ impl PythonExecutor {
             dependency_manager,
             model_loader,
             resource_monitor: Arc::new(RwLock::new(ResourceMonitor::default())),
+            initialized: false,
+            #[cfg(feature = "python")]
+            json_module: None,
         })
     }
     
+    /// 创建配置错误
+    fn config_error(&self, message: String) -> Box<dyn std::error::Error + Send + Sync> {
+        Box::new(EdgeComputeError(format!("Configuration error: {}", message)))
+    }
+
+    /// 创建资源耗尽错误
+    fn resource_exhausted_error(&self, message: String) -> Box<dyn std::error::Error + Send + Sync> {
+        Box::new(EdgeComputeError(format!("Resource exhausted: {}", message)))
+    }
+
+    /// 初始化Python环境
+    #[cfg(feature = "python")]
+    pub fn initialize(&mut self) -> Result<()> {
+        use pyo3::types::PyDict;
+        
+        // 检查是否已初始化
+        if self.initialized {
+            return Ok(());
+        }
+        
+        Python::with_gil(|py| {
+            // 导入必要的模块
+            let sys = py.import_bound("sys")
+                .map_err(|e| self.config_error(format!("Failed to import sys module: {:?}", e)))?;
+                
+            // 添加当前目录到Python路径
+            let path = sys.getattr("path")
+                .map_err(|e| self.config_error(format!("Failed to get sys.path: {:?}", e)))?;
+                
+            path.call_method1("append", ("./python_scripts",))
+                .map_err(|e| self.config_error(format!("Failed to append to Python path: {:?}", e)))?;
+                
+            // 导入json模块用于序列化
+            self.json_module = Some(py.import_bound("json")
+                .map_err(|e| self.config_error(format!("Failed to import json module: {:?}", e)))?
+                .into());
+                
+            Ok(())
+        })?;
+        
+        self.initialized = true;
+        tracing::info!("Python executor initialized successfully");
+        Ok(())
+    }
+
+    /// 初始化Python环境（非Python特性）
+    #[cfg(not(feature = "python"))]
+    pub fn initialize(&mut self) -> Result<()> {
+        Err(self.config_error("Python support not enabled. Please enable the 'python' feature.".to_string()))
+    }
+
+    /// 执行Python脚本
+    #[cfg(feature = "python")]
+    pub async fn execute_script(&self, script_name: &str, args: serde_json::Value) -> Result<serde_json::Value> {
+        use pyo3::types::{PyDict, PyString};
+        
+        if !self.initialized {
+            return Err(self.config_error("Python executor not initialized".to_string()));
+        }
+        
+        let script_path = format!("./python_scripts/{}.py", script_name);
+        let args_json = serde_json::to_string(&args)
+            .map_err(|e| Box::new(EdgeComputeError(format!("Failed to serialize args: {}", e))))?;
+            
+        let result = Python::with_gil(|py| {
+            // 读取脚本内容
+            let script_content = std::fs::read_to_string(&script_path)
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to read script {}: {}", script_path, e))))?;
+                
+            // 准备执行环境
+            let globals = PyDict::new_bound(py);
+            let locals = PyDict::new_bound(py);
+            
+            // 设置参数
+            locals.set_item("input_args", args_json)
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to set input_args: {:?}", e))))?;
+                
+            // 执行脚本
+            py.run(&script_content, Some(globals), Some(locals))
+                .map_err(|e| {
+                    // 获取Python异常详情
+                    if let Some(err) = e.unpack_exception(py) {
+                        let err_str = format!("{:?}", err);
+                        Box::new(EdgeComputeError(format!("Python script execution failed: {}", err_str)))
+                    } else {
+                        Box::new(EdgeComputeError(format!("Python script execution failed: {:?}", e)))
+                    }
+                })?;
+                
+            // 获取结果
+            let result_str: String = locals.get_item("result")
+                .ok_or_else(|| Box::new(EdgeComputeError("Script did not return 'result' variable".to_string())))?
+                .extract()
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to extract result: {:?}", e))))?;
+                
+            // 解析JSON结果
+            let parsed_result: serde_json::Value = serde_json::from_str(&result_str)
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to parse result JSON: {}", e))))?;
+                
+            Ok(parsed_result)
+        });
+        
+        result
+    }
+
+    /// 执行Python脚本（非Python特性）
+    #[cfg(not(feature = "python"))]
+    pub async fn execute_script(&self, _script_name: &str, _args: serde_json::Value) -> Result<serde_json::Value> {
+        Err(self.config_error("Python support not enabled. Please enable the 'python' feature.".to_string()))
+    }
+
     /// 执行Python代码
     #[cfg(feature = "python")]
     pub async fn execute_code(&self, code: &str) -> Result<String> {
@@ -150,7 +268,7 @@ impl PythonExecutor {
         let result = tokio::time::timeout(max_time, tokio::task::spawn_blocking(move || {
             Python::with_gil(|py| {
                 // 创建执行上下文
-                let locals = PyDict::new(py);
+                let locals = PyDict::new_bound(py);
                 
                 // 限制可用的模块（沙箱模式）
                 if config.sandbox_mode {
@@ -211,20 +329,20 @@ impl PythonExecutor {
             Ok(Ok(r)) => r,
             Ok(Err(e)) => return Err(e),
             Err(_) => {
-                return Err(EdgeComputeError::AlgorithmExecution {
+                return Err(Box::new(EdgeComputeError::AlgorithmExecution {
                     message: format!("Python execution timeout after {} seconds", 
                         config.max_execution_time_seconds),
                     algorithm: Some("python_code".to_string()),
                     input_size: Some(code.len()),
-                });
+                }));
             }
         };
         
-        let result = execution_result.map_err(|e| EdgeComputeError::AlgorithmExecution {
+        let result = execution_result.map_err(|e| Box::new(EdgeComputeError::AlgorithmExecution {
             message: format!("Task join error: {}", e),
             algorithm: Some("python_code".to_string()),
             input_size: Some(code.len()),
-        });
+        }));
         
         // 更新统计
         {
@@ -235,16 +353,13 @@ impl PythonExecutor {
             }
         }
         
-        result
+        Ok(result?)
     }
     
     /// 执行Python代码（非Python特性）
     #[cfg(not(feature = "python"))]
     pub async fn execute_code(&self, _code: &str) -> Result<String> {
-        Err(EdgeComputeError::Config {
-            message: "Python support not enabled. Please enable the 'python' feature.".to_string(),
-            source: Some("python-wasm".to_string()),
-        })
+        Err(Box::new(EdgeComputeError("Python support not enabled. Please enable the 'python' feature.".to_string())))
     }
     
     /// 调用Python函数
@@ -272,58 +387,35 @@ impl PythonExecutor {
         let result = tokio::task::spawn_blocking(move || {
             Python::with_gil(|py| {
                 // 导入模块
-                let module = py.import(&module_name)
-                    .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                        message: format!("Failed to import module '{}': {}", module_name, e),
-                        algorithm: Some(format!("{}.{}", module_name, function_name)),
-                        input_size: None,
-                    })?;
+                let module = py.import_bound(&module_name)
+                    .map_err(|e| Box::new(EdgeComputeError(format!("Failed to import module '{}': {}", module_name, e))))?;
                 
                 // 获取函数
                 let func = module.getattr(&function_name)
-                    .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                        message: format!("Failed to get function '{}' from module '{}': {}", 
-                            function_name, module_name, e),
-                        algorithm: Some(format!("{}.{}", module_name, function_name)),
-                        input_size: None,
-                    })?;
+                    .map_err(|e| Box::new(EdgeComputeError(format!("Failed to get function '{}' from module '{}': {}", 
+                        function_name, module_name, e))))?;
                 
                 // 转换参数
-                let py_args = PyList::empty(py);
+                let py_args = PyList::empty_bound(py);
                 for arg in args {
                     let py_arg = Self::json_to_pyobject(py, &arg)
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to convert argument: {}", e),
-                            algorithm: Some(format!("{}.{}", module_name, function_name)),
-                            input_size: None,
-                        })?;
+                        .map_err(|e| Box::new(EdgeComputeError(format!("Failed to convert argument: {}", e))))?;
                     py_args.append(py_arg).ok();
                 }
                 
                 // 调用函数
                 let result = func.call1((py_args,))
-                    .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                        message: format!("Failed to call function '{}': {}", function_name, e),
-                        algorithm: Some(format!("{}.{}", module_name, function_name)),
-                        input_size: None,
-                    })?;
+                    .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function '{}': {}", function_name, e))))?;
                 
                 // 转换结果
-                Self::pyobject_to_json(py, result)
-                    .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                        message: format!("Failed to convert result: {}", e),
-                        algorithm: Some(format!("{}.{}", module_name, function_name)),
-                        input_size: None,
-                    })
+Self::py_to_json(&result)
+                    .map_err(|e| Box::new(EdgeComputeError(format!("Failed to convert result: {}", e))))
+
             })
         })
         .await
-        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-            message: format!("Task join error: {}", e),
-            algorithm: Some(format!("{}.{}", module_name, function_name)),
-            input_size: None,
-        })?;
-        
+        .map_err(|e| Box::new(EdgeComputeError(format!("Task join error: {}", e))))?;
+
         // 更新统计
         {
             let mut stats = self.execution_stats.write().await;
@@ -333,7 +425,7 @@ impl PythonExecutor {
             }
         }
         
-        result
+        Ok(result?)
     }
     
     /// 调用Python函数（非Python特性）
@@ -344,10 +436,7 @@ impl PythonExecutor {
         _function_name: &str,
         _args: Vec<serde_json::Value>,
     ) -> Result<serde_json::Value> {
-        Err(EdgeComputeError::Config {
-            message: "Python support not enabled. Please enable the 'python' feature.".to_string(),
-            source: Some("python-wasm".to_string()),
-        })
+        Err(Box::new(EdgeComputeError("Python support not enabled. Please enable the 'python' feature.".to_string())))
     }
     
     /// 将JSON值转换为Python对象
@@ -370,7 +459,7 @@ impl PythonExecutor {
             }
             serde_json::Value::String(s) => Ok(s.into_py(py)),
             serde_json::Value::Array(arr) => {
-                let list = PyList::empty(py);
+                let list = PyList::empty_bound(py);
                 for item in arr {
                     let py_item = Self::json_to_pyobject(py, item)?;
                     list.append(py_item)?;
@@ -378,7 +467,7 @@ impl PythonExecutor {
                 Ok(list.into())
             }
             serde_json::Value::Object(obj) => {
-                let dict = PyDict::new(py);
+                let dict = PyDict::new_bound(py);
                 for (k, v) in obj {
                     let py_key = k.into_py(py);
                     let py_value = Self::json_to_pyobject(py, v)?;
@@ -391,67 +480,62 @@ impl PythonExecutor {
     
     /// 将Python对象转换为JSON值
     #[cfg(feature = "python")]
-    fn pyobject_to_json(py: pyo3::Python, obj: pyo3::PyObject) -> Result<serde_json::Value> {
-        use pyo3::prelude::*;
-        use pyo3::types::{PyDict, PyList, PyString};
+    fn py_to_json<'p>(obj: &'p PyAny) -> Result<serde_json::Value> {
+        use pyo3::types::{PyDict, PyList, PyBool};
+                use pyo3::prelude::*;
         
-        // 检查类型
-        if obj.is_none(py) {
+        // 检查是否为None
+        if obj.is_none() {
             return Ok(serde_json::Value::Null);
         }
         
-        if let Ok(b) = obj.extract::<bool>(py) {
-            return Ok(serde_json::Value::Bool(b));
+        // 检查是否为布尔值
+        if let Ok(b) = obj.downcast::<pyo3::types::PyBool>() {
+            return Ok(serde_json::Value::Bool(b.is_true()));
         }
         
-        if let Ok(i) = obj.extract::<i64>(py) {
+        // 检查是否为整数
+        if let Ok(i) = obj.extract::<i64>() {
             return Ok(serde_json::Value::Number(i.into()));
         }
         
-        if let Ok(f) = obj.extract<f64>(py) {
-            return Ok(serde_json::json!(f));
+        // 检查是否为浮点数
+        if let Ok(f) = obj.extract::<f64>() {
+            return Ok(serde_json::Value::Number(
+                serde_json::Number::from_f64(f).unwrap_or_else(|| serde_json::Number::from(0))
+            ));
         }
         
-        if let Ok(s) = obj.extract::<String>(py) {
+        // 检查是否为字符串
+        if let Ok(s) = obj.extract::<String>() {
             return Ok(serde_json::Value::String(s));
         }
         
-        if let Ok(list) = obj.downcast::<PyList>(py) {
+        // 检查是否为列表
+        if let Ok(list) = obj.downcast::<pyo3::types::PyList>() {
             let mut arr = Vec::new();
             for item in list.iter() {
-                let py_item = item.to_object(py);
-                arr.push(Self::pyobject_to_json(py, py_item)?);
+                arr.push(Self::py_to_json(&item)?);
             }
             return Ok(serde_json::Value::Array(arr));
         }
         
-        if let Ok(dict) = obj.downcast::<PyDict>(py) {
+        // 检查是否为字典
+        if let Ok(dict) = obj.downcast::<pyo3::types::PyDict>() {
             let mut map = serde_json::Map::new();
             for (key, value) in dict.iter() {
-                let key_str = key.extract::<String>(py)
-                    .map_err(|_| EdgeComputeError::AlgorithmExecution {
-                        message: "Dictionary key must be a string".to_string(),
-                        algorithm: None,
-                        input_size: None,
-                    })?;
-                let py_value = value.to_object(py);
-                map.insert(key_str, Self::pyobject_to_json(py, py_value)?);
+                let key_str = key.extract::<String>()
+                    .map_err(|_| Box::new(EdgeComputeError("Dictionary key must be string".to_string())))?;
+                map.insert(key_str, Self::py_to_json(&value)?);
             }
             return Ok(serde_json::Value::Object(map));
         }
         
-        // 尝试转换为字符串
-        if let Ok(s) = obj.str(py) {
-            return Ok(serde_json::Value::String(s.to_string()));
-        }
-        
-        Err(EdgeComputeError::AlgorithmExecution {
-            message: "Failed to convert Python object to JSON".to_string(),
-            algorithm: None,
-            input_size: None,
-        })
+        // 默认情况，转换为字符串
+        let str_repr: String = obj.str()?.extract()?;
+        Ok(serde_json::Value::String(str_repr))
     }
-    
+
     /// 获取执行统计
     pub async fn get_stats(&self) -> ExecutionStats {
         self.execution_stats.read().await.clone()
@@ -465,10 +549,7 @@ impl PythonExecutor {
         if let Some(max_memory) = self.config.max_memory_mb {
             let max_bytes = max_memory * 1024 * 1024;
             if monitor.current_memory_bytes > max_bytes {
-                return Err(EdgeComputeError::ResourceExhausted {
-                    resource: "memory".to_string(),
-                    message: format!("Memory limit exceeded: {}MB", max_memory),
-                });
+                return Err(self.resource_exhausted_error(format!("Memory limit exceeded: {}MB", max_memory)));
             }
         }
         

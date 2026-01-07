@@ -1,0 +1,24 @@
+[Unit]
+Description=Rust Edge Compute Framework Socket
+Documentation=file:///opt/edge-compute/docs/DEPLOYMENT_GUIDE.md
+Before=rust-edge-compute.service
+
+[Socket]
+ListenStream=3000
+Accept=no
+
+# Socket options
+NoDelay=true
+ReusePort=true
+FreeBind=true
+
+# Security
+SocketMode=0660
+SocketUser=edge-compute
+SocketGroup=edge-compute
+
+# Backlog
+Backlog=2048
+
+[Install]
+WantedBy=sockets.target

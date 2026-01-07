@@ -1,0 +1,31 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/data_types.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/data_types.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/data_types.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/decision_plugin_base.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/decision_plugin_base.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/decision_plugin_base.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/evaluation_plugin_base.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/evaluation_plugin_base.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/evaluation_plugin_base.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/event_plugin_base.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/event_plugin_base.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/event_plugin_base.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/feature_plugin_base.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/feature_plugin_base.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/feature_plugin_base.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/plugin_base.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_base.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_base.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/plugin_factories.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_factories.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_factories.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/plugin_manager.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_manager.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/plugin_manager.cpp.o.d"
+  "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/src/vibrate31_plugin.cpp" "CMakeFiles/AlgorithmPluginsCore.dir/src/vibrate31_plugin.cpp.o" "gcc" "CMakeFiles/AlgorithmPluginsCore.dir/src/vibrate31_plugin.cpp.o.d"
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

@@ -1,0 +1,174 @@
+# Monitoring Configuration for Rust Edge Compute Framework
+# Comprehensive monitoring and observability settings
+
+[metrics]
+# Prometheus metrics configuration
+enabled = true
+port = 9090
+path = "/metrics"
+interval_seconds = 60
+
+# Metric types to collect
+collect_system_metrics = true
+collect_service_metrics = true
+collect_process_metrics = true
+collect_custom_metrics = true
+
+# Metric retention
+retention_days = 30
+max_stored_metrics = 10000
+
+[health_check]
+# Health check configuration
+enabled = true
+interval_seconds = 30
+timeout_seconds = 5
+endpoint = "/api/v1/health"
+
+# Health check components
+check_database = true
+check_storage = true
+check_memory = true
+check_disk = true
+
+# Failure thresholds
+max_consecutive_failures = 3
+unhealthy_threshold = 2
+
+[alerts]
+# Alert configuration
+enabled = true
+
+# Alert thresholds
+cpu_threshold_percent = 80
+memory_threshold_percent = 85
+disk_threshold_percent = 90
+error_rate_threshold_percent = 5
+
+# Alert severity levels
+critical_threshold = 95
+warning_threshold = 80
+info_threshold = 50
+
+[logging]
+# Logging configuration for monitoring
+log_all_metrics = false
+log_errors = true
+log_warnings = true
+verbose_mode = false
+
+# Log rotation
+max_log_size_mb = 100
+max_log_files = 10
+
+[tracing]
+# Distributed tracing (OpenTelemetry)
+enabled = false
+jaeger_endpoint = "http://localhost:14268/api/traces"
+sample_rate = 0.1
+
+# Tracing spans
+trace_http_requests = true
+trace_database_queries = true
+trace_task_execution = true
+
+[prometheus]
+# Prometheus scrape configuration
+scrape_interval_seconds = 15
+scrape_timeout_seconds = 10
+evaluation_interval_seconds = 15
+
+[alertmanager]
+# Alertmanager integration
+enabled = false
+webhook_url = "http://localhost:9093/api/v1/alerts"
+
+[custom_metrics]
+# Custom application metrics
+
+# Task scheduler metrics
+[[custom_metrics.task_scheduler]]
+name = "task_scheduler_queue_depth"
+type = "gauge"
+description = "Number of tasks in scheduler queue"
+
+[[custom_metrics.task_scheduler]]
+name = "task_scheduler_completed"
+type = "counter"
+description = "Total completed tasks"
+
+[[custom_metrics.task_scheduler]]
+name = "task_scheduler_failed"
+type = "counter"
+description = "Total failed tasks"
+
+# HTTP endpoint metrics
+[[custom_metrics.http]]
+name = "http_requests_total"
+type = "counter"
+description = "Total HTTP requests"
+
+[[custom_metrics.http]]
+name = "http_request_duration_seconds"
+type = "histogram"
+description = "HTTP request duration"
+
+[[custom_metrics.http]]
+name = "http_errors_total"
+type = "counter"
+description = "Total HTTP errors"
+
+# Database metrics
+[[custom_metrics.database]]
+name = "database_connections"
+type = "gauge"
+description = "Active database connections"
+
+[[custom_metrics.database]]
+name = "database_operations_total"
+type = "counter"
+description = "Total database operations"
+
+[[custom_metrics.database]]
+name = "database_query_duration_seconds"
+type = "histogram"
+description = "Database query duration"
+
+[dashboards]
+# Grafana dashboard configuration
+enabled = false
+grafana_url = "http://localhost:3000"
+dashboard_uid = "edge-compute"
+
+# Dashboard panels
+panels = [
+    "cpu_usage",
+    "memory_usage",
+    "disk_usage",
+    "http_requests",
+    "error_rate",
+    "task_queue",
+    "database_connections"
+]
+
+[notifications]
+# Notification channels
+
+# Slack notifications
+slack_enabled = false
+slack_webhook_url = ""
+slack_channel = "#edge-compute-alerts"
+
+# Email notifications
+email_enabled = false
+email_to = "admin@example.com"
+smtp_server = "localhost:25"
+
+# PagerDuty
+pagerduty_enabled = false
+pagerduty_integration_key = ""
+
+# Webhooks
+webhook_enabled = false
+webhook_url = ""
+webhook_method = "POST"

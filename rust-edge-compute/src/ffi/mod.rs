@@ -1,28 +1,18 @@
-//! FFI桥接模块
-//!
-//! 提供Rust与C++的安全互操作接口
+//! FFI模块 - 外部函数接口
 
 pub mod bridge;
-pub mod memory_manager;
+pub mod cpp_allocator;
 pub mod exception_handler;
-pub mod type_converter;
-pub mod performance_monitor;
 pub mod integration_example;
+pub mod memory_manager;
+pub mod memory_mapper;
+pub mod performance_monitor;
+pub mod type_converter;
 
-// Cap'n Proto RPC 支持 (可选)
-#[cfg(feature = "capnproto")]
-pub mod capnp_service;
-
-pub use bridge::*;
-pub use memory_manager::*;
-pub use exception_handler::*;
-pub use type_converter::*;
-pub use performance_monitor::*;
-pub use integration_example::*;
-
-#[cfg(feature = "capnproto")]
-pub use capnp_service::*;
-
-// TODO: 包含CXX生成的代码
-// #[cxx::bridge]
-// mod ffi { ... }
+// 重新导出常用的类型
+pub use cpp_allocator::CppAllocator;
+pub use exception_handler::ExceptionHandler;
+pub use memory_manager::MemoryManager;
+pub use memory_mapper::MemoryMapper;
+pub use performance_monitor::PerformanceMonitor;
+pub use type_converter::{ConversionType, TypeConverter};

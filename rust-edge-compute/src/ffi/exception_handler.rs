@@ -2,10 +2,10 @@
 //!
 //! 提供跨语言异常捕获、翻译和处理功能
 
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use std::collections::HashMap;
-use serde::{Deserialize, Serialize};
 
 /// 异常处理器
 pub struct ExceptionHandler {
@@ -111,7 +111,10 @@ impl ExceptionHandler {
             record.is_handled = true;
 
             // 使用结果处理器生成处理结果
-            let result = self.result_processor.process_error_result(&record.translated_message).await?;
+            let result = self
+                .result_processor
+                .process_error_result(&record.translated_message)
+                .await?;
 
             // 更新统计信息
             let mut stats = self.stats.write().await;
@@ -170,8 +173,14 @@ impl ErrorTranslator {
 
         // 初始化常见的C++错误翻译
         map.insert("std::bad_alloc".to_string(), "内存分配失败".to_string());
-        map.insert("std::out_of_range".to_string(), "数组索引超出范围".to_string());
-        map.insert("std::invalid_argument".to_string(), "无效的参数".to_string());
+        map.insert(
+            "std::out_of_range".to_string(),
+            "数组索引超出范围".to_string(),
+        );
+        map.insert(
+            "std::invalid_argument".to_string(),
+            "无效的参数".to_string(),
+        );
         map.insert("std::runtime_error".to_string(), "运行时错误".to_string());
         map.insert("std::logic_error".to_string(), "逻辑错误".to_string());
 
@@ -252,7 +261,10 @@ impl ResultProcessor {
     }
 
     /// 处理错误结果
-    pub async fn process_error_result(&self, error_message: &str) -> Result<ExceptionResult, String> {
+    pub async fn process_error_result(
+        &self,
+        error_message: &str,
+    ) -> Result<ExceptionResult, String> {
         let start_time = std::time::Instant::now();
 
         let result = if error_message.contains("内存分配失败") {
@@ -295,13 +307,18 @@ impl ResultProcessor {
         let mut stats = self.stats.write().await;
         stats.total_processed += 1;
         stats.successful_processed += 1;
-        stats.avg_processing_time_ms = (stats.avg_processing_time_ms * (stats.total_processed as f64 - 1.0) + processing_time) / stats.total_processed as f64;
+        stats.avg_processing_time_ms =
+            (stats.avg_processing_time_ms * (stats.total_processed as f64 - 1.0) + processing_time)
+                / stats.total_processed as f64;
 
         Ok(result)
     }
 
     /// 处理成功结果
-    pub async fn process_success_result(&self, _data: serde_json::Value) -> Result<ExceptionResult, String> {
+    pub async fn process_success_result(
+        &self,
+        _data: serde_json::Value,
+    ) -> Result<ExceptionResult, String> {
         let start_time = std::time::Instant::now();
 
         let result = ExceptionResult {
@@ -317,7 +334,9 @@ impl ResultProcessor {
         let mut stats = self.stats.write().await;
         stats.total_processed += 1;
         stats.successful_processed += 1;
-        stats.avg_processing_time_ms = (stats.avg_processing_time_ms * (stats.total_processed as f64 - 1.0) + processing_time) / stats.total_processed as f64;
+        stats.avg_processing_time_ms =
+            (stats.avg_processing_time_ms * (stats.total_processed as f64 - 1.0) + processing_time)
+                / stats.total_processed as f64;
 
         Ok(result)
     }

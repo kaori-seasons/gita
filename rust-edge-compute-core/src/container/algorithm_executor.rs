@@ -1,14 +1,9 @@
 //! 容器化算法执行器 - 简化实现
 
 use std::collections::HashMap;
-use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use std::collections::VecDeque;
-use std::time::Instant;
 
-use crate::core::{ContainerConfig, TaskStatus};
-use crate::Result;
 
 /// 容器化算法执行器
 pub struct ContainerizedAlgorithmExecutor {
@@ -33,7 +28,10 @@ pub struct AlgorithmInfo {
 
 impl ContainerizedAlgorithmExecutor {
     /// 创建新的容器化算法执行器
-    pub fn new(_container_manager: Arc<std::sync::Mutex<String>>, _memory_manager: Arc<std::sync::Mutex<String>>) -> Self {
+    pub fn new(
+        _container_manager: Arc<std::sync::Mutex<String>>,
+        _memory_manager: Arc<std::sync::Mutex<String>>,
+    ) -> Self {
         Self {
             _container_manager,
             algorithm_registry: Arc::new(RwLock::new(AlgorithmRegistry {

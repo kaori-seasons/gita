@@ -24,6 +24,7 @@ pub mod ordered_window_processor;
 pub mod executor_registry;
 pub mod task_spawn;
 pub mod monitoring;
+pub mod executor_trait;
 
 #[cfg(test)]
 mod integration_tests;
@@ -41,3 +42,4 @@ pub use load_balancer::{LoadBalancer, LoadBalancerConfig};
 pub use intelligent_scheduler::{IntelligentScheduler};
 pub use offset_tracker::{OffsetTracker};
 pub use monitoring::{MonitoringManager, Metrics};
+pub use executor_trait::{Executor, ResourceRequirements, HealthStatus};

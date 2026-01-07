@@ -1,0 +1,9 @@
+/Users/windwheel/Documents/gitrepo/gita/target/debug/build/clang-sys-ccb4d2eda79c5bed/build_script_build-ccb4d2eda79c5bed.d: /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/macros.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/common.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/dynamic.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/static.rs
+
+/Users/windwheel/Documents/gitrepo/gita/target/debug/build/clang-sys-ccb4d2eda79c5bed/build_script_build-ccb4d2eda79c5bed: /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/macros.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/common.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/dynamic.rs /Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/static.rs
+
+/Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build.rs:
+/Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/macros.rs:
+/Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/common.rs:
+/Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/dynamic.rs:
+/Users/windwheel/.cargo/registry/src/mirrors.ustc.edu.cn-5857e57f01837ef8/clang-sys-1.8.1/build/static.rs:

@@ -1,0 +1,1 @@
+{"rustc":16243257175721966122,"features":"[]","declared_features":"[]","target":2764086469773243511,"profile":8276155916380437441,"path":12855414530964256810,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/mime-120d6d44075251a7/dep-lib-mime","checksum":false}}],"rustflags":["-C","link-dead-code=false"],"config":2069994364910194474,"compile_kind":0}

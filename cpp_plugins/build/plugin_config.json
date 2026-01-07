@@ -5,9 +5,9 @@
     "log_level": "INFO",
     "max_log_file_size": "10MB",
     "log_rotation_count": 5,
-    "plugin_directory": "/usr/local/plugins",
-    "config_directory": "/usr/local/config",
-    "cache_directory": "/usr/local/cache"
+    "plugin_directory": "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/install/plugins",
+    "config_directory": "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/install/config",
+    "cache_directory": "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/install/cache"
   },
   "plugin_chains": {
     "vibration_monitoring": {
@@ -111,7 +111,7 @@
   "logging": {
     "console_logging": true,
     "file_logging": true,
-    "log_file_path": "/usr/local/logs/plugin_framework.log",
+    "log_file_path": "/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/install/logs/plugin_framework.log",
     "log_format": "[%Y-%m-%d %H:%M:%S] [%l] [%n] %v",
     "log_levels": {
       "console": "INFO",

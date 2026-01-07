@@ -1,0 +1,76 @@
+# Production Configuration Template for Rust Edge Compute Framework
+# Bare Metal Deployment
+
+[server]
+# Network configuration
+host = "0.0.0.0"
+port = 3000
+workers = 4
+keep_alive = 75
+request_timeout_seconds = 300
+max_connections = 1000
+
+[logging]
+# Logging configuration
+level = "info"
+format = "json"
+output = "file"
+path = "/var/log/edge-compute/app.log"
+max_size_mb = 100
+max_backups = 10
+compress = true
+
+[database]
+# Database configuration
+type = "sled"
+path = "/opt/edge-compute/data/db"
+cache_size_mb = 512
+compression = "lz4"
+
+[security]
+# Security settings
+enable_auth = true
+tls_enabled = false
+tls_cert = "/opt/edge-compute/etc/certs/server.pem"
+tls_key = "/opt/edge-compute/etc/certs/server.key"
+jwt_secret = "CHANGE_THIS_SECRET"
+
+[monitoring]
+# Monitoring and observability
+metrics_enabled = true
+metrics_port = 9090
+tracing_enabled = false
+tracing_jaeger_endpoint = "http://localhost:14268/api/traces"
+health_check_interval_seconds = 30
+
+[scheduler]
+# Task scheduler configuration
+max_concurrent_tasks = 100
+queue_size = 10000
+task_timeout_seconds = 300
+default_max_retries = 3
+intelligent_scheduling_enabled = false
+
+[container]
+# Container runtime configuration (if used)
+runtime_type = "youki"
+runtime_path = "/usr/bin/youki"
+container_root = "/opt/edge-compute/containers"
+enable_cgroups = true
+network_mode = "host"
+
+[updates]
+# OTA update configuration
+auto_check_updates = true
+check_interval_seconds = 3600
+update_server_url = "https://updates.example.com"
+allow_downgrades = false
+backup_old_version = true
+
+[performance]
+# Performance tuning
+enable_compression = true
+buffer_size = 65536
+max_body_size_mb = 100
+connection_pool_size = 128
+use_epoll = true

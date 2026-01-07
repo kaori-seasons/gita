@@ -64,7 +64,11 @@ impl YoukiContainerManager {
     }
 
     /// 创建带有自定义限制的容器管理器
-    pub fn with_limits(runtime_dir: PathBuf, default_memory_limit: u64, default_cpu_limit: f64) -> Self {
+    pub fn with_limits(
+        runtime_dir: PathBuf,
+        default_memory_limit: u64,
+        default_cpu_limit: f64,
+    ) -> Self {
         std::fs::create_dir_all(&runtime_dir).expect("Failed to create runtime directory");
 
         Self {
@@ -83,7 +87,11 @@ impl YoukiContainerManager {
     ) -> Result<String> {
         let container_id = format!("edge-compute-{}", Uuid::new_v4());
 
-        tracing::info!("Creating container: {} for algorithm: {}", container_id, algorithm);
+        tracing::info!(
+            "Creating container: {} for algorithm: {}",
+            container_id,
+            algorithm
+        );
 
         let bundle_path = self.runtime_dir.join(&container_id);
         std::fs::create_dir_all(&bundle_path)
@@ -207,6 +215,12 @@ pub struct YoukiContainerManagerBuilder {
     runtime_dir: PathBuf,
     memory_limit: Option<u64>,
     cpu_limit: Option<f64>,
+}
+
+impl Default for YoukiContainerManagerBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl YoukiContainerManagerBuilder {

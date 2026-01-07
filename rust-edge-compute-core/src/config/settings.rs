@@ -5,6 +5,7 @@ use std::path::PathBuf;
 
 /// 应用程序配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct Settings {
     /// 服务器配置
     pub server: ServerSettings,
@@ -16,6 +17,8 @@ pub struct Settings {
     pub logging: LoggingSettings,
     /// 安全配置
     pub security: SecuritySettings,
+    /// 监控配置
+    pub monitoring: MonitoringSettings,
 }
 
 /// 服务器配置
@@ -127,6 +130,30 @@ pub struct SecuritySettings {
     pub rate_limit: RateLimit,
 }
 
+/// 监控配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MonitoringSettings {
+    /// 是否启用指标收集
+    pub metrics_enabled: bool,
+    /// 指标收集间隔（秒）
+    pub metrics_collection_interval_seconds: u64,
+    /// 是否启用内存监控
+    pub memory_monitoring_enabled: bool,
+    /// 是否启用CPU监控
+    pub cpu_monitoring_enabled: bool,
+}
+
+impl Default for MonitoringSettings {
+    fn default() -> Self {
+        Self {
+            metrics_enabled: true,
+            metrics_collection_interval_seconds: 5,
+            memory_monitoring_enabled: true,
+            cpu_monitoring_enabled: true,
+        }
+    }
+}
+
 /// 频率限制
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RateLimit {
@@ -136,17 +163,6 @@ pub struct RateLimit {
     pub burst_size: u32,
 }
 
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            server: ServerSettings::default(),
-            container: ContainerSettings::default(),
-            ffi: FfiSettings::default(),
-            logging: LoggingSettings::default(),
-            security: SecuritySettings::default(),
-        }
-    }
-}
 
 impl Default for ServerSettings {
     fn default() -> Self {

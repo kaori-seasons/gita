@@ -1,0 +1,1 @@
+{"rustc":16542739221701554903,"features":"[]","declared_features":"[]","target":6962977057026645649,"profile":3033921117576893,"path":15150977885639254848,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/autocfg-4aefec474947405c/dep-lib-autocfg","checksum":false}}],"rustflags":["-C","link-dead-code=false"],"config":2069994364910194474,"compile_kind":0}

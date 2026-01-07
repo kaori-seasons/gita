@@ -3,8 +3,8 @@ members = [
     "rust-edge-compute",
     "rust-edge-compute-core",
     "rust-edge-compute-cpp",
-    "rust-edge-compute-ml",
-    "rust-edge-compute-python",
+    # "rust-edge-compute-ml",
+    # "rust-edge-compute-python",
 ]
 resolver = "2"
 

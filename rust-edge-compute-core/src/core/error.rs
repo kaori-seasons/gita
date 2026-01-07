@@ -601,3 +601,15 @@ impl From<String> for EdgeComputeError {
         }
     }
 }
+
+/// 为 Candle 库的错误类型实现转换
+/// 这允许在使用 Candle 张量操作时使用 `?` 操作符
+impl From<candle_core::Error> for EdgeComputeError {
+    fn from(error: candle_core::Error) -> Self {
+        EdgeComputeError::AlgorithmExecution {
+            message: format!("Candle ML error: {}", error),
+            algorithm: None,
+            input_size: None,
+        }
+    }
+}

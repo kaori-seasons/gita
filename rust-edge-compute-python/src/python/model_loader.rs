@@ -2,7 +2,8 @@
 //!
 //! 提供Python模型的加载、缓存和管理功能
 
-use rust_edge_compute_core::core::error::{Result, EdgeComputeError};
+use rust_edge_compute_core::core::error::EdgeComputeError;
+use rust_edge_compute_core::Result;
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -82,16 +83,26 @@ pub struct LoadStats {
     pub total_scans: u64,
 }
 
+/// 创建配置错误
+fn config_error(message: String, _source: Option<String>) -> Box<dyn std::error::Error + Send + Sync> {
+    Box::new(EdgeComputeError(format!("Configuration error: {}", message)))
+}
+
+/// 创建验证错误
+fn validation_error(message: String, _field: Option<String>, _value: Option<String>) -> Box<dyn std::error::Error + Send + Sync> {
+    Box::new(EdgeComputeError(format!("Validation error: {}", message)))
+}
+
 impl ModelLoader {
     /// 创建新的模型加载器
     pub fn new(config: ModelLoaderConfig) -> Result<Self> {
         // 创建模型目录
         if let Some(parent) = config.model_dir.parent() {
             std::fs::create_dir_all(parent)
-                .map_err(|e| EdgeComputeError::Config {
-                    message: format!("Failed to create model directory: {}", e),
-                    source: Some("model-loader".to_string()),
-                })?;
+                .map_err(|e| config_error(
+                    format!("Failed to create model directory: {}", e),
+                    Some("model-loader".to_string()),
+                ))?;
         }
         
         let loader = Self {
@@ -116,6 +127,8 @@ impl ModelLoader {
         let load_stats = Arc::clone(&self.load_stats);
         let interval = Duration::from_secs(self.config.scan_interval_seconds);
         
+        // 注释掉自动扫描任务，因为它依赖于不存在的模块
+        /*
         let handle = crate::core::TaskSpawner::spawn_with_config(
             async move {
                 let mut interval_timer = tokio::time::interval(interval);
@@ -133,10 +146,23 @@ impl ModelLoader {
                 .with_timeout(self.config.scan_interval_seconds + 10)
                 .with_detailed_errors(true)
         );
+        */
+        let handle = tokio::spawn(async move {
+            let mut interval_timer = tokio::time::interval(interval);
+            
+            loop {
+                interval_timer.tick().await;
+                
+                // 扫描模型目录
+                if let Err(e) = Self::scan_model_directory(&model_dir, &loaded_models, &load_stats).await {
+                    tracing::error!("Error scanning model directory: {}", e);
+                }
+            }
+        });
         
         let mut scan_handle = self
             .scan_handle
-            .write()
+            .try_write()
             .expect("model loader scan handle poisoned");
         *scan_handle = Some(handle);
     }
@@ -161,18 +187,12 @@ impl ModelLoader {
         
         // 读取目录
         let entries = std::fs::read_dir(model_dir)
-            .map_err(|e| EdgeComputeError::Config {
-                message: format!("Failed to read model directory: {}", e),
-                source: Some("model-loader".to_string()),
-            })?;
+            .map_err(|e| Box::new(EdgeComputeError(format!("Configuration error: Failed to read model directory: {}", e))))?;
         
         let mut found_models = HashMap::new();
         
         for entry in entries {
-            let entry = entry.map_err(|e| EdgeComputeError::Config {
-                message: format!("Failed to read directory entry: {}", e),
-                source: Some("model-loader".to_string()),
-            })?;
+            let entry = entry.map_err(|e| Box::new(EdgeComputeError(format!("Configuration error: Failed to read directory entry: {}", e))))?;
             
             let path = entry.path();
             
@@ -205,22 +225,24 @@ impl ModelLoader {
         }
         
         // 更新已加载的模型缓存
-        let mut models = loaded_models.write().await;
-        for (name, info) in found_models {
-            // 如果模型已存在，保留加载时间和使用统计
-            if let Some(existing) = models.get(&name) {
-                models.insert(name.clone(), ModelInfo {
-                    loaded_at: existing.loaded_at,
-                    usage_count: existing.usage_count,
-                    last_used: existing.last_used,
-                    ..info
-                });
-            } else {
-                models.insert(name, info);
+        {
+            let mut models = loaded_models.write().await;
+            for (name, info) in found_models {
+                // 如果模型已存在，保留加载时间和使用统计
+                if let Some(existing) = models.get(&name).cloned() { // 克隆现有模型信息以避免借用问题
+                    models.insert(name.clone(), ModelInfo {
+                        loaded_at: existing.loaded_at,
+                        usage_count: existing.usage_count,
+                        last_used: existing.last_used,
+                        ..info
+                    });
+                } else {
+                    models.insert(name, info);
+                }
             }
         }
-        
-        tracing::debug!("Model scan completed, found {} models", models.len());
+
+        tracing::debug!("Model scan completed, found {} models", loaded_models.read().await.len());
         Ok(())
     }
     
@@ -308,11 +330,7 @@ impl ModelLoader {
             }
             
             if !found {
-                return Err(EdgeComputeError::Validation {
-                    message: format!("Model not found: {}", model_name),
-                    field: Some("model_name".to_string()),
-                    value: Some(model_name.to_string()),
-                });
+                return Err(Box::new(EdgeComputeError(format!("Validation error: Model not found: {}", model_name))));
             }
         }
         
@@ -334,10 +352,7 @@ impl ModelLoader {
     /// 创建模型信息
     async fn create_model_info(&self, path: &Path, name: &str) -> Result<ModelInfo> {
         let metadata = path.metadata()
-            .map_err(|e| EdgeComputeError::Config {
-                message: format!("Failed to read model metadata: {}", e),
-                source: Some("model-loader".to_string()),
-            })?;
+            .map_err(|e| Box::new(EdgeComputeError(format!("Configuration error: Failed to read model metadata: {}", e))))?;
         
         let file_size = metadata.len();
         let model_type = Self::detect_model_type(path);
@@ -373,14 +388,14 @@ impl ModelLoader {
             tracing::info!("Model {} unloaded from cache", model_name);
             Ok(())
         } else {
-            Err(EdgeComputeError::Validation {
-                message: format!("Model not found in cache: {}", model_name),
-                field: Some("model_name".to_string()),
-                value: Some(model_name.to_string()),
-            })
+            Err(validation_error(
+                format!("Model not found in cache: {}", model_name),
+                Some("model_name".to_string()),
+                Some(model_name.to_string()),
+            ))
         }
     }
-    
+
     /// 获取加载统计
     pub async fn get_stats(&self) -> LoadStats {
         self.load_stats.read().await.clone()

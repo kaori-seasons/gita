@@ -1,0 +1,1 @@
+{"rustc":16243257175721966122,"features":"[]","declared_features":"[]","target":6656734005897261505,"profile":8276155916380437441,"path":3102787584509458612,"deps":[],"local":[{"CheckDepInfo":{"dep_info":"debug/.fingerprint/tower-layer-bd645463e77ee0fd/dep-lib-tower_layer","checksum":false}}],"rustflags":["-C","link-dead-code=false"],"config":2069994364910194474,"compile_kind":0}

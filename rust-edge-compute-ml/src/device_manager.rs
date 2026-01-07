@@ -2,11 +2,11 @@
 //!
 //! 管理CPU、CUDA、Metal等计算设备，提供设备选择和资源管理功能
 
-use candle_core::{Device, DeviceLocation};
+use candle_core::Device;
+use rust_edge_compute_core::core::error::{EdgeComputeError, Result};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use rust_edge_compute_core::core::error::{Result, EdgeComputeError};
 
 /// 设备类型
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -20,44 +20,32 @@ pub enum DeviceType {
 }
 
 impl DeviceType {
-    /// 创建Candle设备
+    /// 创建 Candle 设备
     pub fn to_candle_device(&self) -> Result<Device> {
         match self {
             DeviceType::Cpu => Ok(Device::Cpu),
             DeviceType::Cuda(idx) => {
                 #[cfg(feature = "cuda")]
                 {
-                    Device::new_cuda(*idx)
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to create CUDA device {}: {}", idx, e),
-                            algorithm: None,
-                            input_size: None,
-                        })
+                    Device::new_cuda(*idx).map_err(|e| {
+                        EdgeComputeError(format!("Failed to create CUDA device {}: {}", idx, e))
+                    })
                 }
                 #[cfg(not(feature = "cuda"))]
                 {
-                    Err(EdgeComputeError::Config {
-                        message: "CUDA support not enabled".to_string(),
-                        source: Some("candle-ml".to_string()),
-                    })
+                    Err(EdgeComputeError("CUDA support not enabled".to_string()))
                 }
             }
             DeviceType::Metal(idx) => {
                 #[cfg(feature = "metal")]
                 {
-                    Device::new_metal(*idx)
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to create Metal device {}: {}", idx, e),
-                            algorithm: None,
-                            input_size: None,
-                        })
+                    Device::new_metal(*idx).map_err(|e| {
+                        EdgeComputeError(format!("Failed to create Metal device {}: {}", idx, e))
+                    })
                 }
                 #[cfg(not(feature = "metal"))]
                 {
-                    Err(EdgeComputeError::Config {
-                        message: "Metal support not enabled".to_string(),
-                        source: Some("candle-ml".to_string()),
-                    })
+                    Err(EdgeComputeError("Metal support not enabled".to_string()))
                 }
             }
         }
@@ -112,23 +100,25 @@ pub struct DeviceManager {
 
 impl DeviceManager {
     /// 创建新的设备管理器
-    pub fn new(config: DeviceManagerConfig) -> Result<Self> {
-        let mut manager = Self {
+    /// 注意：由于初始化是异步操作，使用 new_async 来初始化
+    pub fn new(config: DeviceManagerConfig) -> Self {
+        Self {
             config,
             devices: Arc::new(RwLock::new(HashMap::new())),
             device_usage: Arc::new(RwLock::new(HashMap::new())),
-        };
-        
-        // 初始化设备
-        manager.initialize_devices().await?;
-        
-        Ok(manager)
+        }
     }
-    
+
+    /// 缆步初始化设备管理器
+    pub async fn initialize(&mut self) -> Result<()> {
+        self.initialize_devices().await?;
+        Ok(())
+    }
+
     /// 初始化设备
     async fn initialize_devices(&mut self) -> Result<()> {
         let mut devices = self.devices.write().await;
-        
+
         // 添加CPU设备
         devices.insert(
             "cpu".to_string(),
@@ -140,7 +130,7 @@ impl DeviceManager {
                 compute_capability: None,
             },
         );
-        
+
         // 尝试添加CUDA设备
         #[cfg(feature = "cuda")]
         {
@@ -157,7 +147,7 @@ impl DeviceManager {
                 },
             );
         }
-        
+
         // 尝试添加Metal设备
         #[cfg(feature = "metal")]
         {
@@ -172,21 +162,21 @@ impl DeviceManager {
                 },
             );
         }
-        
+
         Ok(())
     }
-    
+
     /// 获取默认设备
     pub async fn get_default_device(&self) -> Result<Device> {
         self.config.default_device.to_candle_device()
     }
-    
+
     /// 选择最佳设备
     pub async fn select_best_device(&self) -> Result<Device> {
         if self.config.auto_select_device {
             // 优先选择GPU设备
             let devices = self.devices.read().await;
-            
+
             // 查找可用的CUDA设备
             #[cfg(feature = "cuda")]
             {
@@ -198,7 +188,7 @@ impl DeviceManager {
                     }
                 }
             }
-            
+
             // 查找可用的Metal设备
             #[cfg(feature = "metal")]
             {
@@ -211,35 +201,35 @@ impl DeviceManager {
                 }
             }
         }
-        
+
         // 回退到默认设备
         self.get_default_device().await
     }
-    
+
     /// 获取设备信息
     pub async fn get_device_info(&self, device_name: &str) -> Option<DeviceInfo> {
         let devices = self.devices.read().await;
         devices.get(device_name).cloned()
     }
-    
+
     /// 列出所有可用设备
     pub async fn list_devices(&self) -> Vec<DeviceInfo> {
         let devices = self.devices.read().await;
         devices.values().cloned().collect()
     }
-    
+
     /// 获取设备使用计数
     pub async fn get_device_usage(&self, device_name: &str) -> usize {
         let usage = self.device_usage.read().await;
         usage.get(device_name).copied().unwrap_or(0)
     }
-    
+
     /// 增加设备使用计数
     pub async fn increment_device_usage(&self, device_name: &str) {
         let mut usage = self.device_usage.write().await;
         *usage.entry(device_name.to_string()).or_insert(0) += 1;
     }
-    
+
     /// 减少设备使用计数
     pub async fn decrement_device_usage(&self, device_name: &str) {
         let mut usage = self.device_usage.write().await;
@@ -254,31 +244,34 @@ impl DeviceManager {
 
 impl Default for DeviceManager {
     fn default() -> Self {
-        Self::new(DeviceManagerConfig::default()).unwrap()
+        Self::new(DeviceManagerConfig::default())
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_device_manager_creation() {
-        let manager = DeviceManager::new(DeviceManagerConfig::default()).unwrap();
+        let mut manager = DeviceManager::new(DeviceManagerConfig::default());
+        // 初始化设备列表
+        let _ = manager.initialize().await;
         let devices = manager.list_devices().await;
+        // 应该至少有 CPU 设备
         assert!(!devices.is_empty());
     }
-    
+
     #[tokio::test]
     async fn test_device_manager_default_device() {
-        let manager = DeviceManager::new(DeviceManagerConfig::default()).unwrap();
+        let manager = DeviceManager::new(DeviceManagerConfig::default());
         let device = manager.get_default_device().await.unwrap();
         assert_eq!(device.location(), DeviceLocation::Cpu);
     }
-    
+
     #[tokio::test]
     async fn test_device_manager_select_best() {
-        let manager = DeviceManager::new(DeviceManagerConfig::default()).unwrap();
+        let manager = DeviceManager::new(DeviceManagerConfig::default());
         let device = manager.select_best_device().await.unwrap();
         // 应该至少能获取到一个设备
         assert!(true);

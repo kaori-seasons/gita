@@ -5,27 +5,13 @@
 #include <vector>
 #include <string>
 
+struct AlgorithmInput;
+struct AlgorithmOutput;
+
 // 前向声明
 class PluginExecutor;
 
-// 算法输入结构 - 与Rust侧共享
-struct AlgorithmInput {
-    std::string algorithm_name;
-    std::string parameters_json;
-    std::string device_id;
-    uint64_t timestamp_ms;
-};
-
-// 算法输出结构 - 与Rust侧共享
-struct AlgorithmOutput {
-    bool success;
-    std::string result_json;
-    std::string error_message;
-    uint64_t execution_time_ms;
-    uint64_t memory_used_bytes;
-};
-
-// C++ 算法执行器接口
+// C++算法执行器接口（三层架构实现）
 class CppAlgorithmExecutor {
 public:
     CppAlgorithmExecutor();
@@ -33,19 +19,25 @@ public:
 
     // 初始化
     bool initialize() const;
-    
-    // 执行算法 - 生产级实现
+
+    // 执行通用算法
     AlgorithmOutput execute_algorithm(const AlgorithmInput& input) const;
-    
+
     // 获取可用插件列表
     std::vector<std::string> get_available_plugins() const;
-    
+
     // 获取插件信息
     std::string get_plugin_info(const std::string& plugin_name) const;
 
+    // 加载插件
+    bool load_plugin(const std::string& plugin_name);
+
+    // 卸载插件
+    bool unload_plugin(const std::string& plugin_name);
+
 private:
     // 插件执行器（顶层抽象）
-    mutable PluginExecutor* plugin_executor_;
+    mutable std::unique_ptr<PluginExecutor> plugin_executor_;
 };
 
 // 创建C++算法执行器的工厂函数

@@ -1,0 +1,1 @@
+cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/windwheel/Documents/gitrepo/gita/target/debug/build/mime_guess-7aaef86816d63335/out/mime_types_generated.rs

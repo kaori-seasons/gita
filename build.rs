@@ -53,7 +53,7 @@ fn build_cpp_bridge() {
     // 使用CXX编译bridge.rs
     let mut build = cxx_build::bridge("src/ffi/bridge.rs");
     build
-        .file("src/ffi/cpp/bridge_simple.cc")  // 使用简化版本（但包含生产级算法）
+        .file("src/ffi/cpp/bridge.cc")  // 使用生产增强的实现
         .include("src/ffi/cpp")
         .include(&include_dir)
         .include(&cpp_plugins_dir)  // 添加cpp_plugins目录
@@ -76,13 +76,14 @@ fn build_cpp_bridge() {
 fn link_cpp_plugins() {
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let cpp_plugins_dir = PathBuf::from(&manifest_dir).join("cpp_plugins");
-    let build_dir = cpp_plugins_dir.join("build");
-    let lib_dir = build_dir.join("lib");
+    let install_dir = cpp_plugins_dir.join("install");
+    let lib_dir = install_dir.join("lib");
     
     // 检查库是否存在
     if lib_dir.exists() {
         println!("cargo:rustc-link-search=native={}", lib_dir.display());
         println!("cargo:rustc-link-lib=dylib=AlgorithmPlugins");
+        println!("cargo:rustc-link-lib=static=AlgorithmPluginsCore");
         
         // 在macOS上设置rpath
         if cfg!(target_os = "macos") {

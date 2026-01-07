@@ -1,8 +1,10 @@
-//! WASM沙箱
+//! WASM执行器
 //!
-//! 提供安全的WASM执行环境，使用Wasmtime进行集成
+//! 提供WebAssembly代码执行和函数调用功能
 
-use rust_edge_compute_core::core::error::{Result, EdgeComputeError};
+use rust_edge_compute_core::core::error::EdgeComputeError;
+use rust_edge_compute_core::Result;
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use std::time::Duration;
@@ -91,9 +93,9 @@ impl WasmSandbox {
         })
     }
     
-    /// 执行WASM模块
+    /// 执行WASM字节码
     #[cfg(feature = "wasm")]
-    pub async fn execute_module(
+    pub async fn execute_wasm(
         &self,
         wasm_bytes: &[u8],
         function_name: &str,
@@ -202,20 +204,17 @@ impl WasmSandbox {
         result
     }
     
-    /// 执行WASM模块（非WASM特性）
+    /// 执行WASM字节码（非WASM特性）
     #[cfg(not(feature = "wasm"))]
-    pub async fn execute_module(
+    pub async fn execute_wasm(
         &self,
         _wasm_bytes: &[u8],
         _function_name: &str,
         _args: Vec<serde_json::Value>,
     ) -> Result<serde_json::Value> {
-        Err(EdgeComputeError::Config {
-            message: "WASM support not enabled. Please enable the 'wasm' feature.".to_string(),
-            source: Some("python-wasm".to_string()),
-        })
+        Err(Box::new(EdgeComputeError("WASM support not enabled. Please enable the 'wasm' feature.".to_string())))
     }
-    
+
     /// 获取执行统计
     pub async fn get_stats(&self) -> WasmExecutionStats {
         self.execution_stats.read().await.clone()
@@ -233,48 +232,32 @@ impl WasmSandbox {
         
         // 尝试不同的函数签名
         // 1. 无参数，返回i32
-        if let Ok(func) = instance.get_typed_func::<(), i32>(store, function_name) {
-            let result = func.call(store, ())
-                .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                    message: format!("Failed to call function: {}", e),
-                    algorithm: Some(function_name.to_string()),
-                    input_size: None,
-                })?;
+        if let Ok(func) = instance.get_typed_func::<(), i32>(&mut *store, function_name) {
+            let result = func.call(&mut *store, ())
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
             return Ok(serde_json::json!({ "result": result }));
         }
         
         // 2. 无参数，返回f64
-        if let Ok(func) = instance.get_typed_func::<(), f64>(store, function_name) {
-            let result = func.call(store, ())
-                .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                    message: format!("Failed to call function: {}", e),
-                    algorithm: Some(function_name.to_string()),
-                    input_size: None,
-                })?;
+        if let Ok(func) = instance.get_typed_func::<(), f64>(&mut *store, function_name) {
+            let result = func.call(&mut *store, ())
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
             return Ok(serde_json::json!({ "result": result }));
         }
         
         // 3. 无参数，无返回值
-        if let Ok(func) = instance.get_typed_func::<(), ()>(store, function_name) {
-            func.call(store, ())
-                .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                    message: format!("Failed to call function: {}", e),
-                    algorithm: Some(function_name.to_string()),
-                    input_size: None,
-                })?;
+        if let Ok(func) = instance.get_typed_func::<(), ()>(&mut *store, function_name) {
+            func.call(&mut *store, ())
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
             return Ok(serde_json::json!({ "result": "success" }));
         }
         
         // 4. 单个i32参数，返回i32
         if args.len() == 1 {
             if let Some(arg) = args[0].as_i64() {
-                if let Ok(func) = instance.get_typed_func::<(i32,), i32>(store, function_name) {
-                    let result = func.call(store, (arg as i32,))
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to call function: {}", e),
-                            algorithm: Some(function_name.to_string()),
-                            input_size: None,
-                        })?;
+                if let Ok(func) = instance.get_typed_func::<(i32,), i32>(&mut *store, function_name) {
+                    let result = func.call(&mut *store, (arg as i32,))
+                        .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
                     return Ok(serde_json::json!({ "result": result }));
                 }
             }
@@ -283,13 +266,9 @@ impl WasmSandbox {
         // 5. 单个f64参数，返回f64
         if args.len() == 1 {
             if let Some(arg) = args[0].as_f64() {
-                if let Ok(func) = instance.get_typed_func::<(f64,), f64>(store, function_name) {
-                    let result = func.call(store, (arg,))
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to call function: {}", e),
-                            algorithm: Some(function_name.to_string()),
-                            input_size: None,
-                        })?;
+                if let Ok(func) = instance.get_typed_func::<(f64,), f64>(&mut *store, function_name) {
+                    let result = func.call(&mut *store, (arg,))
+                        .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
                     return Ok(serde_json::json!({ "result": result }));
                 }
             }
@@ -298,20 +277,16 @@ impl WasmSandbox {
         // 6. 两个i32参数，返回i32
         if args.len() == 2 {
             if let (Some(a1), Some(a2)) = (args[0].as_i64(), args[1].as_i64()) {
-                if let Ok(func) = instance.get_typed_func::<(i32, i32), i32>(store, function_name) {
-                    let result = func.call(store, (a1 as i32, a2 as i32))
-                        .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                            message: format!("Failed to call function: {}", e),
-                            algorithm: Some(function_name.to_string()),
-                            input_size: None,
-                        })?;
+                if let Ok(func) = instance.get_typed_func::<(i32, i32), i32>(&mut *store, function_name) {
+                    let result = func.call(&mut *store, (a1 as i32, a2 as i32))
+                        .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
                     return Ok(serde_json::json!({ "result": result }));
                 }
             }
         }
         
         // 7. 使用通用函数接口（支持动态参数）
-        if let Ok(func) = instance.get_func(store, function_name) {
+        if let Some(func) = instance.get_func(&mut *store, function_name) {
             // 转换参数为WASM值
             let mut wasm_args = Vec::new();
             for arg in args {
@@ -321,12 +296,8 @@ impl WasmSandbox {
             
             // 调用函数
             let mut results = vec![wasmtime::Val::I32(0)];
-            func.call(store, &wasm_args, &mut results)
-                .map_err(|e| EdgeComputeError::AlgorithmExecution {
-                    message: format!("Failed to call function: {}", e),
-                    algorithm: Some(function_name.to_string()),
-                    input_size: None,
-                })?;
+            func.call(&mut *store, &wasm_args, &mut results)
+                .map_err(|e| Box::new(EdgeComputeError(format!("Failed to call function: {}", e))))?;
             
             // 转换返回值
             if let Some(result_val) = results.first() {
@@ -335,13 +306,20 @@ impl WasmSandbox {
             }
         }
         
-        Err(EdgeComputeError::AlgorithmExecution {
-            message: format!("Function '{}' not found or has unsupported signature", function_name),
-            algorithm: Some(function_name.to_string()),
-            input_size: None,
-        })
+        Err(Box::new(EdgeComputeError(format!("Function '{}' not found or has unsupported signature", function_name))))
     }
     
+    /// 调用WASM函数（非WASM特性）
+    #[cfg(not(feature = "wasm"))]
+    pub async fn call_function(
+        &self,
+        _module_name: &str,
+        _function_name: &str,
+        _args: Vec<serde_json::Value>,
+    ) -> Result<serde_json::Value> {
+        Err(Box::new(EdgeComputeError("WASM support not enabled. Please enable the 'wasm' feature.".to_string())))
+    }
+
     /// 将JSON值转换为WASM值
     #[cfg(feature = "wasm")]
     fn json_to_wasm_value(value: &serde_json::Value) -> Result<wasmtime::Val> {
@@ -352,32 +330,20 @@ impl WasmSandbox {
                 if let Some(i) = n.as_i64() {
                     Ok(Val::I32(i as i32))
                 } else if let Some(f) = n.as_f64() {
-                    Ok(Val::F64(f))
+                    Ok(Val::F64(f.to_bits()))
                 } else {
-                    Err(EdgeComputeError::AlgorithmExecution {
-                        message: "Unsupported number type".to_string(),
-                        algorithm: None,
-                        input_size: None,
-                    })
+                    Err(Box::new(EdgeComputeError("Unsupported number type".to_string())))
                 }
             }
             serde_json::Value::String(s) => {
                 // 字符串需要特殊处理（通常需要内存传递）
                 // 这里简化处理，返回错误
-                Err(EdgeComputeError::AlgorithmExecution {
-                    message: "String parameters not yet supported".to_string(),
-                    algorithm: None,
-                    input_size: None,
-                })
+                Err(Box::new(EdgeComputeError("String parameters not yet supported".to_string())))
             }
-            _ => Err(EdgeComputeError::AlgorithmExecution {
-                message: format!("Unsupported parameter type: {:?}", value),
-                algorithm: None,
-                input_size: None,
-            }),
+            _ => Err(Box::new(EdgeComputeError(format!("Unsupported parameter type: {:?}", value)))),
         }
     }
-    
+
     /// 将WASM值转换为JSON值
     #[cfg(feature = "wasm")]
     fn wasm_value_to_json(value: &wasmtime::Val) -> Result<serde_json::Value> {
@@ -388,16 +354,8 @@ impl WasmSandbox {
             Val::I64(i) => Ok(serde_json::json!(*i)),
             Val::F32(f) => Ok(serde_json::json!(*f)),
             Val::F64(f) => Ok(serde_json::json!(*f)),
-            Val::V128(_) => Err(EdgeComputeError::AlgorithmExecution {
-                message: "V128 return type not supported".to_string(),
-                algorithm: None,
-                input_size: None,
-            }),
-            Val::FuncRef(_) | Val::ExternRef(_) => Err(EdgeComputeError::AlgorithmExecution {
-                message: "Reference return type not supported".to_string(),
-                algorithm: None,
-                input_size: None,
-            }),
+            Val::V128(_) => Err(Box::new(EdgeComputeError("V128 return type not supported".to_string()))),
+            Val::FuncRef(_) | Val::ExternRef(_) => Err(Box::new(EdgeComputeError("Reference return type not supported".to_string()))),
         }
     }
 }

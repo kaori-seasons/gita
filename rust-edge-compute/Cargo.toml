@@ -102,6 +102,9 @@ tokio-metrics = { version = "0.4", optional = true }
 # HTTP客户端
 reqwest = { workspace = true }
 
+# 命令行参数解析
+clap = { version = "4.5", features = ["derive"] }
+
 [dev-dependencies]
 # 测试依赖
 reqwest = { workspace = true }
@@ -126,8 +129,10 @@ full = ["cpp", "ml", "python", "capnproto"]
 tokio-console = ["dep:console-subscriber"]
 tokio-metrics = ["dep:tokio-metrics"]
 monitoring = ["tokio-console", "tokio-metrics"]
+# Linux容器支持
+linux-container = ["dep:youki"]
 
 # libcontainer仅在Linux上可用
 [target.'cfg(target_os = "linux")'.dependencies]
-libcontainer = { git = "https://github.com/containers/youki.git", branch = "main" }
+youki = { version = "0.0.4", optional = true }
 

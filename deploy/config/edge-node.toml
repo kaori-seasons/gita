@@ -1,0 +1,89 @@
+# Edge Node Configuration Template for Rust Edge Compute Framework
+# For deployment on edge devices with limited resources
+# Bare Metal Deployment
+
+[server]
+# Network configuration - optimized for edge nodes
+host = "0.0.0.0"
+port = 3000
+workers = 2  # Lower worker count for edge devices
+keep_alive = 60  # Shorter keep-alive for resource efficiency
+request_timeout_seconds = 180  # Shorter timeout for edge
+max_connections = 500  # Lower connection limit
+
+[logging]
+# Logging configuration - minimal for edge devices
+level = "warn"  # Less verbose logging
+format = "json"
+output = "file"
+path = "/var/log/edge-compute/app.log"
+max_size_mb = 50  # Smaller log files
+max_backups = 5  # Keep fewer backups
+compress = true
+
+[database]
+# Database configuration - optimized for edge
+type = "sled"  # Lightweight embedded database
+path = "/opt/edge-compute/data/db"
+cache_size_mb = 256  # Reduced cache for edge devices
+compression = "lz4"
+
+[security]
+# Security settings - balanced for edge
+enable_auth = true
+tls_enabled = false  # TLS can be expensive on edge devices
+jwt_secret = "CHANGE_THIS_SECRET"
+rate_limit_enabled = true
+rate_limit_requests = 500  # Lower limit for edge
+rate_limit_window_seconds = 60
+
+[monitoring]
+# Monitoring - lightweight for edge
+metrics_enabled = true
+metrics_port = 9090
+tracing_enabled = false  # Tracing adds overhead
+health_check_interval_seconds = 60
+monitoring_sample_rate = 0.5  # Sample 50% of operations
+
+[scheduler]
+# Task scheduler - conservative for edge
+max_concurrent_tasks = 50  # Lower concurrency
+queue_size = 5000
+task_timeout_seconds = 300
+default_max_retries = 2  # Fewer retries
+intelligent_scheduling_enabled = false
+
+[container]
+# Container runtime configuration - optional
+runtime_type = "youki"
+enable_cgroups = true
+container_root = "/opt/edge-compute/containers"
+network_mode = "bridge"  # Bridge mode for isolation
+
+[updates]
+# OTA update configuration
+auto_check_updates = true
+check_interval_seconds = 7200  # Check less frequently
+update_server_url = "https://updates.example.com"
+allow_downgrades = false
+backup_old_version = true
+max_download_bandwidth_kbps = 1024  # Limit bandwidth
+
+[performance]
+# Performance tuning - resource-conscious
+enable_compression = true
+buffer_size = 32768  # Smaller buffer
+max_body_size_mb = 50  # Lower body size limit
+connection_pool_size = 64  # Smaller pool
+use_epoll = true
+enable_http2 = true
+
+[edge]
+# Edge-specific settings
+device_name = "edge-node-1"
+device_id = ""  # Set by installation
+enable_local_cache = true
+cache_ttl_seconds = 300
+sync_interval_seconds = 600
+enable_battery_optimization = false  # Set to true for battery-powered devices
+max_memory_mb = 512  # Maximum memory usage

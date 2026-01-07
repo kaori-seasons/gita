@@ -2,14 +2,13 @@
 //!
 //! 管理ML模型的加载、缓存和版本控制
 
-use candle_core::{Device, Tensor};
-use candle_nn::VarBuilder;
+use candle_core::Device;
+use rust_edge_compute_core::core::error::{EdgeComputeError, Result};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
-use tokio::sync::RwLock;
-use rust_edge_compute_core::core::error::{Result, EdgeComputeError};
 use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
 
 /// 模型信息
 #[derive(Debug, Clone)]
@@ -83,24 +82,21 @@ pub struct ModelManager {
 
 impl ModelManager {
     /// 创建新的模型管理器
-    pub fn new(
-        config: ModelCacheConfig,
-        device_manager: Arc<DeviceManager>,
-    ) -> Self {
+    pub fn new(config: ModelCacheConfig, device_manager: Arc<DeviceManager>) -> Self {
         let manager = Self {
             config,
             models: Arc::new(RwLock::new(HashMap::new())),
             device_manager,
         };
-        
+
         // 启动自动清理任务
         if manager.config.enable_auto_cleanup {
             manager.start_cleanup_task();
         }
-        
+
         manager
     }
-    
+
     /// 加载模型
     pub async fn load_model(
         &self,
@@ -109,19 +105,18 @@ impl ModelManager {
         model_type: ModelType,
     ) -> Result<()> {
         let model_path = model_path.as_ref().to_path_buf();
-        
-        // 检查模型文件是否存在
+
+        // 检查模形文件是否存在
         if !model_path.exists() {
-            return Err(EdgeComputeError::Io {
-                message: format!("Model file not found: {:?}", model_path),
-                operation: Some("load_model".to_string()),
-                path: Some(model_path.to_string_lossy().to_string()),
-            });
+            return Err(EdgeComputeError(format!(
+                "Model file not found: {:?}",
+                model_path
+            )));
         }
-        
+
         // 选择设备
         let device = self.device_manager.select_best_device().await?;
-        
+
         // 创建模型信息
         let model_info = ModelInfo {
             model_id: model_id.clone(),
@@ -137,7 +132,7 @@ impl ModelManager {
             last_used: Instant::now(),
             usage_count: 0,
         };
-        
+
         // 检查缓存是否已满
         {
             let models = self.models.read().await;
@@ -146,21 +141,21 @@ impl ModelManager {
                 self.cleanup_oldest_model().await?;
             }
         }
-        
+
         // 添加到缓存
         {
             let mut models = self.models.write().await;
-            models.insert(model_id, model_info);
+            models.insert(model_id.clone(), model_info);
         }
-        
+
         tracing::info!("Model loaded: {}", model_id);
         Ok(())
     }
-    
+
     /// 获取模型
     pub async fn get_model(&self, model_id: &str) -> Option<ModelInfo> {
         let mut models = self.models.write().await;
-        
+
         if let Some(model) = models.get_mut(model_id) {
             // 更新使用信息
             model.last_used = Instant::now();
@@ -170,7 +165,7 @@ impl ModelManager {
             None
         }
     }
-    
+
     /// 卸载模型
     pub async fn unload_model(&self, model_id: &str) -> Result<()> {
         let mut models = self.models.write().await;
@@ -178,71 +173,67 @@ impl ModelManager {
         tracing::info!("Model unloaded: {}", model_id);
         Ok(())
     }
-    
+
     /// 列出所有缓存的模型
     pub async fn list_models(&self) -> Vec<ModelInfo> {
         let models = self.models.read().await;
         models.values().cloned().collect()
     }
-    
+
     /// 清理最旧的模型
     async fn cleanup_oldest_model(&self) -> Result<()> {
         let mut models = self.models.write().await;
-        
-        if let Some((oldest_id, _)) = models
-            .iter()
-            .min_by_key(|(_, info)| info.last_used)
-        {
+
+        if let Some((oldest_id, _)) = models.iter().min_by_key(|(_, info)| info.last_used) {
             let id = oldest_id.clone();
             models.remove(&id);
             tracing::info!("Cleaned up oldest model: {}", id);
         }
-        
+
         Ok(())
     }
-    
+
     /// 清理过期模型
     async fn cleanup_expired_models(&self) {
         let ttl = Duration::from_secs(self.config.model_ttl_seconds);
         let now = Instant::now();
-        
+
         let mut models = self.models.write().await;
         let expired_ids: Vec<String> = models
             .iter()
             .filter(|(_, info)| now.duration_since(info.last_used) > ttl)
             .map(|(id, _)| id.clone())
             .collect();
-        
+
         for id in expired_ids {
             models.remove(&id);
             tracing::info!("Cleaned up expired model: {}", id);
         }
     }
-    
+
     /// 启动清理任务
     fn start_cleanup_task(&self) {
         let models = Arc::clone(&self.models);
         let config = self.config.clone();
-        
+
         tokio::spawn(async move {
-            let mut interval = tokio::time::interval(
-                Duration::from_secs(config.cleanup_interval_seconds),
-            );
-            
+            let mut interval =
+                tokio::time::interval(Duration::from_secs(config.cleanup_interval_seconds));
+
             loop {
                 interval.tick().await;
-                
+
                 // 清理过期模型
                 let ttl = Duration::from_secs(config.model_ttl_seconds);
                 let now = Instant::now();
-                
+
                 let mut models_guard = models.write().await;
                 let expired_ids: Vec<String> = models_guard
                     .iter()
                     .filter(|(_, info)| now.duration_since(info.last_used) > ttl)
                     .map(|(id, _)| id.clone())
                     .collect();
-                
+
                 for id in expired_ids {
                     models_guard.remove(&id);
                     tracing::info!("Cleaned up expired model: {}", id);
@@ -250,11 +241,11 @@ impl ModelManager {
             }
         });
     }
-    
+
     /// 获取模型统计信息
     pub async fn get_stats(&self) -> ModelManagerStats {
         let models = self.models.read().await;
-        
+
         ModelManagerStats {
             total_models: models.len(),
             total_usage: models.values().map(|m| m.usage_count).sum(),
@@ -293,27 +284,21 @@ use crate::device_manager::DeviceManager;
 mod tests {
     use super::*;
     use crate::device_manager::DeviceManager;
-    
+
     #[tokio::test]
     async fn test_model_manager_creation() {
         let device_manager = Arc::new(DeviceManager::default());
-        let manager = ModelManager::new(
-            ModelCacheConfig::default(),
-            device_manager,
-        );
-        
+        let manager = ModelManager::new(ModelCacheConfig::default(), device_manager);
+
         let stats = manager.get_stats().await;
         assert_eq!(stats.total_models, 0);
     }
-    
+
     #[tokio::test]
     async fn test_model_manager_load_model() {
         let device_manager = Arc::new(DeviceManager::default());
-        let manager = ModelManager::new(
-            ModelCacheConfig::default(),
-            device_manager,
-        );
-        
+        let manager = ModelManager::new(ModelCacheConfig::default(), device_manager);
+
         // 注意：这个测试需要实际的模型文件
         // 这里只是测试接口，实际使用时需要提供真实的模型路径
         // let result = manager.load_model(

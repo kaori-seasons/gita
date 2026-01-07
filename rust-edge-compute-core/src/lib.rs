@@ -13,10 +13,10 @@ pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + S
 
 /// 核心图暴模件，为了兼容性，提供最小化的类型
 pub mod core {
-    use std::sync::Arc;
-    pub use serde::{Serialize, Deserialize};
+    pub use serde::{Deserialize, Serialize};
+    
     pub mod types {
-        use serde::{Serialize, Deserialize};
+        use serde::{Deserialize, Serialize};
         #[derive(Debug, Clone, Serialize, Deserialize)]
         pub struct ComputeRequest {
             pub id: String,
@@ -29,7 +29,7 @@ pub mod core {
             pub success: bool,
             pub result: String,
         }
-        
+
         impl ComputeResponse {
             pub fn success(id: String, result: serde_json::Value, _execution_time: u64) -> Self {
                 Self {
@@ -37,7 +37,7 @@ pub mod core {
                     result: result.to_string(),
                 }
             }
-            
+
             pub fn failure(id: String, error: String) -> Self {
                 Self {
                     success: false,
@@ -74,8 +74,11 @@ pub mod core {
 
     // 导出 error 模块
     pub mod error {
-        use std::fmt;
         use std::error::Error;
+        use std::fmt;
+
+        // 定义 Result 类型
+        pub type Result<T> = std::result::Result<T, EdgeComputeError>;
 
         #[derive(Debug, Clone)]
         pub struct ErrorHandler;
@@ -97,6 +100,14 @@ pub mod core {
         }
 
         impl Error for EdgeComputeError {}
+
+        // 为 Candle 库错误实现转换
+        #[cfg(feature = "candle")]
+        impl From<candle_core::Error> for EdgeComputeError {
+            fn from(err: candle_core::Error) -> Self {
+                EdgeComputeError(format!("Candle error: {}", err))
+            }
+        }
     }
 
     pub use error::*;
@@ -111,28 +122,39 @@ pub mod core {
         #[derive(Debug, Clone)]
         pub struct SpawnConfig {
             pub name: String,
+            pub timeout_seconds: Option<u64>,
         }
-        
+
         impl SpawnConfig {
             pub fn new(name: impl Into<String>) -> Self {
                 Self {
                     name: name.into(),
+                    timeout_seconds: None,
                 }
             }
-            
+
             pub fn with_detailed_errors(self, _detailed: bool) -> Self {
                 self
             }
-            
+
             pub fn with_log_success(self, _log: bool) -> Self {
+                self
+            }
+
+            pub fn with_timeout(mut self, timeout_seconds: u64) -> Self {
+                self.timeout_seconds = Some(timeout_seconds);
                 self
             }
         }
 
+        impl Default for SpawnConfig {
+            fn default() -> Self {
+                Self::new("default_task")
+            }
+        }
+
         impl TaskSpawner {
-            pub fn spawn_default<F>(
-                _future: F,
-            ) -> JoinHandle<Result<(), TaskExecutionError>>
+            pub fn spawn_default<F>(_future: F) -> JoinHandle<Result<(), TaskExecutionError>>
             where
                 F: Future<Output = Result<(), Box<dyn std::error::Error + Send + Sync>>>
                     + Send
@@ -160,7 +182,7 @@ pub mod core {
             Timeout(String),
             Failed(String),
         }
-        
+
         impl std::fmt::Display for TaskExecutionError {
             fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
                 match self {
@@ -170,11 +192,56 @@ pub mod core {
                 }
             }
         }
-        
+
         impl std::error::Error for TaskExecutionError {}
     }
 
     pub use task_spawn::*;
+
+    pub mod executor_trait {
+        use super::{ComputeRequest, ComputeResponse, Result};
+        use async_trait::async_trait;
+
+        /// 资源需求定义
+        #[derive(Debug, Clone)]
+        pub struct ResourceRequirements {
+            pub memory_mb: u64,
+            pub cpu_cores: f64,
+            pub gpu_memory_mb: Option<u64>,
+        }
+
+        /// 健康状态定义
+        #[derive(Debug, Clone)]
+        pub enum HealthStatus {
+            Healthy,
+            Degraded,
+            Unhealthy,
+        }
+
+        /// Executor trait定义
+        #[async_trait]
+        pub trait Executor: Send + Sync {
+            /// 执行计算任务
+            async fn execute(&self, request: ComputeRequest) -> Result<ComputeResponse>;
+
+            /// 获取Executor名称
+            fn name(&self) -> &str;
+
+            /// 获取Executor版本
+            fn version(&self) -> &str;
+
+            /// 获取支持的算法列表
+            fn supported_algorithms(&self) -> Vec<String>;
+
+            /// 获取资源需求
+            fn resource_requirements(&self) -> ResourceRequirements;
+
+            /// 检查健康状态
+            async fn health_check(&self) -> HealthStatus;
+        }
+    }
+
+    pub use executor_trait::*;
 
     pub mod executor_registry {
         pub struct ExecutorRegistry;
@@ -183,7 +250,31 @@ pub mod core {
     pub use executor_registry::*;
 
     pub mod security {
-        pub struct UserSession;
+        #[derive(Debug, Clone)]
+        pub struct UserSession {
+            pub user_id: String,
+            pub username: String,
+            pub roles: Vec<String>,
+            pub permissions: Vec<String>,
+            pub created_at: String,
+            pub expires_at: String,
+        }
+
+        impl UserSession {
+            pub fn new(user_id: String, username: String) -> Self {
+                Self {
+                    user_id,
+                    username,
+                    roles: Vec::new(),
+                    permissions: Vec::new(),
+                    created_at: chrono::Utc::now().to_rfc3339(),
+                    expires_at: chrono::Utc::now()
+                        .checked_add_signed(chrono::Duration::hours(24))
+                        .unwrap()
+                        .to_rfc3339(),
+                }
+            }
+        }
     }
 
     pub use security::*;
@@ -252,23 +343,21 @@ pub mod core {
 
     // 导出 scheduler 中最小化的类型
     pub mod scheduler {
-        use crate::Result;
-        use std::sync::Arc;
-        use super::*;
+        
+        
+        
 
         #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+        #[derive(Default)]
         pub enum TaskPriority {
             Low = 0,
+            #[default]
             Normal = 1,
             High = 2,
             Critical = 3,
         }
 
-        impl Default for TaskPriority {
-            fn default() -> Self {
-                TaskPriority::Normal
-            }
-        }
+        
     }
 
     pub use scheduler::*;
@@ -277,4 +366,3 @@ pub mod core {
 }
 
 pub use core::*;
-

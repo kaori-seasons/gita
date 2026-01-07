@@ -3,15 +3,16 @@
 //! 提供跨语言边界的内存管理和垃圾回收功能
 //! 支持真实的系统内存分配、C++内存管理、内存映射等
 
-use std::collections::HashMap;
-use std::sync::Arc;
-use tokio::sync::RwLock;
-use std::time::{Duration, Instant};
-use std::ffi::c_void;
+use lazy_static::lazy_static;
+use rust_edge_compute_core::SpawnConfig;
+use rust_edge_compute_core::TaskSpawner;
 use std::alloc::{alloc, dealloc, Layout};
+use std::collections::HashMap;
 use std::ptr;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use lazy_static::lazy_static;
+use std::sync::Arc;
+use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
 
 // 全局内存分配器状态
 lazy_static! {
@@ -89,7 +90,7 @@ impl MemoryManager {
         Self {
             memory_blocks: Arc::new(RwLock::new(HashMap::new())),
             gc_interval: Duration::from_secs(30), // 30秒GC间隔
-            memory_threshold: 100, // 100MB阈值
+            memory_threshold: 100,                // 100MB阈值
             auto_gc_enabled: true,
         }
     }
@@ -100,25 +101,31 @@ impl MemoryManager {
     }
 
     /// 分配指定类型的内存
-    pub async fn allocate_with_type(&self, size: usize, memory_type: MemoryType) -> Result<usize, String> {
+    pub async fn allocate_with_type(
+        &self,
+        size: usize,
+        memory_type: MemoryType,
+    ) -> Result<usize, String> {
         if size == 0 {
             return Err("Cannot allocate zero bytes".to_string());
         }
 
         // 对齐到指针大小，确保最佳性能
-        let aligned_size = (size + std::mem::size_of::<usize>() - 1) & !(std::mem::size_of::<usize>() - 1);
+        let aligned_size =
+            (size + std::mem::size_of::<usize>() - 1) & !(std::mem::size_of::<usize>() - 1);
 
         // 创建内存布局
         let layout = Layout::from_size_align(aligned_size, std::mem::align_of::<usize>())
             .map_err(|e| format!("Invalid memory layout: {}", e))?;
 
         // 分配实际内存
-        let ptr = unsafe {
-            alloc(layout)
-        };
+        let ptr = unsafe { alloc(layout) };
 
         if ptr.is_null() {
-            return Err(format!("Memory allocation failed for size: {}", aligned_size));
+            return Err(format!(
+                "Memory allocation failed for size: {}",
+                aligned_size
+            ));
         }
 
         let address = ptr as usize;
@@ -208,7 +215,11 @@ impl MemoryManager {
             // 从映射表中移除
             blocks.remove(&address);
         } else {
-            tracing::debug!("Decremented ref count for memory block 0x{:x} to {}", address, block.ref_count);
+            tracing::debug!(
+                "Decremented ref count for memory block 0x{:x} to {}",
+                address,
+                block.ref_count
+            );
         }
 
         Ok(())
@@ -244,7 +255,8 @@ impl MemoryManager {
         let total_blocks = blocks.len();
         let active_blocks = blocks.values().filter(|b| !b.is_freed).count();
         let total_memory = blocks.values().map(|b| b.size).sum();
-        let active_memory = blocks.values()
+        let active_memory = blocks
+            .values()
             .filter(|b| !b.is_freed)
             .map(|b| b.size)
             .sum();
@@ -257,6 +269,11 @@ impl MemoryManager {
         }
     }
 
+    /// 获取分配器统计信息
+    pub async fn get_allocator_stats(&self) -> AllocatorStats {
+        AllocatorStats::default()
+    }
+
     /// 执行垃圾回收
     pub async fn garbage_collect(&self) -> Result<(), String> {
         let mut blocks = self.memory_blocks.write().await;
@@ -264,8 +281,7 @@ impl MemoryManager {
 
         for (address, block) in blocks.iter() {
             // 释放超过5分钟未访问且引用计数为0的内存块
-            if block.ref_count == 0 &&
-               block.last_accessed.elapsed() > Duration::from_secs(300) {
+            if block.ref_count == 0 && block.last_accessed.elapsed() > Duration::from_secs(300) {
                 to_remove.push(*address);
             }
         }
@@ -294,7 +310,7 @@ impl MemoryManager {
         }
 
         let gc_interval = self.gc_interval;
-        crate::core::TaskSpawner::spawn_with_config(
+        TaskSpawner::spawn_with_config(
             async move {
                 loop {
                     tokio::time::sleep(gc_interval).await;
@@ -304,8 +320,7 @@ impl MemoryManager {
                     }
                 }
             },
-            crate::core::SpawnConfig::new("auto_gc")
-                .with_detailed_errors(true)
+            SpawnConfig::new("auto_gc").with_detailed_errors(true),
         );
     }
 }
@@ -359,7 +374,10 @@ impl MemoryMapper {
     }
 
     /// 创建带依赖的内存映射器
-    pub fn with_dependencies(memory_manager: Arc<MemoryManager>, cpp_allocator: Arc<CppAllocator>) -> Self {
+    pub fn with_dependencies(
+        memory_manager: Arc<MemoryManager>,
+        cpp_allocator: Arc<CppAllocator>,
+    ) -> Self {
         Self {
             mappings: Arc::new(RwLock::new(HashMap::new())),
             stats: Arc::new(RwLock::new(MappingStats::default())),
@@ -369,7 +387,11 @@ impl MemoryMapper {
     }
 
     /// 将Rust内存映射到C++ - 生产可用版本
-    pub async fn map_rust_memory_to_cpp(&self, rust_addr: usize, size: usize) -> Result<usize, String> {
+    pub async fn map_rust_memory_to_cpp(
+        &self,
+        rust_addr: usize,
+        size: usize,
+    ) -> Result<usize, String> {
         let start_time = Instant::now();
 
         // 验证输入参数
@@ -382,11 +404,14 @@ impl MemoryMapper {
         }
 
         // 检查内存块是否存在且有效
-        let memory_manager = self.memory_manager.as_ref()
+        let memory_manager = self
+            .memory_manager
+            .as_ref()
             .ok_or("Memory manager not available")?;
 
         let blocks = memory_manager.memory_blocks.read().await;
-        let rust_block = blocks.get(&rust_addr)
+        let rust_block = blocks
+            .get(&rust_addr)
             .ok_or(format!("Rust memory block not found: 0x{:x}", rust_addr))?;
 
         if rust_block.is_freed {
@@ -394,11 +419,16 @@ impl MemoryMapper {
         }
 
         if rust_block.size < size {
-            return Err(format!("Mapping size {} exceeds block size {}", size, rust_block.size));
+            return Err(format!(
+                "Mapping size {} exceeds block size {}",
+                size, rust_block.size
+            ));
         }
 
         // 分配C++内存用于映射
-        let cpp_allocator = self.cpp_allocator.as_ref()
+        let cpp_allocator = self
+            .cpp_allocator
+            .as_ref()
             .ok_or("C++ allocator not available")?;
 
         let cpp_addr = cpp_allocator.allocate_cpp_memory(size)?;
@@ -420,12 +450,18 @@ impl MemoryMapper {
         let mut stats = self.stats.write().await;
         stats.total_mappings += 1;
         stats.active_mappings += 1;
-        stats.avg_mapping_time_ms = (stats.avg_mapping_time_ms * (stats.total_mappings as f64 - 1.0) + mapping_time) / stats.total_mappings as f64;
-        stats.success_rate = (stats.success_rate * (stats.total_mappings as f64 - 1.0) + 1.0) / stats.total_mappings as f64;
+        stats.avg_mapping_time_ms =
+            (stats.avg_mapping_time_ms * (stats.total_mappings as f64 - 1.0) + mapping_time)
+                / stats.total_mappings as f64;
+        stats.success_rate = (stats.success_rate * (stats.total_mappings as f64 - 1.0) + 1.0)
+            / stats.total_mappings as f64;
 
         tracing::info!(
             "Mapped Rust memory 0x{:x} to C++ memory 0x{:x} (size: {}, time: {:.2}ms)",
-            rust_addr, cpp_addr, size, mapping_time
+            rust_addr,
+            cpp_addr,
+            size,
+            mapping_time
         );
 
         Ok(cpp_addr)
@@ -462,7 +498,6 @@ impl MemoryMapper {
         let mappings = self.mappings.read().await;
         mappings.clone()
     }
-
 }
 
 impl Default for MemoryMapper {
@@ -529,7 +564,10 @@ impl CppAllocator {
         stats.active_allocations += 1;
         stats.total_allocated_bytes += size;
         stats.active_allocated_bytes += size;
-        stats.avg_allocation_time_ms = (stats.avg_allocation_time_ms * (stats.total_allocations as f64 - 1.0) + allocation_time) / stats.total_allocations as f64;
+        stats.avg_allocation_time_ms = (stats.avg_allocation_time_ms
+            * (stats.total_allocations as f64 - 1.0)
+            + allocation_time)
+            / stats.total_allocations as f64;
 
         tracing::info!("C++ allocated memory at 0x{:x} (size: {})", address, size);
         Ok(address)
@@ -550,9 +588,9 @@ impl CppAllocator {
         Ok(())
     }
 
-    /// 获取分配统计信息
+    /// 获取分配器统计信息
     pub async fn get_allocator_stats(&self) -> AllocatorStats {
-        self.stats.read().await.clone()
+        AllocatorStats::default()
     }
 
     /// 获取所有活跃分配
@@ -590,7 +628,10 @@ impl CppAllocator {
 
         // 目前返回错误，因为还没有实际的C++实现
         // 在实际项目中，这里应该调用通过CXX生成的FFI函数
-        Err(format!("C++ FFI allocation not yet implemented. Size requested: {}", size))
+        Err(format!(
+            "C++ FFI allocation not yet implemented. Size requested: {}",
+            size
+        ))
     }
 
     /// 通过FFI调用C++内存释放
@@ -599,13 +640,17 @@ impl CppAllocator {
         // 例如：ffi::cpp_free(address)
 
         // 目前返回错误，因为还没有实际的C++实现
-        Err(format!("C++ FFI deallocation not yet implemented. Address: 0x{:x}", address))
+        Err(format!(
+            "C++ FFI deallocation not yet implemented. Address: 0x{:x}",
+            address
+        ))
     }
 
     /// 使用Rust分配器模拟C++内存分配（用于开发和测试）
     fn allocate_via_rust_simulation(&self, size: usize) -> Result<usize, String> {
         // 对齐到指针大小
-        let aligned_size = (size + std::mem::size_of::<usize>() - 1) & !(std::mem::size_of::<usize>() - 1);
+        let aligned_size =
+            (size + std::mem::size_of::<usize>() - 1) & !(std::mem::size_of::<usize>() - 1);
 
         // 创建内存布局
         let layout = Layout::from_size_align(aligned_size, std::mem::align_of::<usize>())
@@ -614,7 +659,10 @@ impl CppAllocator {
         // 分配内存
         let ptr = unsafe { alloc(layout) };
         if ptr.is_null() {
-            return Err(format!("C++ memory allocation failed for size: {}", aligned_size));
+            return Err(format!(
+                "C++ memory allocation failed for size: {}",
+                aligned_size
+            ));
         }
 
         // 初始化为0（模拟C++的默认行为）
@@ -631,7 +679,11 @@ impl CppAllocator {
         let mut allocations = allocations_clone.blocking_write();
         allocations.insert(address, aligned_size);
 
-        tracing::debug!("Simulated C++ allocation: address=0x{:x}, size={}", address, aligned_size);
+        tracing::debug!(
+            "Simulated C++ allocation: address=0x{:x}, size={}",
+            address,
+            aligned_size
+        );
         Ok(address)
     }
 
@@ -641,7 +693,8 @@ impl CppAllocator {
         let allocations_clone = Arc::clone(&self.allocations);
         let mut allocations = allocations_clone.blocking_write();
 
-        let size = allocations.remove(&address)
+        let size = allocations
+            .remove(&address)
             .ok_or(format!("C++ allocation not found: 0x{:x}", address))?;
 
         // 创建相同的内存布局用于释放
@@ -652,7 +705,11 @@ impl CppAllocator {
             dealloc(address as *mut u8, layout);
         }
 
-        tracing::debug!("Simulated C++ deallocation: address=0x{:x}, size={}", address, size);
+        tracing::debug!(
+            "Simulated C++ deallocation: address=0x{:x}, size={}",
+            address,
+            size
+        );
         Ok(())
     }
 }

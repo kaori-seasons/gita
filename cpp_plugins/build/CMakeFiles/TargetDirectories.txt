@@ -1,0 +1,10 @@
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/AlgorithmPluginsCore.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/AlgorithmPlugins.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/package.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/package_source.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/edit_cache.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/rebuild_cache.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/list_install_components.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/install.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/install/local.dir
+/Users/windwheel/Documents/gitrepo/gita/cpp_plugins/build/CMakeFiles/install/strip.dir

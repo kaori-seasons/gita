@@ -22,8 +22,8 @@ pub fn load_config<P: AsRef<Path>>(path: P) -> Result<Settings, config::ConfigEr
 
 /// 加载默认配置
 pub fn load_default_config() -> Result<Settings, config::ConfigError> {
-    let builder = config::Config::builder()
-        .add_source(config::Environment::with_prefix("EDGE_COMPUTE"));
+    let builder =
+        config::Config::builder().add_source(config::Environment::with_prefix("EDGE_COMPUTE"));
 
     builder.build()?.try_deserialize()
 }
